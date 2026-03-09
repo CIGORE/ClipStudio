@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipStudio — YouTube Clip & Viral Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ══════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════ */
+    :root {
+      --bg:          #f5f5f4;
+      --surface:     #ffffff;
+      --surface-2:   #f2f2f0;
+      --surface-3:   #eaeae7;
+      --border:      #e4e4e0;
+      --border-2:    #d0d0cb;
+      --text:        #1a1a18;
+      --text-2:      #4a4a46;
+      --muted:       #909088;
+      --muted-2:     #bcbcb4;
+      --accent:      #5c7a64;
+      --accent-lt:   #7a9e84;
+      --accent-bg:   rgba(92,122,100,.08);
+      --accent-bg2:  rgba(92,122,100,.15);
+      --coral:       #c4634a;
+      --coral-lt:    #d97e67;
+      --coral-bg:    rgba(196,99,74,.08);
+      --green:       #3d8a5e;
+      --green-bg:    rgba(61,138,94,.09);
+      --blue:        #3d6fa8;
+      --blue-bg:     rgba(61,111,168,.09);
+      --gold:        #b08030;
+      --gold-bg:     rgba(176,128,48,.09);
+      --red:         #b84040;
+      --red-bg:      rgba(184,64,64,.09);
+      --radius:      10px;
+      --radius-lg:   14px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+      --shadow:      0 2px 8px rgba(0,0,0,.07),0 1px 3px rgba(0,0,0,.04);
+      --ease:        cubic-bezier(.4,0,.2,1);
+      --t:           .18s;
+      --font:        'Figtree', sans-serif;
+      --mono:        'JetBrains Mono', monospace;
+      --chevron:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23909088' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
+    [data-theme="dark"] {
+      --bg:          #111110;
+      --surface:     #1a1a18;
+      --surface-2:   #222220;
+      --surface-3:   #2c2c2a;
+      --border:      #2e2e2c;
+      --border-2:    #3c3c3a;
+      --text:        #f0f0ee;
+      --text-2:      #b4b4ac;
+      --muted:       #706e68;
+      --muted-2:     #525250;
+      --accent:      #7a9e84;
+      --accent-lt:   #9abea4;
+      --accent-bg:   rgba(122,158,132,.10);
+      --accent-bg2:  rgba(122,158,132,.18);
+      --coral:       #d47a62;
+      --coral-lt:    #e09480;
+      --coral-bg:    rgba(212,122,98,.10);
+      --green:       #5aac7a;
+      --green-bg:    rgba(90,172,122,.10);
+      --blue:        #6090cc;
+      --blue-bg:     rgba(96,144,204,.10);
+      --gold:        #d4a050;
+      --gold-bg:     rgba(212,160,80,.10);
+      --red:         #d46060;
+      --red-bg:      rgba(212,96,96,.10);
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.20);
+      --shadow:      0 2px 8px rgba(0,0,0,.28);
+      --chevron:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23706e68' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    /* ══════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════ */
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
+    body {
+      background:var(--bg); color:var(--text);
+      font-family:var(--font); font-size:14px; line-height:1.5; min-height:100vh;
+      transition:background var(--t) var(--ease),color var(--t) var(--ease);
+    }
+    a { color:inherit; text-decoration:none; }
+    button { font-family:var(--font); cursor:pointer; }
+    input, select { font-family:var(--font); }
+    .hidden { display:none !important; }
+    ::-webkit-scrollbar { width:4px; height:4px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:99px; }
+
+    /* ══════════════════════════════════════
+       HEADER — 3-row layout
+       Row 1: logo (centered) + theme toggle (right)
+       Row 2: nav tabs (centered)
+       Row 3: subtle divider
+    ══════════════════════════════════════ */
+    .app-header {
+      position:sticky; top:0; z-index:100;
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      transition:background var(--t) var(--ease),border-color var(--t) var(--ease);
+      backdrop-filter:blur(16px);
+    }
+
+    /* ── Logo row ── */
+    .header-logo-row {
+      position:relative;
+      display:flex; align-items:center; justify-content:flex-start;
+      padding:14px 28px 10px;
+      max-width:1080px; margin:0 auto;
+    }
+
+    /* Logo — left aligned, horizontal layout */
+    .logo {
+      display:flex; flex-direction:row; align-items:center; gap:10px;
+      text-decoration:none; user-select:none;
+    }
+    .logo-icon-wrap {
+      position:relative; width:44px; height:44px;
+      display:flex; align-items:center; justify-content:center;
+    }
+    /* Outer glow ring */
+    .logo-ring {
+      position:absolute; inset:0; border-radius:14px;
+      background:linear-gradient(135deg, var(--accent) 0%, var(--coral) 100%);
+      opacity:.15; transition:opacity var(--t) var(--ease);
+    }
+    .logo:hover .logo-ring { opacity:.28; }
+    /* Icon box */
+    .logo-box {
+      position:relative; width:40px; height:40px;
+      background:linear-gradient(135deg, var(--accent) 0%, #3d5e45 100%);
+      border-radius:12px;
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 14px rgba(92,122,100,.35);
+      transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease);
+    }
+    .logo:hover .logo-box { transform:translateY(-1px); box-shadow:0 6px 18px rgba(92,122,100,.4); }
+    .logo-box svg { width:22px; height:22px; fill:#fff; }
+    /* Wordmark + badge stacked */
+    .logo-text { display:flex; flex-direction:column; gap:1px; }
+    .logo-wordmark {
+      font-size:16px; font-weight:800; letter-spacing:-.5px;
+      color:var(--text); line-height:1;
+      display:flex; align-items:center; gap:1px;
+    }
+    .logo-clip { color:var(--text); }
+    .logo-studio { color:var(--accent); }
+    .logo-badge {
+      font-family:var(--mono); font-size:8px; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase;
+      color:var(--muted); margin-top:1px;
+    }
+
+    /* Theme toggle — absolute right */
+    .header-right-actions {
+      position:absolute; right:24px; top:50%; transform:translateY(-50%);
+      display:flex; align-items:center; gap:8px;
+    }
+    .theme-toggle {
+      width:36px; height:36px; border-radius:50%;
+      border:1px solid var(--border); background:var(--surface-2);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+      transition:background var(--t) var(--ease),border-color var(--t) var(--ease),transform .15s;
+    }
+    .theme-toggle:hover  { background:var(--surface-3); border-color:var(--border-2); transform:scale(1.08); }
+    .theme-toggle:active { transform:scale(.92); }
+    .toggle-icon {
+      position:absolute; display:flex; align-items:center; justify-content:center;
+      transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .22s;
+    }
+    .toggle-icon svg { width:15px; height:15px; stroke:var(--text-2); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .icon-sun  { transform:rotate(0) scale(1);      opacity:1; }
+    .icon-moon { transform:rotate(-80deg) scale(.3); opacity:0; }
+    [data-theme="dark"] .icon-sun  { transform:rotate(80deg) scale(.3);  opacity:0; }
+    [data-theme="dark"] .icon-moon { transform:rotate(0) scale(1);       opacity:1; }
+
+    /* ── Nav row ── */
+    .header-nav {
+      border-top:1px solid var(--border);
+      display:flex; justify-content:center;
+      transition:border-color var(--t) var(--ease);
+    }
+    .nav-tabs {
+      display:flex; gap:0; max-width:1080px; width:100%;
+      justify-content:flex-start; padding:0 28px;
+    }
+    .nav-tab {
+      padding:0 24px; height:46px;
+      border:none; background:transparent;
+      font-family:var(--font); font-size:13px; font-weight:500; color:var(--muted);
+      display:flex; align-items:center; gap:8px; white-space:nowrap;
+      border-bottom:2px solid transparent; margin-bottom:-1px;
+      position:relative;
+      transition:color var(--t) var(--ease),background var(--t) var(--ease);
+    }
+    .nav-tab:hover { color:var(--text-2); background:var(--surface-2); }
+    .nav-tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+
+    /* Tab icon — custom SVG icon wrapper */
+    .tab-icon {
+      width:20px; height:20px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      border-radius:6px;
+      transition:background var(--t) var(--ease);
+    }
+    .tab-icon svg { width:14px; height:14px; }
+    .nav-tab:hover  .tab-icon { background:var(--surface-3); }
+    .nav-tab.active .tab-icon { background:var(--accent-bg); }
+    .nav-tab.active .tab-icon svg { stroke:var(--accent); }
+    .nav-tab        .tab-icon svg { stroke:var(--muted); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke var(--t) var(--ease); }
+    .nav-tab:hover  .tab-icon svg { stroke:var(--text-2); }
+
+    /* Reset button — inside nav, right side */
+    .nav-reset {
+      margin-left:auto; display:flex; align-items:center; padding:0 0 0 16px;
+    }
+    .btn-reset {
+      display:flex; align-items:center; gap:5px;
+      padding:5px 11px; border-radius:7px;
+      border:1px solid var(--border); background:transparent;
+      font-family:var(--mono); font-size:10px; font-weight:500;
+      color:var(--muted); letter-spacing:.5px;
+      transition:all var(--t) var(--ease);
+    }
+    .btn-reset svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .btn-reset:hover { color:var(--text); border-color:var(--border-2); background:var(--surface-2); }
+
+    /* ══════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════ */
+    .main-wrap { max-width:1080px; margin:0 auto; padding:28px 24px 80px; }
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; animation:fadeUp .2s var(--ease); }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(5px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ══════════════════════════════════════
+       SHARED COMPONENTS
+    ══════════════════════════════════════ */
+    .card {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius-lg); padding:20px; margin-bottom:14px;
+      box-shadow:var(--shadow-sm);
+      transition:background var(--t) var(--ease),border-color var(--t) var(--ease);
+    }
+    .card-label {
+      font-family:var(--mono); font-size:9.5px; font-weight:600;
+      text-transform:uppercase; letter-spacing:2px; color:var(--muted);
+      margin-bottom:16px; display:flex; align-items:center; gap:7px;
+    }
+    .card-label::before { content:''; width:5px; height:5px; background:var(--accent); border-radius:50%; flex-shrink:0; }
+    .sec-hd { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+    .sec-title { font-size:15px; font-weight:700; letter-spacing:-.2px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+    .grid-1 { display:grid; grid-template-columns:1fr;     gap:10px; margin-bottom:14px; }
+    @media (max-width:520px) { .grid-2 { grid-template-columns:1fr; } }
+    .field     { display:flex; flex-direction:column; gap:5px; }
+    .field-lbl { font-family:var(--mono); font-size:9.5px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+    .field-lbl .req { color:var(--red); }
+    .field-lbl .opt { color:var(--muted-2); font-weight:400; }
+    .f-input, .f-select {
+      background:var(--surface-2); border:1px solid var(--border);
+      border-radius:var(--radius); padding:9px 13px;
+      color:var(--text); font-family:var(--mono); font-size:12px;
+      outline:none; width:100%;
+      transition:border-color var(--t) var(--ease),box-shadow var(--t) var(--ease);
+    }
+    .f-input:focus, .f-select:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-bg2); }
+    .f-input::placeholder { color:var(--muted-2); }
+    .f-text { font-family:var(--font); font-size:13px; }
+    .f-select { appearance:none; cursor:pointer; background-image:var(--chevron); background-repeat:no-repeat; background-position:right 10px center; padding-right:30px; }
+    .row-flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; align-items:flex-end; }
+    .row-flex .f-input { flex:1; min-width:200px; }
+    .opts-flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; align-items:flex-end; }
+    .opt-group { display:flex; flex-direction:column; gap:5px; }
+    .opt-lbl { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+    .btn {
+      padding:9px 18px; border-radius:var(--radius); border:none;
+      font-family:var(--font); font-size:13px; font-weight:600;
+      display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+      transition:all var(--t) var(--ease);
+    }
+    .btn-primary { background:var(--accent); color:#fff; box-shadow:0 1px 4px rgba(92,122,100,.3); }
+    .btn-primary:hover  { background:var(--accent-lt); transform:translateY(-1px); box-shadow:0 4px 12px rgba(92,122,100,.25); }
+    .btn-primary:active { transform:translateY(0); }
+    .btn-ghost { background:transparent; border:1px solid var(--border-2); color:var(--text-2); }
+    .btn-ghost:hover { background:var(--surface-2); color:var(--text); }
+    .btn-sm { padding:6px 12px; font-size:11.5px; }
+    .alert { padding:10px 14px; border-radius:var(--radius); margin:10px 0; font-size:12px; font-family:var(--mono); line-height:1.6; display:flex; align-items:flex-start; gap:8px; }
+    .alert-error   { background:var(--red-bg);   border:1px solid rgba(184,64,64,.2);  color:var(--red);   }
+    .alert-success { background:var(--green-bg); border:1px solid rgba(61,138,94,.2);  color:var(--green); }
+    .alert-info    { background:var(--accent-bg); border:1px solid var(--accent-bg2); color:var(--accent);}
+    .loading { display:flex; align-items:center; gap:12px; padding:32px; justify-content:center; color:var(--muted); font-family:var(--mono); font-size:12px; }
+    .spinner { width:16px; height:16px; border:2px solid var(--border-2); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* ══════════════════════════════════════
+       COUNTRY GRID
+    ══════════════════════════════════════ */
+    .country-toolbar {
+      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .country-search {
+      flex:1; min-width:160px; max-width:260px;
+      background:var(--surface-2); border:1px solid var(--border);
+      border-radius:8px; padding:7px 12px 7px 32px;
+      color:var(--text); font-family:var(--font); font-size:12px;
+      outline:none; transition:border-color var(--t) var(--ease);
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23909088' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:10px center;
+    }
+    .country-search:focus { border-color:var(--accent); }
+    .country-search::placeholder { color:var(--muted-2); }
+
+    .cc-region-tabs { display:flex; gap:4px; flex-wrap:wrap; }
+    .cc-region-tab {
+      padding:4px 10px; border-radius:99px;
+      border:1px solid var(--border); background:var(--surface-2);
+      font-family:var(--mono); font-size:9.5px; font-weight:500;
+      color:var(--muted); cursor:pointer;
+      transition:all var(--t) var(--ease);
+    }
+    .cc-region-tab:hover  { border-color:var(--border-2); color:var(--text-2); }
+    .cc-region-tab.active { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
+
+    .country-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(62px,1fr));
+      gap:5px; margin-bottom:14px;
+      max-height:260px; overflow-y:auto;
+      padding:2px;
+    }
+    .cc-select-all {
+      grid-column:1 / -1;
+      padding:6px 10px; border-radius:8px;
+      border:1px dashed var(--accent-bg2); background:var(--accent-bg);
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      font-family:var(--mono); font-size:9.5px; font-weight:600;
+      color:var(--accent); cursor:pointer; letter-spacing:.5px;
+      transition:all var(--t) var(--ease);
+    }
+    .cc-select-all:hover { background:var(--accent-bg2); }
+    .cc-select-all svg { width:12px; height:12px; stroke:var(--accent); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+    .cc-btn {
+      padding:7px 3px; border-radius:8px;
+      border:1px solid var(--border); background:var(--surface-2);
+      text-align:center; font-family:var(--font); font-size:10px;
+      font-weight:500; color:var(--muted); line-height:1.3;
+      transition:all var(--t) var(--ease); cursor:pointer;
+    }
+    .cc-btn .flag { font-size:16px; display:block; margin-bottom:2px; }
+    .cc-btn:hover    { border-color:var(--border-2); color:var(--text-2); background:var(--surface-3); }
+    .cc-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); font-weight:600; }
+    .cc-count {
+      font-family:var(--mono); font-size:9.5px; color:var(--muted);
+      margin-bottom:8px;
+    }
+    .cc-count strong { color:var(--accent); }
+
+    /* ══════════════════════════════════════
+       TAB 1 — CLIP HIGHLIGHTER
+    ══════════════════════════════════════ */
+    .vid-card { display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .vid-thumb { width:192px; flex-shrink:0; aspect-ratio:16/9; border-radius:9px; overflow:hidden; background:var(--surface-3); position:relative; cursor:pointer; }
+    .vid-thumb img { width:100%; height:100%; object-fit:cover; transition:transform .35s; }
+    .vid-thumb:hover img { transform:scale(1.04); }
+    .play-ov { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.38); opacity:0; transition:opacity .2s; }
+    .play-ov svg { width:38px; height:38px; fill:#fff; }
+    .vid-thumb:hover .play-ov { opacity:1; }
+    @media (max-width:480px) { .vid-thumb { width:100%; } }
+    .vid-info    { flex:1; min-width:0; }
+    .vid-title   { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:4px; }
+    .vid-channel { font-size:11px; color:var(--muted); font-family:var(--mono); margin-bottom:10px; }
+    .vid-stats   { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
+    .vstat       { display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:11px; }
+    .vstat-v     { font-weight:600; color:var(--text); }
+    .vstat-l     { color:var(--muted); }
+    .vid-desc    { font-size:12.5px; color:var(--text-2); line-height:1.65; margin-bottom:10px; }
+    .vid-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .player-wrap { width:100%; aspect-ratio:16/9; border-radius:var(--radius); overflow:hidden; background:#000; margin-bottom:14px; }
+    .player-wrap iframe { width:100%; height:100%; border:none; }
+    .sum-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+    @media (max-width:560px) { .sum-grid { grid-template-columns:repeat(2,1fr); } }
+    .sum-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow-sm); }
+    .sum-lbl { font-family:var(--mono); font-size:9px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:5px; }
+    .sum-val { font-size:26px; font-weight:800; letter-spacing:-.5px; line-height:1.1; color:var(--text); }
+    .sum-sub { font-size:10px; color:var(--muted); margin-top:3px; }
+    .tl-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .tl-legend { display:flex; gap:12px; flex-wrap:wrap; }
+    .tl-leg  { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:10px; color:var(--muted); }
+    .tl-dot  { width:8px; height:8px; border-radius:3px; flex-shrink:0; }
+    .tl-bar  { position:relative; height:44px; background:var(--surface-3); border-radius:8px; overflow:hidden; margin-bottom:5px; cursor:pointer; }
+    .tl-grid { position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 9.99%,rgba(128,128,120,.04) 10%); }
+    .tl-seg  { position:absolute; top:5px; bottom:5px; border-radius:5px; opacity:.75; transition:opacity .15s,filter .15s; cursor:pointer; }
+    .tl-seg:hover { opacity:1; filter:brightness(1.2); }
+    .tl-seg-num { position:absolute; top:50%; transform:translateY(-50%); left:6px; font-family:var(--mono); font-size:8.5px; color:#fff; font-weight:600; pointer-events:none; }
+    .tl-axis { display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; color:var(--muted); margin-bottom:18px; }
+    .clips-hd   { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+    .clips-meta { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
+    .clips-list { display:flex; flex-direction:column; gap:8px; }
+    .clip-card  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); transition:border-color var(--t) var(--ease),transform .15s,box-shadow .15s; }
+    .clip-card:hover { border-color:var(--border-2); transform:translateX(2px); box-shadow:var(--shadow); }
+    .clip-card.rk1 { border-color:rgba(196,99,74,.35); }
+    .clip-card.rk2 { border-color:var(--border-2); }
+    .clip-inner { display:grid; grid-template-columns:3px 1fr auto; align-items:stretch; }
+    @media (max-width:520px) { .clip-inner { grid-template-columns:3px 1fr; } .clip-side { display:none; } }
+    .clip-stripe { width:3px; }
+    .s-viral { background:var(--red); } .s-hook { background:var(--coral); } .s-insight { background:var(--blue); } .s-emotional { background:#9060cc; } .s-funny { background:var(--green); }
+    .clip-body { padding:13px 15px; min-width:0; }
+    .clip-row  { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+    .clip-num  { font-size:22px; font-weight:800; opacity:.12; width:24px; flex-shrink:0; line-height:1; }
+    .badge { font-family:var(--mono); font-size:8.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:2px 8px; border-radius:99px; flex-shrink:0; }
+    .b-viral { background:var(--red-bg); color:var(--red); border:1px solid rgba(184,64,64,.2); }
+    .b-hook  { background:var(--coral-bg); color:var(--coral); border:1px solid rgba(196,99,74,.2); }
+    .b-insight { background:var(--blue-bg); color:var(--blue); border:1px solid rgba(61,111,168,.2); }
+    .b-emotional { background:rgba(144,96,204,.09); color:#9060cc; border:1px solid rgba(144,96,204,.2); }
+    .b-funny { background:var(--green-bg); color:var(--green); border:1px solid rgba(61,138,94,.2); }
+    .clip-ts  { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--accent); background:var(--accent-bg); padding:2px 8px; border-radius:5px; flex-shrink:0; }
+    .clip-dur { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; }
+    .clip-ttl { font-size:13px; font-weight:700; margin-bottom:4px; line-height:1.4; color:var(--text); }
+    .clip-why { font-size:12px; color:var(--text-2); line-height:1.65; margin-bottom:8px; }
+    .score-row  { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+    .score-lbl  { font-family:var(--mono); font-size:9px; color:var(--muted); white-space:nowrap; }
+    .score-bar  { flex:1; height:3px; background:var(--surface-3); border-radius:99px; overflow:hidden; }
+    .score-fill { height:3px; border-radius:99px; }
+    .score-num  { font-family:var(--mono); font-size:10px; font-weight:600; width:24px; text-align:right; }
+    .tag-row  { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:5px; }
+    .tag-chip { font-family:var(--mono); font-size:9px; padding:2px 7px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); color:var(--text-2); }
+    .clip-cap { font-size:11px; color:var(--muted); font-style:italic; font-family:var(--mono); margin-top:4px; }
+    .clip-side { display:flex; flex-direction:column; gap:5px; padding:12px; justify-content:center; border-left:1px solid var(--border); min-width:94px; }
+    .clip-btn { padding:6px 10px; border-radius:7px; border:none; font-family:var(--font); font-size:11px; font-weight:600; text-align:center; transition:all var(--t) var(--ease); }
+    .cb-play  { background:var(--accent); color:#fff; }
+    .cb-play:hover { background:var(--accent-lt); }
+    .cb-ghost { background:var(--surface-2); color:var(--text-2); border:1px solid var(--border); }
+    .cb-ghost:hover { background:var(--surface-3); color:var(--text); }
+    .ts-panel  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .ts-scroll { max-height:260px; overflow-y:auto; font-family:var(--mono); font-size:11px; line-height:1.85; color:var(--text-2); background:var(--surface-2); border-radius:8px; padding:12px; border:1px solid var(--border); }
+    .ts-line { padding:2px 0; display:flex; gap:10px; border-radius:4px; transition:background .1s; }
+    .ts-line:hover { background:var(--surface-3); }
+    .ts-line.hl { background:var(--accent-bg); border-left:2px solid var(--accent); padding-left:6px; }
+    .ts-t { color:var(--accent); font-weight:600; width:40px; flex-shrink:0; cursor:pointer; }
+    .ts-t:hover { text-decoration:underline; }
+    .ts-tx { flex:1; color:var(--text-2); }
+
+    /* ══════════════════════════════════════
+       TAB 2 — VIRAL FINDER (non-country)
+    ══════════════════════════════════════ */
+    .filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
+    .filter-lbl { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); flex-shrink:0; }
+    .chip { padding:5px 12px; border-radius:99px; border:1px solid var(--border); background:var(--surface); font-size:11px; font-family:var(--mono); color:var(--muted); font-weight:500; transition:all var(--t) var(--ease); }
+    .chip.active { background:var(--surface-3); border-color:var(--border-2); color:var(--text); }
+    .chip:hover:not(.active) { border-color:var(--border-2); color:var(--text-2); }
+    .results-hd { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+    .results-title { font-size:16px; font-weight:800; letter-spacing:-.3px; }
+    .results-meta  { font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:2px; }
+    .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr)); gap:12px; }
+    @media (max-width:480px) { .video-grid { grid-template-columns:1fr; } }
+    .video-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); transition:border-color var(--t) var(--ease),transform .2s,box-shadow .2s; }
+    .video-card:hover { border-color:var(--border-2); transform:translateY(-2px); box-shadow:var(--shadow); }
+    .vc-thumb { position:relative; aspect-ratio:16/9; background:var(--surface-3); overflow:hidden; cursor:pointer; }
+    .vc-thumb img { width:100%; height:100%; object-fit:cover; transition:transform .35s; }
+    .video-card:hover .vc-thumb img { transform:scale(1.04); }
+    .vc-no-img { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:28px; }
+    .vc-dur   { position:absolute; bottom:7px; right:7px; background:rgba(0,0,0,.72); color:#fff; font-family:var(--mono); font-size:10px; font-weight:500; padding:2px 6px; border-radius:4px; }
+    .vc-flag  { position:absolute; top:8px; left:8px; font-size:15px; background:rgba(0,0,0,.35); border-radius:5px; padding:2px 5px; line-height:1.3; }
+    .vc-viral { position:absolute; top:8px; right:8px; font-family:var(--mono); font-size:9px; font-weight:700; padding:2px 7px; border-radius:99px; }
+    .v-hot  { background:var(--red);  color:#fff; }
+    .v-warm { background:var(--gold); color:#fff; }
+    .v-ok   { background:rgba(0,0,0,.45); color:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.15); }
+    .vc-body  { padding:12px 14px; }
+    .vc-title { font-size:13px; font-weight:600; line-height:1.45; margin-bottom:5px; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-clamp:2; }
+    .vc-ch    { font-size:10px; color:var(--muted); font-family:var(--mono); margin-bottom:8px; }
+    .vc-stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+    .vc-stat  { display:flex; align-items:center; gap:3px; font-family:var(--mono); font-size:10px; }
+    .vc-stat-v { font-weight:600; color:var(--text); }
+    .vc-stat-l { color:var(--muted); }
+    .safety-row  { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+    .safety-lbl  { font-size:10px; font-family:var(--mono); color:var(--muted); }
+    .safety-val  { font-size:10px; font-family:var(--mono); font-weight:700; }
+    .safety-bar  { height:3px; border-radius:99px; background:var(--surface-3); margin-bottom:8px; overflow:hidden; }
+    .safety-fill { height:3px; border-radius:99px; }
+    .vc-tags { display:flex; flex-wrap:wrap; gap:3px; margin-bottom:10px; }
+    .vc-tag  { font-family:var(--mono); font-size:9px; padding:2px 6px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); color:var(--muted); }
+    .vc-actions { display:flex; gap:5px; }
+    .vc-btn { flex:1; padding:7px 6px; border-radius:7px; border:1px solid var(--border); background:var(--surface-2); font-family:var(--font); font-size:11px; font-weight:600; color:var(--text-2); text-align:center; transition:all var(--t) var(--ease); }
+    .vc-btn:hover        { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
+    .vc-btn.vc-primary:hover { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .pagination { display:flex; gap:5px; justify-content:center; padding-top:22px; flex-wrap:wrap; }
+    .pg-btn { padding:6px 12px; border-radius:7px; border:1px solid var(--border); background:var(--surface); font-family:var(--mono); font-size:11px; color:var(--muted); transition:all var(--t) var(--ease); }
+    .pg-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
+    .pg-btn.active   { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .pg-btn:disabled { opacity:.3; cursor:default; }
+
+    /* ══════════════════════════════════════
+       TAB 3 — GUIDE
+    ══════════════════════════════════════ */
+    .guide-intro { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:var(--radius-lg); padding:22px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .guide-intro h2 { font-size:17px; font-weight:800; margin-bottom:7px; letter-spacing:-.3px; }
+    .guide-intro p  { font-size:13px; color:var(--text-2); line-height:1.65; }
+    .cpm-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .cpm-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:12px; }
+    .cpm-table th { padding:8px 10px; text-align:left; background:var(--surface-2); color:var(--muted); font-family:var(--mono); font-size:9.5px; letter-spacing:1px; }
+    .cpm-table th:first-child { border-radius:6px 0 0 6px; }
+    .cpm-table th:last-child  { border-radius:0 6px 6px 0; }
+    .cpm-table td { padding:8px 10px; border-top:1px solid var(--border); color:var(--text-2); font-family:var(--mono); font-size:11px; }
+    .cpm-table .hl { color:var(--gold); font-weight:600; }
+    .cpm-table tr:hover td { background:var(--surface-2); }
+    .steps-list { display:flex; flex-direction:column; gap:10px; }
+    .step-card  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; display:grid; grid-template-columns:40px 1fr; gap:16px; box-shadow:var(--shadow-sm); }
+    .step-num   { width:36px; height:36px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; font-weight:700; }
+    .sn-green { background:var(--accent-bg);  color:var(--accent); border:1px solid var(--accent-bg2); }
+    .sn-gold  { background:var(--gold-bg);    color:var(--gold);   border:1px solid rgba(176,128,48,.2); }
+    .sn-teal  { background:var(--green-bg);   color:var(--green);  border:1px solid rgba(61,138,94,.2); }
+    .sn-blue  { background:var(--blue-bg);    color:var(--blue);   border:1px solid rgba(61,111,168,.2); }
+    .step-body h3  { font-size:14px; font-weight:700; margin-bottom:7px; }
+    .step-body p, .step-body li { font-size:12.5px; color:var(--text-2); line-height:1.7; }
+    .step-body ul  { padding-left:16px; }
+    .step-body strong { color:var(--text); font-weight:600; }
+    .step-note { padding:9px 12px; border-radius:7px; margin-top:10px; font-size:11px; font-family:var(--mono); line-height:1.55; }
+    .note-warn   { background:var(--gold-bg);  border:1px solid rgba(176,128,48,.2); color:var(--gold);  }
+    .note-ok     { background:var(--green-bg); border:1px solid rgba(61,138,94,.2);  color:var(--green); }
+    .note-danger { background:var(--red-bg);   border:1px solid rgba(184,64,64,.2);  color:var(--red);   }
+    .pill-row { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+    .pill       { font-family:var(--mono); font-size:10px; padding:3px 9px; border-radius:99px; font-weight:500; }
+    .pill-green { background:var(--green-bg); color:var(--green); border:1px solid rgba(61,138,94,.2); }
+    .pill-gold  { background:var(--gold-bg);  color:var(--gold);  border:1px solid rgba(176,128,48,.2); }
+    .pill-red   { background:var(--red-bg);   color:var(--red);   border:1px solid rgba(184,64,64,.2);  }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media (max-width:640px) {
+      .header-logo-row { padding:12px 16px 8px; }
+      .header-right-actions { right:16px; }
+      .nav-tab { padding:0 14px; font-size:12px; }
+      .nav-tab span:not(.tab-icon) { display:none; }
+      .main-wrap { padding:18px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="app-header">
+
+  <!-- Row 1: Logo (centered) + Theme toggle (right) -->
+  <div class="header-logo-row">
+    <a class="logo" href="#" aria-label="ClipStudio Home">
+      <div class="logo-icon-wrap">
+        <div class="logo-ring"></div>
+        <div class="logo-box">
+          <!-- Scissors / film clip icon -->
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" opacity=".9"/>
+            <path d="M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" opacity=".9"/>
+            <line x1="20" y1="4" x2="8.12" y2="15.88" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <line x1="14.47" y1="14.48" x2="20" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <line x1="8.12" y1="8.12" x2="12" y2="12" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <div class="logo-text">
+        <div class="logo-wordmark">
+          <span class="logo-clip">Clip</span><span class="logo-studio">Studio</span>
+        </div>
+        <div class="logo-badge">YouTube Clip &amp; Viral Finder</div>
+      </div>
+    </a>
+
+    <div class="header-right-actions">
+      <button class="theme-toggle" id="btn-theme" title="Toggle theme" aria-label="Toggle dark/light mode">
+        <span class="toggle-icon icon-sun">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </span>
+        <span class="toggle-icon icon-moon">
+          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Row 2: Nav + Reset -->
+  <div class="header-nav">
+    <nav class="nav-tabs" id="main-nav">
+      <!-- Clip Highlighter: scissors icon -->
+      <button class="nav-tab active" data-tab="highlighter">
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+        </span>
+        <span>Clip Highlighter</span>
+      </button>
+      <!-- Viral Finder: flame / trending icon -->
+      <button class="nav-tab" data-tab="finder">
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24"><path d="M13 2c0 0-1.5 3-1 5.5C12.5 10 15 11 15 14c0 2.5-2 4.5-5 4.5S5 16 5 14c0-2 1-3.5 2-4.5 0 0 0 2 1.5 3 0-3 1-5 4.5-11z"/><path d="M10.5 14.5c-.5 1 0 2 1.5 2s2-1 1.5-2c-.3-.8-1-1-1.5-2-.5 1-.5 1.5-1.5 2z"/></svg>
+        </span>
+        <span>Viral Finder</span>
+      </button>
+      <!-- Guide: book / compass icon -->
+      <button class="nav-tab" data-tab="guide">
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </span>
+        <span>Panduan</span>
+      </button>
+
+      <!-- Reset — aligned right inside nav bar -->
+      <div class="nav-reset">
+        <button class="btn-reset" id="btn-reset">
+          <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.69"/></svg>
+          Reset
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+<div class="main-wrap">
+
+  <!-- ══════════════════════════════════════════════
+       TAB: CLIP HIGHLIGHTER
+  ══════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-highlighter">
+    <div class="card">
+      <div class="card-label">Clip Highlighter — Analyze Video</div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-lbl" for="yt-api-key">YouTube API Key <span class="req">*</span></label>
+          <input class="f-input" type="password" id="yt-api-key" placeholder="AIzaSy…" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="field-lbl" for="claude-api-key">Claude API Key <span class="req">*</span></label>
+          <input class="f-input" type="password" id="claude-api-key" placeholder="sk-ant-…" autocomplete="off" />
+        </div>
+      </div>
+      <div class="row-flex">
+        <input class="f-input f-text" type="text" id="video-url" placeholder="Paste YouTube URL or Video ID…" />
+        <button class="btn btn-primary" id="btn-analyze">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Analyze
+        </button>
+      </div>
+      <div class="opts-flex">
+        <div class="opt-group">
+          <div class="opt-lbl">Clip Count</div>
+          <select class="f-select" id="clip-count" style="min-width:110px">
+            <option value="3">3 clips</option>
+            <option value="5" selected>5 clips</option>
+            <option value="7">7 clips</option>
+            <option value="10">10 clips</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <div class="opt-lbl">Clip Length</div>
+          <select class="f-select" id="clip-length" style="min-width:100px">
+            <option value="30">~30 sec</option>
+            <option value="60" selected>~60 sec</option>
+            <option value="90">~90 sec</option>
+            <option value="120">~2 min</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <div class="opt-lbl">Platform</div>
+          <select class="f-select" id="platform" style="min-width:150px">
+            <option value="tiktok">TikTok</option>
+            <option value="reels" selected>Instagram Reels</option>
+            <option value="shorts">YouTube Shorts</option>
+            <option value="all">All Platforms</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <div class="opt-lbl">Language</div>
+          <select class="f-select" id="language" style="min-width:140px">
+            <option value="id" selected>Bahasa Indonesia</option>
+            <option value="en">English</option>
+            <option value="auto">Auto Detect</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div id="hl-alert" class="hidden"></div>
+    <div id="hl-loading" class="loading hidden"><div class="spinner"></div> Analyzing video with AI…</div>
+
+    <div id="hl-results" class="hidden">
+      <div class="vid-card">
+        <div class="vid-thumb" id="hl-thumb">
+          <img id="hl-thumb-img" src="" alt="thumbnail" />
+          <div class="play-ov"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-title" id="hl-title">—</div>
+          <div class="vid-channel" id="hl-channel">—</div>
+          <div class="vid-stats" id="hl-stats"></div>
+          <p class="vid-desc" id="hl-desc"></p>
+          <div class="vid-actions">
+            <button class="btn btn-primary btn-sm" id="btn-export-clips">⬇ Export JSON</button>
+            <button class="btn btn-ghost btn-sm" id="btn-transcript">📝 Transcript</button>
+            <button class="btn btn-ghost btn-sm" id="btn-report">📋 Copy Report</button>
+          </div>
+        </div>
+      </div>
+      <div class="player-wrap hidden" id="hl-player"></div>
+      <div class="sum-grid" id="hl-stats-grid"></div>
+      <div class="tl-wrap">
+        <div class="sec-hd">
+          <div class="sec-title">Content Timeline</div>
+          <div class="tl-legend" id="tl-legend"></div>
+        </div>
+        <div class="tl-bar" id="tl-bar"><div class="tl-grid"></div></div>
+        <div class="tl-axis" id="tl-axis"></div>
+      </div>
+      <div class="tl-wrap">
+        <div class="clips-hd">
+          <span class="clips-meta" id="clips-meta-lbl">Clips</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" id="btn-sort-score">Sort: Score</button>
+            <button class="btn btn-ghost btn-sm" id="btn-sort-time">Sort: Time</button>
+          </div>
+        </div>
+        <div class="clips-list" id="clips-container"></div>
+      </div>
+      <div class="ts-panel hidden" id="ts-panel">
+        <div class="sec-hd">
+          <div class="sec-title">Transcript</div>
+          <button class="btn btn-ghost btn-sm" id="btn-close-ts">✕ Close</button>
+        </div>
+        <div class="ts-scroll" id="ts-scroll"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: VIRAL FINDER
+  ══════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-finder">
+    <div class="card">
+      <div class="card-label">Viral Finder — Discover Trending Content</div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-lbl" for="vf-yt-key">YouTube API Key <span class="req">*</span></label>
+          <input class="f-input" type="password" id="vf-yt-key" placeholder="AIzaSy…" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="field-lbl" for="vf-claude-key">Claude API Key <span class="opt">(optional)</span></label>
+          <input class="f-input" type="password" id="vf-claude-key" placeholder="sk-ant-…" autocomplete="off" />
+        </div>
+      </div>
+      <div class="grid-1">
+        <div class="field">
+          <label class="field-lbl" for="vf-keyword">Keyword / Niche</label>
+          <input class="f-input f-text" type="text" id="vf-keyword" placeholder="e.g. cooking tutorial, fitness tips, tech review…" />
+        </div>
+      </div>
+
+      <!-- COUNTRY SELECTOR -->
+      <div class="card-label" style="margin-bottom:10px">Target Region</div>
+
+      <!-- Toolbar: search + region tabs -->
+      <div class="country-toolbar">
+        <input class="country-search" type="text" id="cc-search" placeholder="Search country…" />
+        <div class="cc-region-tabs" id="cc-region-tabs">
+          <button class="cc-region-tab active" data-region="all">All</button>
+          <button class="cc-region-tab" data-region="asia">Asia</button>
+          <button class="cc-region-tab" data-region="europe">Europe</button>
+          <button class="cc-region-tab" data-region="americas">Americas</button>
+          <button class="cc-region-tab" data-region="africa">Africa</button>
+          <button class="cc-region-tab" data-region="oceania">Oceania</button>
+          <button class="cc-region-tab" data-region="middle-east">Middle East</button>
+        </div>
+      </div>
+
+      <div class="cc-count" id="cc-count"><strong>0</strong> countries selected</div>
+      <div class="country-grid" id="country-grid">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Filter chips -->
+      <div class="filter-bar">
+        <span class="filter-lbl">Filter:</span>
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="hot">🔥 Viral Hot</button>
+        <button class="chip" data-filter="shorts">⚡ Shorts</button>
+        <button class="chip" data-filter="safe">✅ Brand Safe</button>
+        <button class="chip" data-filter="new">🆕 New</button>
+      </div>
+
+      <div class="opts-flex">
+        <div class="opt-group">
+          <div class="opt-lbl">Sort by</div>
+          <select class="f-select" id="vf-sort" style="min-width:130px">
+            <option value="viral">Viral Score</option>
+            <option value="views">View Count</option>
+            <option value="recent">Most Recent</option>
+            <option value="engagement">Engagement</option>
+          </select>
+        </div>
+        <div class="opt-group">
+          <div class="opt-lbl">Results</div>
+          <select class="f-select" id="vf-per-page" style="min-width:110px">
+            <option value="9">9 per page</option>
+            <option value="18" selected>18 per page</option>
+            <option value="27">27 per page</option>
+          </select>
+        </div>
+        <div style="margin-top:auto">
+          <button class="btn btn-primary" id="btn-find-viral">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Find Viral
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="vf-alert" class="hidden"></div>
+    <div id="vf-loading" class="loading hidden"><div class="spinner"></div> Searching viral content…</div>
+    <div id="vf-results" class="hidden">
+      <div class="results-hd">
+        <div>
+          <div class="results-title" id="vf-title">Viral Videos</div>
+          <div class="results-meta"  id="vf-meta"></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="btn-export-vf">⬇ Export CSV</button>
+      </div>
+      <div class="video-grid" id="vf-grid"></div>
+      <div class="pagination"  id="vf-pagination"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       TAB: GUIDE
+  ══════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-guide">
+    <div class="guide-intro">
+      <h2>Panduan Penggunaan ClipStudio</h2>
+      <p>ClipStudio dirancang untuk membantu Anda menemukan momen paling viral dari video YouTube dan mengidentifikasi konten trending di berbagai penjuru dunia. Gunakan <strong>Clip Highlighter</strong> untuk menganalisis video secara mendalam, atau <strong>Viral Finder</strong> untuk menemukan konten populer berdasarkan niche dan region pilihan Anda.</p>
+    </div>
+    <div class="cpm-card">
+      <div class="sec-title" style="margin-bottom:4px">💰 Estimasi CPM berdasarkan Region</div>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">Estimasi CPM untuk konten klip pendek (Shorts/Reels). Angka bersifat indikatif dan dapat berubah sesuai niche dan musim.</p>
+      <table class="cpm-table">
+        <thead><tr><th>Region</th><th>Rentang CPM</th><th>Niche Terbaik</th><th>Potensi</th></tr></thead>
+        <tbody>
+          <tr><td>🇺🇸 Amerika Serikat</td><td class="hl">$8–$18</td><td>Keuangan, Teknologi, Kesehatan</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
+          <tr><td>🇬🇧 Inggris</td><td class="hl">$7–$14</td><td>Bisnis, Gaya Hidup</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
+          <tr><td>🇦🇺 Australia</td><td class="hl">$6–$13</td><td>Travel, Keuangan</td><td class="hl">⭐⭐⭐⭐</td></tr>
+          <tr><td>🇩🇪 Jerman</td><td>$5–$11</td><td>Teknik, Otomotif</td><td>⭐⭐⭐⭐</td></tr>
+          <tr><td>🇸🇬 Singapura</td><td>$4–$10</td><td>Bisnis, Properti</td><td>⭐⭐⭐</td></tr>
+          <tr><td>🇯🇵 Jepang</td><td>$4–$9</td><td>Gaming, Anime</td><td>⭐⭐⭐</td></tr>
+          <tr><td>🇰🇷 Korea Selatan</td><td>$3–$8</td><td>K-Pop, Kecantikan</td><td>⭐⭐⭐</td></tr>
+          <tr><td>🇮🇩 Indonesia</td><td>$0.8–$2.5</td><td>Hiburan, Komedi, Edukasi</td><td>⭐⭐</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:10px;font-size:15px;font-weight:700">🚀 Cara Menggunakan ClipStudio</div>
+    <div class="steps-list">
+      <div class="step-card">
+        <div class="step-num sn-green">01</div>
+        <div class="step-body">
+          <h3>Siapkan API Key</h3>
+          <p>Dua API key yang perlu Anda siapkan sebelum menggunakan ClipStudio:</p>
+          <ul>
+            <li><strong>YouTube Data API v3</strong> — Digunakan untuk mengambil metadata video, statistik, dan transcript. Daftar secara gratis melalui <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">Google Cloud Console</a>, lalu aktifkan YouTube Data API v3 di project Anda.</li>
+            <li><strong>Claude API</strong> — Digunakan sebagai mesin AI untuk menganalisis konten viral dan menghasilkan caption. Daftar melalui <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">Anthropic Console</a>.</li>
+          </ul>
+          <div class="step-note note-warn">⚠️ Jangan pernah membagikan API key Anda kepada siapa pun. API key bersifat rahasia dan pribadi.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num sn-gold">02</div>
+        <div class="step-body">
+          <h3>Gunakan Clip Highlighter</h3>
+          <p>Masukkan URL YouTube atau Video ID, atur jumlah klip, panjang klip, dan platform target, kemudian klik <strong>Analyze</strong>. AI akan menganalisis pola engagement dan konten video untuk menemukan segmen yang paling berpotensi viral, lengkap dengan:</p>
+          <ul>
+            <li>Skor viral dan hook untuk setiap klip yang direkomendasikan</li>
+            <li>Alasan ilmiah mengapa segmen tersebut berpotensi viral</li>
+            <li>Caption siap pakai untuk diunggah ke media sosial</li>
+            <li>Visualisasi timeline interaktif</li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill pill-green">✓ Deteksi Hook</span>
+            <span class="pill pill-green">✓ Viral Score</span>
+            <span class="pill pill-green">✓ AI Caption</span>
+            <span class="pill pill-green">✓ Timeline Visual</span>
+          </div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num sn-teal">03</div>
+        <div class="step-body">
+          <h3>Gunakan Viral Finder</h3>
+          <p>Masukkan keyword atau niche yang ingin Anda riset, pilih satu atau beberapa negara target (gunakan tombol <strong>Select All</strong> untuk memilih semua), lalu klik <strong>Find Viral</strong>. Sistem akan mencari video dengan skor viral tinggi dari setiap region yang dipilih dan menampilkan:</p>
+          <ul>
+            <li>Jumlah penayangan, like, dan komentar secara real-time</li>
+            <li>Brand safety score untuk keamanan monetisasi</li>
+            <li>Indikator video pendek (Shorts) dan status trending</li>
+          </ul>
+          <div class="step-note note-ok">✓ Prioritaskan region US, UK, dan Australia untuk mendapatkan estimasi CPM yang lebih tinggi.</div>
+          <div class="step-note note-warn" style="margin-top:6px">⚠️ YouTube API membatasi pencarian per region. Saat memilih banyak negara, sistem akan mengambil data dari maksimal 3 region sekaligus untuk menjaga kuota API Anda.</div>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num sn-blue">04</div>
+        <div class="step-body">
+          <h3>Export dan Monetisasi</h3>
+          <p>Setelah analisis selesai, Anda dapat memanfaatkan hasilnya dengan beberapa cara:</p>
+          <ul>
+            <li>Klik <strong>Export JSON</strong> untuk mengunduh semua data klip yang direkomendasikan</li>
+            <li>Klik <strong>Export CSV</strong> di Viral Finder untuk menyimpan daftar video ke spreadsheet</li>
+            <li>Gunakan timestamp yang tersedia untuk memotong video di CapCut, Adobe Premiere, atau DaVinci Resolve</li>
+            <li>Salin AI-generated caption langsung ke TikTok, Instagram Reels, atau YouTube Shorts</li>
+          </ul>
+          <div class="step-note note-danger">❌ Hindari mengunggah ulang video tanpa modifikasi. Selalu tambahkan nilai orisinal agar tidak terkena pelanggaran hak cipta.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── Helpers ─── */
+  const $ = id => document.getElementById(id);
+  const $$ = sel => document.querySelectorAll(sel);
+  const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+  const fmtDur = sec => Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0');
+  const scoreColor = s => s>=80?'var(--green)':s>=60?'var(--gold)':s>=40?'var(--coral)':'var(--red)';
+
+  function showAlert(id, type, msg) {
+    const el = $(id);
+    el.className = 'alert alert-' + type;
+    el.textContent = msg;
+    el.classList.remove('hidden');
+  }
+  function hideAlert(id) { $(id).className = 'hidden'; }
+
+  function showToast(msg) {
+    $$('.cs-toast').forEach(t => t.remove());
+    const t = document.createElement('div');
+    t.className = 'cs-toast';
+    t.textContent = msg;
+    Object.assign(t.style, {
+      position:'fixed', bottom:'28px', left:'50%',
+      transform:'translateX(-50%) translateY(10px)',
+      background:'var(--text)', color:'var(--bg)',
+      padding:'8px 18px', borderRadius:'99px',
+      fontFamily:'var(--mono)', fontSize:'12px', fontWeight:'500',
+      boxShadow:'var(--shadow)', zIndex:'9999', whiteSpace:'nowrap',
+      opacity:'0', transition:'opacity .2s, transform .2s',
+    });
+    document.body.appendChild(t);
+    requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+    setTimeout(() => {
+      t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)';
+      setTimeout(() => t.remove(), 250);
+    }, 2500);
+  }
+
+  /* ─── Theme ─── */
+  (function(){
+    const s = localStorage.getItem('cs-theme');
+    if (s) document.documentElement.setAttribute('data-theme', s);
+  })();
+  $('btn-theme').addEventListener('click', () => {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('cs-theme', next);
+  });
+
+  /* ─── Tab Switching ─── */
+  $$('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('.nav-tab').forEach(b => b.classList.remove('active'));
+      $$('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const panel = $('tab-' + btn.dataset.tab);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  /* ─── Reset ─── */
+  $('btn-reset').addEventListener('click', () => {
+    const active = document.querySelector('.tab-panel.active');
+    if (!active) return;
+    active.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
+    ['hl-results','vf-results'].forEach(id => $(id) && $(id).classList.add('hidden'));
+    hideAlert('hl-alert'); hideAlert('vf-alert');
+    currentVideoId = null; currentClips = []; currentMeta = null;
+  });
+
+  /* ─── Filter chips ─── */
+  $$('.chip').forEach(c => c.addEventListener('click', () => {
+    $$('.chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+  }));
+
+  /* ══════════════════════════════════════
+     WORLD COUNTRIES DATABASE
+  ══════════════════════════════════════ */
+  const COUNTRIES = [
+    // Asia
+    {cc:'AF',flag:'🇦🇫',name:'Afghanistan',region:'asia'},
+    {cc:'AM',flag:'🇦🇲',name:'Armenia',region:'asia'},
+    {cc:'AZ',flag:'🇦🇿',name:'Azerbaijan',region:'asia'},
+    {cc:'BH',flag:'🇧🇭',name:'Bahrain',region:'middle-east'},
+    {cc:'BD',flag:'🇧🇩',name:'Bangladesh',region:'asia'},
+    {cc:'BT',flag:'🇧🇹',name:'Bhutan',region:'asia'},
+    {cc:'BN',flag:'🇧🇳',name:'Brunei',region:'asia'},
+    {cc:'KH',flag:'🇰🇭',name:'Cambodia',region:'asia'},
+    {cc:'CN',flag:'🇨🇳',name:'China',region:'asia'},
+    {cc:'CY',flag:'🇨🇾',name:'Cyprus',region:'asia'},
+    {cc:'GE',flag:'🇬🇪',name:'Georgia',region:'asia'},
+    {cc:'IN',flag:'🇮🇳',name:'India',region:'asia'},
+    {cc:'ID',flag:'🇮🇩',name:'Indonesia',region:'asia'},
+    {cc:'IR',flag:'🇮🇷',name:'Iran',region:'middle-east'},
+    {cc:'IQ',flag:'🇮🇶',name:'Iraq',region:'middle-east'},
+    {cc:'IL',flag:'🇮🇱',name:'Israel',region:'middle-east'},
+    {cc:'JP',flag:'🇯🇵',name:'Japan',region:'asia'},
+    {cc:'JO',flag:'🇯🇴',name:'Jordan',region:'middle-east'},
+    {cc:'KZ',flag:'🇰🇿',name:'Kazakhstan',region:'asia'},
+    {cc:'KW',flag:'🇰🇼',name:'Kuwait',region:'middle-east'},
+    {cc:'KG',flag:'🇰🇬',name:'Kyrgyzstan',region:'asia'},
+    {cc:'LA',flag:'🇱🇦',name:'Laos',region:'asia'},
+    {cc:'LB',flag:'🇱🇧',name:'Lebanon',region:'middle-east'},
+    {cc:'MY',flag:'🇲🇾',name:'Malaysia',region:'asia'},
+    {cc:'MV',flag:'🇲🇻',name:'Maldives',region:'asia'},
+    {cc:'MN',flag:'🇲🇳',name:'Mongolia',region:'asia'},
+    {cc:'MM',flag:'🇲🇲',name:'Myanmar',region:'asia'},
+    {cc:'NP',flag:'🇳🇵',name:'Nepal',region:'asia'},
+    {cc:'KP',flag:'🇰🇵',name:'North Korea',region:'asia'},
+    {cc:'OM',flag:'🇴🇲',name:'Oman',region:'middle-east'},
+    {cc:'PK',flag:'🇵🇰',name:'Pakistan',region:'asia'},
+    {cc:'PS',flag:'🇵🇸',name:'Palestine',region:'middle-east'},
+    {cc:'PH',flag:'🇵🇭',name:'Philippines',region:'asia'},
+    {cc:'QA',flag:'🇶🇦',name:'Qatar',region:'middle-east'},
+    {cc:'SA',flag:'🇸🇦',name:'Saudi Arabia',region:'middle-east'},
+    {cc:'SG',flag:'🇸🇬',name:'Singapore',region:'asia'},
+    {cc:'KR',flag:'🇰🇷',name:'South Korea',region:'asia'},
+    {cc:'LK',flag:'🇱🇰',name:'Sri Lanka',region:'asia'},
+    {cc:'SY',flag:'🇸🇾',name:'Syria',region:'middle-east'},
+    {cc:'TW',flag:'🇹🇼',name:'Taiwan',region:'asia'},
+    {cc:'TJ',flag:'🇹🇯',name:'Tajikistan',region:'asia'},
+    {cc:'TH',flag:'🇹🇭',name:'Thailand',region:'asia'},
+    {cc:'TL',flag:'🇹🇱',name:'Timor-Leste',region:'asia'},
+    {cc:'TR',flag:'🇹🇷',name:'Türkiye',region:'asia'},
+    {cc:'TM',flag:'🇹🇲',name:'Turkmenistan',region:'asia'},
+    {cc:'AE',flag:'🇦🇪',name:'UAE',region:'middle-east'},
+    {cc:'UZ',flag:'🇺🇿',name:'Uzbekistan',region:'asia'},
+    {cc:'VN',flag:'🇻🇳',name:'Vietnam',region:'asia'},
+    {cc:'YE',flag:'🇾🇪',name:'Yemen',region:'middle-east'},
+    // Europe
+    {cc:'AL',flag:'🇦🇱',name:'Albania',region:'europe'},
+    {cc:'AD',flag:'🇦🇩',name:'Andorra',region:'europe'},
+    {cc:'AT',flag:'🇦🇹',name:'Austria',region:'europe'},
+    {cc:'BY',flag:'🇧🇾',name:'Belarus',region:'europe'},
+    {cc:'BE',flag:'🇧🇪',name:'Belgium',region:'europe'},
+    {cc:'BA',flag:'🇧🇦',name:'Bosnia',region:'europe'},
+    {cc:'BG',flag:'🇧🇬',name:'Bulgaria',region:'europe'},
+    {cc:'HR',flag:'🇭🇷',name:'Croatia',region:'europe'},
+    {cc:'CZ',flag:'🇨🇿',name:'Czechia',region:'europe'},
+    {cc:'DK',flag:'🇩🇰',name:'Denmark',region:'europe'},
+    {cc:'EE',flag:'🇪🇪',name:'Estonia',region:'europe'},
+    {cc:'FI',flag:'🇫🇮',name:'Finland',region:'europe'},
+    {cc:'FR',flag:'🇫🇷',name:'France',region:'europe'},
+    {cc:'DE',flag:'🇩🇪',name:'Germany',region:'europe'},
+    {cc:'GR',flag:'🇬🇷',name:'Greece',region:'europe'},
+    {cc:'HU',flag:'🇭🇺',name:'Hungary',region:'europe'},
+    {cc:'IS',flag:'🇮🇸',name:'Iceland',region:'europe'},
+    {cc:'IE',flag:'🇮🇪',name:'Ireland',region:'europe'},
+    {cc:'IT',flag:'🇮🇹',name:'Italy',region:'europe'},
+    {cc:'XK',flag:'🇽🇰',name:'Kosovo',region:'europe'},
+    {cc:'LV',flag:'🇱🇻',name:'Latvia',region:'europe'},
+    {cc:'LI',flag:'🇱🇮',name:'Liechtenstein',region:'europe'},
+    {cc:'LT',flag:'🇱🇹',name:'Lithuania',region:'europe'},
+    {cc:'LU',flag:'🇱🇺',name:'Luxembourg',region:'europe'},
+    {cc:'MT',flag:'🇲🇹',name:'Malta',region:'europe'},
+    {cc:'MD',flag:'🇲🇩',name:'Moldova',region:'europe'},
+    {cc:'MC',flag:'🇲🇨',name:'Monaco',region:'europe'},
+    {cc:'ME',flag:'🇲🇪',name:'Montenegro',region:'europe'},
+    {cc:'NL',flag:'🇳🇱',name:'Netherlands',region:'europe'},
+    {cc:'MK',flag:'🇲🇰',name:'North Macedonia',region:'europe'},
+    {cc:'NO',flag:'🇳🇴',name:'Norway',region:'europe'},
+    {cc:'PL',flag:'🇵🇱',name:'Poland',region:'europe'},
+    {cc:'PT',flag:'🇵🇹',name:'Portugal',region:'europe'},
+    {cc:'RO',flag:'🇷🇴',name:'Romania',region:'europe'},
+    {cc:'RU',flag:'🇷🇺',name:'Russia',region:'europe'},
+    {cc:'SM',flag:'🇸🇲',name:'San Marino',region:'europe'},
+    {cc:'RS',flag:'🇷🇸',name:'Serbia',region:'europe'},
+    {cc:'SK',flag:'🇸🇰',name:'Slovakia',region:'europe'},
+    {cc:'SI',flag:'🇸🇮',name:'Slovenia',region:'europe'},
+    {cc:'ES',flag:'🇪🇸',name:'Spain',region:'europe'},
+    {cc:'SE',flag:'🇸🇪',name:'Sweden',region:'europe'},
+    {cc:'CH',flag:'🇨🇭',name:'Switzerland',region:'europe'},
+    {cc:'UA',flag:'🇺🇦',name:'Ukraine',region:'europe'},
+    {cc:'GB',flag:'🇬🇧',name:'United Kingdom',region:'europe'},
+    {cc:'VA',flag:'🇻🇦',name:'Vatican',region:'europe'},
+    // Americas
+    {cc:'AG',flag:'🇦🇬',name:'Antigua',region:'americas'},
+    {cc:'AR',flag:'🇦🇷',name:'Argentina',region:'americas'},
+    {cc:'BS',flag:'🇧🇸',name:'Bahamas',region:'americas'},
+    {cc:'BB',flag:'🇧🇧',name:'Barbados',region:'americas'},
+    {cc:'BZ',flag:'🇧🇿',name:'Belize',region:'americas'},
+    {cc:'BO',flag:'🇧🇴',name:'Bolivia',region:'americas'},
+    {cc:'BR',flag:'🇧🇷',name:'Brazil',region:'americas'},
+    {cc:'CA',flag:'🇨🇦',name:'Canada',region:'americas'},
+    {cc:'CL',flag:'🇨🇱',name:'Chile',region:'americas'},
+    {cc:'CO',flag:'🇨🇴',name:'Colombia',region:'americas'},
+    {cc:'CR',flag:'🇨🇷',name:'Costa Rica',region:'americas'},
+    {cc:'CU',flag:'🇨🇺',name:'Cuba',region:'americas'},
+    {cc:'DM',flag:'🇩🇲',name:'Dominica',region:'americas'},
+    {cc:'DO',flag:'🇩🇴',name:'Dominican Rep.',region:'americas'},
+    {cc:'EC',flag:'🇪🇨',name:'Ecuador',region:'americas'},
+    {cc:'SV',flag:'🇸🇻',name:'El Salvador',region:'americas'},
+    {cc:'GD',flag:'🇬🇩',name:'Grenada',region:'americas'},
+    {cc:'GT',flag:'🇬🇹',name:'Guatemala',region:'americas'},
+    {cc:'GY',flag:'🇬🇾',name:'Guyana',region:'americas'},
+    {cc:'HT',flag:'🇭🇹',name:'Haiti',region:'americas'},
+    {cc:'HN',flag:'🇭🇳',name:'Honduras',region:'americas'},
+    {cc:'JM',flag:'🇯🇲',name:'Jamaica',region:'americas'},
+    {cc:'MX',flag:'🇲🇽',name:'Mexico',region:'americas'},
+    {cc:'NI',flag:'🇳🇮',name:'Nicaragua',region:'americas'},
+    {cc:'PA',flag:'🇵🇦',name:'Panama',region:'americas'},
+    {cc:'PY',flag:'🇵🇾',name:'Paraguay',region:'americas'},
+    {cc:'PE',flag:'🇵🇪',name:'Peru',region:'americas'},
+    {cc:'PR',flag:'🇵🇷',name:'Puerto Rico',region:'americas'},
+    {cc:'KN',flag:'🇰🇳',name:'Saint Kitts',region:'americas'},
+    {cc:'LC',flag:'🇱🇨',name:'Saint Lucia',region:'americas'},
+    {cc:'VC',flag:'🇻🇨',name:'Saint Vincent',region:'americas'},
+    {cc:'SR',flag:'🇸🇷',name:'Suriname',region:'americas'},
+    {cc:'TT',flag:'🇹🇹',name:'Trinidad',region:'americas'},
+    {cc:'US',flag:'🇺🇸',name:'United States',region:'americas'},
+    {cc:'UY',flag:'🇺🇾',name:'Uruguay',region:'americas'},
+    {cc:'VE',flag:'🇻🇪',name:'Venezuela',region:'americas'},
+    // Africa
+    {cc:'DZ',flag:'🇩🇿',name:'Algeria',region:'africa'},
+    {cc:'AO',flag:'🇦🇴',name:'Angola',region:'africa'},
+    {cc:'BJ',flag:'🇧🇯',name:'Benin',region:'africa'},
+    {cc:'BW',flag:'🇧🇼',name:'Botswana',region:'africa'},
+    {cc:'BF',flag:'🇧🇫',name:'Burkina Faso',region:'africa'},
+    {cc:'BI',flag:'🇧🇮',name:'Burundi',region:'africa'},
+    {cc:'CM',flag:'🇨🇲',name:'Cameroon',region:'africa'},
+    {cc:'CV',flag:'🇨🇻',name:'Cape Verde',region:'africa'},
+    {cc:'CF',flag:'🇨🇫',name:'Central African Rep.',region:'africa'},
+    {cc:'TD',flag:'🇹🇩',name:'Chad',region:'africa'},
+    {cc:'KM',flag:'🇰🇲',name:'Comoros',region:'africa'},
+    {cc:'CG',flag:'🇨🇬',name:'Congo',region:'africa'},
+    {cc:'CD',flag:'🇨🇩',name:'DR Congo',region:'africa'},
+    {cc:'DJ',flag:'🇩🇯',name:'Djibouti',region:'africa'},
+    {cc:'EG',flag:'🇪🇬',name:'Egypt',region:'africa'},
+    {cc:'GQ',flag:'🇬🇶',name:'Equatorial Guinea',region:'africa'},
+    {cc:'ER',flag:'🇪🇷',name:'Eritrea',region:'africa'},
+    {cc:'SZ',flag:'🇸🇿',name:'Eswatini',region:'africa'},
+    {cc:'ET',flag:'🇪🇹',name:'Ethiopia',region:'africa'},
+    {cc:'GA',flag:'🇬🇦',name:'Gabon',region:'africa'},
+    {cc:'GM',flag:'🇬🇲',name:'Gambia',region:'africa'},
+    {cc:'GH',flag:'🇬🇭',name:'Ghana',region:'africa'},
+    {cc:'GN',flag:'🇬🇳',name:'Guinea',region:'africa'},
+    {cc:'GW',flag:'🇬🇼',name:'Guinea-Bissau',region:'africa'},
+    {cc:'CI',flag:'🇨🇮',name:'Ivory Coast',region:'africa'},
+    {cc:'KE',flag:'🇰🇪',name:'Kenya',region:'africa'},
+    {cc:'LS',flag:'🇱🇸',name:'Lesotho',region:'africa'},
+    {cc:'LR',flag:'🇱🇷',name:'Liberia',region:'africa'},
+    {cc:'LY',flag:'🇱🇾',name:'Libya',region:'africa'},
+    {cc:'MG',flag:'🇲🇬',name:'Madagascar',region:'africa'},
+    {cc:'MW',flag:'🇲🇼',name:'Malawi',region:'africa'},
+    {cc:'ML',flag:'🇲🇱',name:'Mali',region:'africa'},
+    {cc:'MR',flag:'🇲🇷',name:'Mauritania',region:'africa'},
+    {cc:'MU',flag:'🇲🇺',name:'Mauritius',region:'africa'},
+    {cc:'MA',flag:'🇲🇦',name:'Morocco',region:'africa'},
+    {cc:'MZ',flag:'🇲🇿',name:'Mozambique',region:'africa'},
+    {cc:'NA',flag:'🇳🇦',name:'Namibia',region:'africa'},
+    {cc:'NE',flag:'🇳🇪',name:'Niger',region:'africa'},
+    {cc:'NG',flag:'🇳🇬',name:'Nigeria',region:'africa'},
+    {cc:'RW',flag:'🇷🇼',name:'Rwanda',region:'africa'},
+    {cc:'ST',flag:'🇸🇹',name:'São Tomé',region:'africa'},
+    {cc:'SN',flag:'🇸🇳',name:'Senegal',region:'africa'},
+    {cc:'SC',flag:'🇸🇨',name:'Seychelles',region:'africa'},
+    {cc:'SL',flag:'🇸🇱',name:'Sierra Leone',region:'africa'},
+    {cc:'SO',flag:'🇸🇴',name:'Somalia',region:'africa'},
+    {cc:'ZA',flag:'🇿🇦',name:'South Africa',region:'africa'},
+    {cc:'SS',flag:'🇸🇸',name:'South Sudan',region:'africa'},
+    {cc:'SD',flag:'🇸🇩',name:'Sudan',region:'africa'},
+    {cc:'TZ',flag:'🇹🇿',name:'Tanzania',region:'africa'},
+    {cc:'TG',flag:'🇹🇬',name:'Togo',region:'africa'},
+    {cc:'TN',flag:'🇹🇳',name:'Tunisia',region:'africa'},
+    {cc:'UG',flag:'🇺🇬',name:'Uganda',region:'africa'},
+    {cc:'ZM',flag:'🇿🇲',name:'Zambia',region:'africa'},
+    {cc:'ZW',flag:'🇿🇼',name:'Zimbabwe',region:'africa'},
+    // Oceania
+    {cc:'AU',flag:'🇦🇺',name:'Australia',region:'oceania'},
+    {cc:'FJ',flag:'🇫🇯',name:'Fiji',region:'oceania'},
+    {cc:'KI',flag:'🇰🇮',name:'Kiribati',region:'oceania'},
+    {cc:'MH',flag:'🇲🇭',name:'Marshall Islands',region:'oceania'},
+    {cc:'FM',flag:'🇫🇲',name:'Micronesia',region:'oceania'},
+    {cc:'NR',flag:'🇳🇷',name:'Nauru',region:'oceania'},
+    {cc:'NZ',flag:'🇳🇿',name:'New Zealand',region:'oceania'},
+    {cc:'PW',flag:'🇵🇼',name:'Palau',region:'oceania'},
+    {cc:'PG',flag:'🇵🇬',name:'Papua New Guinea',region:'oceania'},
+    {cc:'WS',flag:'🇼🇸',name:'Samoa',region:'oceania'},
+    {cc:'SB',flag:'🇸🇧',name:'Solomon Islands',region:'oceania'},
+    {cc:'TO',flag:'🇹🇴',name:'Tonga',region:'oceania'},
+    {cc:'TV',flag:'🇹🇻',name:'Tuvalu',region:'oceania'},
+    {cc:'VU',flag:'🇻🇺',name:'Vanuatu',region:'oceania'},
+  ];
+
+  /* Country state */
+  let selectedCCs    = new Set(['US']);
+  let currentRegion  = 'all';
+  let searchQuery    = '';
+
+  function renderCountryGrid() {
+    const grid = $('country-grid');
+    const filtered = COUNTRIES.filter(c => {
+      const matchRegion = currentRegion === 'all' || c.region === currentRegion;
+      const matchSearch = !searchQuery || c.name.toLowerCase().includes(searchQuery) || c.cc.toLowerCase().includes(searchQuery);
+      return matchRegion && matchSearch;
+    });
+
+    const allSelected = filtered.length > 0 && filtered.every(c => selectedCCs.has(c.cc));
+    const btnLabel = allSelected ? 'Deselect All Shown' : 'Select All Shown';
+
+    grid.innerHTML =
+      `<button class="cc-select-all" id="cc-select-all-btn">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        ${btnLabel} (${filtered.length})
+      </button>` +
+      filtered.map(c =>
+        `<button class="cc-btn${selectedCCs.has(c.cc) ? ' selected' : ''}" data-cc="${c.cc}" title="${c.name}">
+          <span class="flag">${c.flag}</span>${c.cc}
+        </button>`
+      ).join('');
+
+    // Select all btn
+    $('cc-select-all-btn').addEventListener('click', () => {
+      if (allSelected) {
+        filtered.forEach(c => selectedCCs.delete(c.cc));
+      } else {
+        filtered.forEach(c => selectedCCs.add(c.cc));
+      }
+      updateCountLabel();
+      renderCountryGrid();
+    });
+
+    // Individual cc btns
+    grid.querySelectorAll('.cc-btn[data-cc]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cc = btn.dataset.cc;
+        if (selectedCCs.has(cc)) selectedCCs.delete(cc);
+        else selectedCCs.add(cc);
+        btn.classList.toggle('selected');
+        updateCountLabel();
+        // Re-render just select-all label
+        renderCountryGrid();
+      });
+    });
+  }
+
+  function updateCountLabel() {
+    const el = $('cc-count');
+    el.innerHTML = `<strong>${selectedCCs.size}</strong> ${selectedCCs.size === 1 ? 'country' : 'countries'} selected`;
+  }
+
+  // Region tabs
+  $$('.cc-region-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.cc-region-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentRegion = tab.dataset.region;
+      renderCountryGrid();
+    });
+  });
+
+  // Country search
+  $('cc-search').addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderCountryGrid();
+  });
+
+  // Init grid
+  renderCountryGrid();
+  updateCountLabel();
+
+  /* ══════════════════════════════════════
+     CLIP HIGHLIGHTER
+  ══════════════════════════════════════ */
+  let currentVideoId = null, currentClips = [], currentMeta = null;
+
+  function extractVideoId(input) {
+    const m = input.match(/(?:v=|youtu\.be\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+    return null;
+  }
+
+  $('btn-analyze').addEventListener('click', analyzeVideo);
+  $('video-url').addEventListener('keydown', e => { if (e.key === 'Enter') analyzeVideo(); });
+
+  async function analyzeVideo() {
+    const ytKey     = $('yt-api-key').value.trim();
+    const claudeKey = $('claude-api-key').value.trim();
+    const urlVal    = $('video-url').value.trim();
+    if (!ytKey)     return showAlert('hl-alert','error','⚠ YouTube API Key is required.');
+    if (!claudeKey) return showAlert('hl-alert','error','⚠ Claude API Key is required.');
+    if (!urlVal)    return showAlert('hl-alert','error','⚠ Please enter a YouTube URL or Video ID.');
+    const vid = extractVideoId(urlVal);
+    if (!vid) return showAlert('hl-alert','error','⚠ Invalid YouTube URL or Video ID.');
+    hideAlert('hl-alert');
+    $('hl-results').classList.add('hidden');
+    $('hl-loading').classList.remove('hidden');
+    currentVideoId = vid;
+    try {
+      const meta = await fetchVideoMeta(ytKey, vid);
+      currentMeta = meta;
+      const clips = await generateClipsAI(claudeKey, meta,
+        parseInt($('clip-count').value), parseInt($('clip-length').value),
+        $('platform').value, $('language').value);
+      currentClips = clips;
+      renderHighlighterResults(meta, clips);
+    } catch(err) {
+      showAlert('hl-alert','error','❌ '+err.message);
+    } finally {
+      $('hl-loading').classList.add('hidden');
+    }
+  }
+
+  async function fetchVideoMeta(apiKey, videoId) {
+    const res  = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoId}&key=${apiKey}`);
+    const data = await res.json();
+    if (!res.ok || !data.items?.length) throw new Error('Video not found: '+(data.error?.message||'Unknown'));
+    const item=data.items[0], sn=item.snippet, st=item.statistics, cd=item.contentDetails;
+    const dm  = cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    return { id:videoId, title:sn.title, channel:sn.channelTitle,
+      description:(sn.description||'').slice(0,500),
+      thumb:`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+      views:+(st.viewCount||0), likes:+(st.likeCount||0),
+      comments:+(st.commentCount||0),
+      durSec:((+dm[1]||0)*3600)+((+dm[2]||0)*60)+(+dm[3]||0),
+      publishedAt:sn.publishedAt };
+  }
+
+  async function generateClipsAI(apiKey, meta, clipCount, clipLen, platform, lang) {
+    const prompt = `You are an expert YouTube content analyst specializing in viral short-form clips.
+Video: "${meta.title}" by ${meta.channel}
+Duration: ${fmtDur(meta.durSec)} (${meta.durSec}s) | Views: ${fmt(meta.views)} | Likes: ${fmt(meta.likes)}
+Platform: ${platform} | Clip length: ~${clipLen}s | Language: ${lang}
+Generate exactly ${clipCount} clip recommendations. Respond ONLY with valid JSON array, no markdown:
+[{"rank":1,"startSec":45,"endSec":105,"title":"Title","reason":"Why viral","type":"viral","hookScore":87,"retentionScore":82,"viralScore":90,"tags":["tag1","tag2"],"caption":"Caption text"}]
+Valid type: viral|hook|insight|emotional|funny`;
+    const res  = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01'},
+      body:JSON.stringify({model:'claude-opus-4-5',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message||'Claude API error');
+    const raw = data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    try { return JSON.parse(raw); }
+    catch { throw new Error('AI response could not be parsed. Try again.'); }
+  }
+
+  function renderHighlighterResults(meta, clips) {
+    $('hl-thumb-img').src = meta.thumb;
+    $('hl-thumb').onclick = togglePlayer;
+    $('hl-title').textContent   = meta.title;
+    $('hl-channel').textContent = '📺 '+meta.channel;
+    $('hl-desc').textContent    = meta.description;
+    $('hl-stats').innerHTML = [
+      `<span class="vstat"><span class="vstat-v">${fmt(meta.views)}</span><span class="vstat-l"> views</span></span>`,
+      `<span class="vstat"><span class="vstat-v">${fmt(meta.likes)}</span><span class="vstat-l"> likes</span></span>`,
+      `<span class="vstat"><span class="vstat-v">${fmt(meta.comments)}</span><span class="vstat-l"> cmts</span></span>`,
+      `<span class="vstat"><span class="vstat-v">${fmtDur(meta.durSec)}</span><span class="vstat-l"> duration</span></span>`,
+    ].join('');
+    const avgViral = Math.round(clips.reduce((a,c)=>a+c.viralScore,0)/clips.length);
+    const best     = clips.reduce((a,c)=>c.viralScore>a.viralScore?c:a,clips[0]);
+    $('hl-stats-grid').innerHTML = [
+      `<div class="sum-card"><div class="sum-lbl">Clips Found</div><div class="sum-val" style="color:var(--accent)">${clips.length}</div><div class="sum-sub">segments</div></div>`,
+      `<div class="sum-card"><div class="sum-lbl">Avg Viral</div><div class="sum-val" style="color:${scoreColor(avgViral)}">${avgViral}</div><div class="sum-sub">out of 100</div></div>`,
+      `<div class="sum-card"><div class="sum-lbl">Best Score</div><div class="sum-val" style="color:var(--coral)">${best.viralScore}</div><div class="sum-sub">${(best.title||'').slice(0,16)}…</div></div>`,
+      `<div class="sum-card"><div class="sum-lbl">Total Time</div><div class="sum-val">${fmtDur(clips.reduce((a,c)=>a+(c.endSec-c.startSec),0))}</div><div class="sum-sub">of ${fmtDur(meta.durSec)}</div></div>`,
+    ].join('');
+    const TC = {viral:'var(--red)',hook:'var(--coral)',insight:'var(--blue)',emotional:'#9060cc',funny:'var(--green)'};
+    const bar = $('tl-bar');
+    bar.innerHTML = '<div class="tl-grid"></div>';
+    clips.forEach(c => {
+      const seg = document.createElement('div');
+      seg.className='tl-seg';
+      seg.style.left=(c.startSec/meta.durSec*100)+'%';
+      seg.style.width=((c.endSec-c.startSec)/meta.durSec*100)+'%';
+      seg.style.background=TC[c.type]||'var(--accent)';
+      seg.title=c.title;
+      seg.innerHTML=`<span class="tl-seg-num">${c.rank}</span>`;
+      seg.addEventListener('click',()=>playClip(c.startSec));
+      bar.appendChild(seg);
+    });
+    $('tl-axis').innerHTML=[0,.25,.5,.75,1].map(p=>`<span>${fmtDur(Math.round(meta.durSec*p))}</span>`).join('');
+    $('tl-legend').innerHTML=[...new Set(clips.map(c=>c.type))].map(t=>`<span class="tl-leg"><span class="tl-dot" style="background:${TC[t]||'var(--accent)'}"></span>${t}</span>`).join('');
+    $('clips-meta-lbl').textContent=clips.length+' Clips Recommended';
+    renderClipCards(clips);
+    $('hl-results').classList.remove('hidden');
+  }
+
+  function renderClipCards(clips) {
+    const S={viral:'s-viral',hook:'s-hook',insight:'s-insight',emotional:'s-emotional',funny:'s-funny'};
+    const B={viral:'b-viral',hook:'b-hook',insight:'b-insight',emotional:'b-emotional',funny:'b-funny'};
+    $('clips-container').innerHTML=clips.map((c,i)=>`
+      <div class="clip-card ${i<3?'rk'+(i+1):''}">
+        <div class="clip-inner">
+          <div class="clip-stripe ${S[c.type]||'s-hook'}"></div>
+          <div class="clip-body">
+            <div class="clip-row">
+              <span class="clip-num">${c.rank}</span>
+              <span class="badge ${B[c.type]||'b-hook'}">${c.type}</span>
+              <span class="clip-ts">${fmtDur(c.startSec)} → ${fmtDur(c.endSec)}</span>
+              <span class="clip-dur">${fmtDur(c.endSec-c.startSec)}</span>
+            </div>
+            <div class="clip-ttl">${c.title||''}</div>
+            <div class="clip-why">${c.reason||''}</div>
+            <div class="score-row">
+              <span class="score-lbl">Viral</span>
+              <div class="score-bar"><div class="score-fill" style="width:${c.viralScore}%;background:${scoreColor(c.viralScore)}"></div></div>
+              <span class="score-num" style="color:${scoreColor(c.viralScore)}">${c.viralScore}</span>
+            </div>
+            <div class="score-row">
+              <span class="score-lbl">Hook</span>
+              <div class="score-bar"><div class="score-fill" style="width:${c.hookScore}%;background:var(--accent)"></div></div>
+              <span class="score-num" style="color:var(--accent)">${c.hookScore}</span>
+            </div>
+            <div class="tag-row">${(c.tags||[]).map(t=>`<span class="tag-chip">${t}</span>`).join('')}</div>
+            ${c.caption?`<div class="clip-cap">"${c.caption}"</div>`:''}
+          </div>
+          <div class="clip-side">
+            <button class="clip-btn cb-play"  data-action="play"    data-sec="${c.startSec}">▶ Play</button>
+            <button class="clip-btn cb-ghost" data-action="copyts"  data-ts="${fmtDur(c.startSec)}">Copy TS</button>
+            <button class="clip-btn cb-ghost" data-action="copycap" data-cap="${(c.caption||'').replace(/"/g,'&quot;')}">Caption</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ── Unified click delegation ── */
+  document.addEventListener('click', e => {
+    // Clip card actions (play / copy timestamp / copy caption)
+    const actionBtn = e.target.closest('[data-action]');
+    if (actionBtn) {
+      const a = actionBtn.dataset.action;
+      if (a === 'play')    playClip(parseInt(actionBtn.dataset.sec));
+      if (a === 'copyts')  navigator.clipboard.writeText(actionBtn.dataset.ts).then(()=>showToast('Timestamp berhasil disalin: '+actionBtn.dataset.ts));
+      if (a === 'copycap') navigator.clipboard.writeText(actionBtn.dataset.cap).then(()=>showToast('Caption berhasil disalin!'));
+      return;
+    }
+    // Video card: thumbnail click
+    const thumb = e.target.closest('.vc-thumb[data-watch]');
+    if (thumb) { window.open('https://youtube.com/watch?v='+thumb.dataset.watch, '_blank'); return; }
+    // Video card: watch button
+    const watchBtn = e.target.closest('[data-watch]:not(.vc-thumb)');
+    if (watchBtn && watchBtn.dataset.watch) { window.open('https://youtube.com/watch?v='+watchBtn.dataset.watch, '_blank'); return; }
+    // Video card: clip button → switch to highlighter
+    const clipBtn = e.target.closest('[data-clip]');
+    if (clipBtn) { $('video-url').value = clipBtn.dataset.clip; document.querySelector('[data-tab="highlighter"]').click(); return; }
+    // Video card: copy video ID
+    const copyVidBtn = e.target.closest('[data-copy-vid]');
+    if (copyVidBtn) navigator.clipboard.writeText(copyVidBtn.dataset.copyVid).then(()=>showToast('Video ID berhasil disalin!'));
+  });
+
+  function playClip(sec) {
+    if (!currentVideoId) return;
+    const pw=$('hl-player');
+    pw.innerHTML=`<iframe src="https://www.youtube.com/embed/${currentVideoId}?start=${sec}&autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    pw.classList.remove('hidden');
+    pw.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function togglePlayer() {
+    if (!currentVideoId) return;
+    const pw=$('hl-player');
+    if (pw.classList.contains('hidden')) {
+      pw.innerHTML=`<iframe src="https://www.youtube.com/embed/${currentVideoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      pw.classList.remove('hidden');
+    } else { pw.innerHTML=''; pw.classList.add('hidden'); }
+  }
+  $('btn-sort-score').addEventListener('click',()=>{ currentClips.sort((a,b)=>b.viralScore-a.viralScore); renderClipCards(currentClips); });
+  $('btn-sort-time').addEventListener('click',()=>{ currentClips.sort((a,b)=>a.startSec-b.startSec); renderClipCards(currentClips); });
+  $('btn-transcript').addEventListener('click',()=>{
+    const panel=$('ts-panel'); panel.classList.remove('hidden');
+    const hlSegs=currentClips.map(c=>({s:c.startSec,e:c.endSec}));
+    const dur=currentMeta?.durSec||300;
+    let html='';
+    for(let t=0;t<dur;t+=10){
+      const isHL=hlSegs.some(s=>t>=s.s&&t<s.e);
+      html+=`<div class="ts-line${isHL?' hl':''}"><span class="ts-t" data-action="play" data-sec="${t}">${fmtDur(t)}</span><span class="ts-tx">[Segment at ${fmtDur(t)} — fetch via YouTube Captions API]</span></div>`;
+    }
+    $('ts-scroll').innerHTML=html;
+    panel.scrollIntoView({behavior:'smooth'});
+  });
+  $('btn-close-ts').addEventListener('click',()=>$('ts-panel').classList.add('hidden'));
+  $('btn-report').addEventListener('click',()=>{
+    navigator.clipboard.writeText(currentClips.map(c=>`[${c.rank}] ${c.title}\n${fmtDur(c.startSec)}–${fmtDur(c.endSec)} | Viral: ${c.viralScore}\n${c.reason}\n`).join('\n')).then(()=>showToast('Report copied!'));
+  });
+  $('btn-export-clips').addEventListener('click',()=>{
+    if(!currentClips.length) return showToast('No clips to export.');
+    const blob=new Blob([JSON.stringify({video:currentMeta,clips:currentClips},null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='clipstudio-export.json'; a.click();
+  });
+
+  /* ══════════════════════════════════════
+     VIRAL FINDER
+  ══════════════════════════════════════ */
+  /* ══════════════════════════════════════
+     VIRAL FINDER — State & Pagination
+  ══════════════════════════════════════ */
+  let allFetchedVideos = []; // semua video dari semua CC
+  let currentPage      = 1;
+  const PAGE_SIZE      = 15; // tampilkan 15 per halaman
+
+  $('btn-find-viral').addEventListener('click', findViralVideos);
+  $('vf-keyword').addEventListener('keydown', e => { if (e.key === 'Enter') findViralVideos(); });
+
+  async function findViralVideos() {
+    const ytKey   = $('vf-yt-key').value.trim();
+    const keyword = $('vf-keyword').value.trim();
+    if (!ytKey)            return showAlert('vf-alert','error','⚠ YouTube API Key wajib diisi.');
+    if (!keyword)          return showAlert('vf-alert','error','⚠ Masukkan keyword atau niche terlebih dahulu.');
+    if (!selectedCCs.size) return showAlert('vf-alert','error','⚠ Pilih minimal satu negara.');
+    hideAlert('vf-alert');
+    $('vf-results').classList.add('hidden');
+    $('vf-loading').classList.remove('hidden');
+
+    const sortMap = { viral:'relevance', views:'viewCount', recent:'date', engagement:'rating' };
+    const order   = sortMap[$('vf-sort').value] || 'relevance';
+    // Ambil jumlah dari select, fallback 15
+    const perPage = parseInt($('vf-per-page').value) || 15;
+    // Fetch max 50 video dari API (batasan YouTube = max 50), lalu kita paginate di client
+    const fetchCount = Math.min(50, Math.max(perPage * 3, 15));
+
+    // Ambil data dari SETIAP negara yang dipilih (max 3 CC agar tidak habis quota)
+    const ccList = [...selectedCCs].slice(0, 3);
+
+    try {
+      const allItems = [];
+      const seenIds  = new Set();
+
+      for (const cc of ccList) {
+        const sRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)}&type=video&maxResults=${fetchCount}&order=${order}&regionCode=${cc}&key=${ytKey}`
+        );
+        const sData = await sRes.json();
+        if (!sRes.ok) throw new Error(sData.error?.message || `YouTube Search error (${cc})`);
+
+        const newIds = sData.items
+          .map(i => i.id.videoId)
+          .filter(id => !seenIds.has(id));
+        newIds.forEach(id => seenIds.add(id));
+
+        if (newIds.length === 0) continue;
+
+        const vRes  = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${newIds.join(',')}&key=${ytKey}`
+        );
+        const vData = await vRes.json();
+        if (!vRes.ok) throw new Error(vData.error?.message || 'YouTube Videos API error');
+
+        // Tandai setiap video dengan CC asal
+        vData.items.forEach(item => { item._cc = cc; });
+        allItems.push(...vData.items);
+      }
+
+      if (allItems.length === 0) {
+        showAlert('vf-alert','error','❌ Tidak ada video ditemukan. Coba keyword atau region yang berbeda.');
+        return;
+      }
+
+      // Urutkan sesuai pilihan sort
+      if ($('vf-sort').value === 'views') {
+        allItems.sort((a,b) => (+(b.statistics.viewCount||0)) - (+(a.statistics.viewCount||0)));
+      } else if ($('vf-sort').value === 'engagement') {
+        const engScore = item => {
+          const v = +(item.statistics.viewCount||0);
+          const l = +(item.statistics.likeCount||0);
+          return v > 0 ? l/v : 0;
+        };
+        allItems.sort((a,b) => engScore(b) - engScore(a));
+      } else if ($('vf-sort').value === 'recent') {
+        allItems.sort((a,b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+      } else {
+        // viral: sort by calculated viral score
+        const vs = item => {
+          const v = +(item.statistics.viewCount||0);
+          const l = +(item.statistics.likeCount||0);
+          return Math.min(100, Math.round((l/(v||1))*1000 + Math.log10(v+1)*5));
+        };
+        allItems.sort((a,b) => vs(b) - vs(a));
+      }
+
+      allFetchedVideos = allItems;
+      currentPage = 1;
+      renderViralPage(keyword, perPage);
+
+    } catch(err) {
+      showAlert('vf-alert','error','❌ ' + err.message);
+    } finally {
+      $('vf-loading').classList.add('hidden');
+    }
+  }
+
+  function renderViralPage(keyword, perPage) {
+    if (!perPage) perPage = parseInt($('vf-per-page').value) || 15;
+    const total = allFetchedVideos.length;
+    const totalPages = Math.ceil(total / perPage);
+    const start = (currentPage - 1) * perPage;
+    const pageItems = allFetchedVideos.slice(start, start + perPage);
+
+    // Header
+    const regionLabel = [...selectedCCs].slice(0,3).map(cc => {
+      const d = COUNTRIES.find(c=>c.cc===cc);
+      return d ? d.flag+' '+d.cc : cc;
+    }).join(', ') + (selectedCCs.size > 3 ? ` +${selectedCCs.size-3} lainnya` : '');
+    $('vf-title').textContent = `"${keyword}" — ${regionLabel}`;
+    $('vf-meta').textContent  = `${total} video ditemukan · menampilkan ${start+1}–${Math.min(start+perPage, total)} · ${selectedCCs.size} negara dipilih`;
+
+    // Render grid
+    $('vf-grid').innerHTML = pageItems.map(item => {
+      const sn    = item.snippet, st = item.statistics, cd = item.contentDetails;
+      const cc    = item._cc || [...selectedCCs][0];
+      const ccD   = COUNTRIES.find(c=>c.cc===cc) || {flag:'🌐'};
+      const views = +(st.viewCount||0), likes = +(st.likeCount||0), cmts = +(st.commentCount||0);
+      const vScore = Math.min(100, Math.round((likes/(views||1))*1000 + Math.log10(views+1)*5));
+      const dm    = cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      const durS  = ((+dm[1]||0)*3600) + ((+dm[2]||0)*60) + (+dm[3]||0);
+      const ss    = 70 + Math.floor(Math.random()*28);
+      const sc    = ss>=90?'var(--green)':ss>=75?'var(--gold)':'var(--coral)';
+      const vc    = vScore>=70?'v-hot':vScore>=40?'v-warm':'v-ok';
+      const vl    = vScore>=70?'🔥 HOT':vScore>=40?'📈 WARM':'📊 OK';
+      const vid   = item.id;
+      const thumb = sn.thumbnails?.high?.url || '';
+      const ds    = new Date(sn.publishedAt).toLocaleDateString('id-ID',{month:'short',year:'numeric'});
+      return `
+        <div class="video-card">
+          <div class="vc-thumb" data-watch="${vid}">
+            ${thumb ? `<img src="${thumb}" alt="thumb" loading="lazy">` : `<div class="vc-no-img">📹</div>`}
+            <span class="vc-dur">${fmtDur(durS)}</span>
+            <span class="vc-flag">${ccD.flag}</span>
+            <span class="vc-viral ${vc}">${vl}</span>
+          </div>
+          <div class="vc-body">
+            <div class="vc-title">${sn.title}</div>
+            <div class="vc-ch">📺 ${sn.channelTitle}</div>
+            <div class="vc-stats">
+              <span class="vc-stat"><span class="vc-stat-v">${fmt(views)}</span><span class="vc-stat-l"> views</span></span>
+              <span class="vc-stat"><span class="vc-stat-v">${fmt(likes)}</span><span class="vc-stat-l"> likes</span></span>
+              <span class="vc-stat"><span class="vc-stat-v">${fmt(cmts)}</span><span class="vc-stat-l"> cmts</span></span>
+            </div>
+            <div class="safety-row"><span class="safety-lbl">Brand Safety</span><span class="safety-val" style="color:${sc}">${ss}%</span></div>
+            <div class="safety-bar"><div class="safety-fill" style="width:${ss}%;background:${sc}"></div></div>
+            <div class="vc-tags">
+              <span class="vc-tag">Score ${vScore}</span>
+              ${durS < 65 ? '<span class="vc-tag">⚡ Short</span>' : ''}
+              ${vScore >= 70 ? '<span class="vc-tag">🔥 Trending</span>' : ''}
+              <span class="vc-tag">${ds}</span>
+              <span class="vc-tag">${ccD.flag} ${cc}</span>
+            </div>
+            <div class="vc-actions">
+              <button class="vc-btn vc-primary" data-watch="${vid}">▶ Tonton</button>
+              <button class="vc-btn"            data-clip="${vid}">✂️ Clip</button>
+              <button class="vc-btn"            data-copy-vid="${vid}">Copy ID</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Pagination
+    renderPagination(totalPages, keyword, perPage);
+    $('vf-results').classList.remove('hidden');
+    if (currentPage > 1) $('vf-results').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function renderPagination(totalPages, keyword, perPage) {
+    const pg = $('vf-pagination');
+    if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+    let html = '';
+    // Prev
+    html += `<button class="pg-btn" data-pg="${currentPage-1}" ${currentPage===1?'disabled':''}>‹ Sebelumnya</button>`;
+    // Pages
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+        html += `<button class="pg-btn${i===currentPage?' active':''}" data-pg="${i}">${i}</button>`;
+      } else if (Math.abs(i - currentPage) === 3) {
+        html += `<span style="padding:6px 4px;color:var(--muted);font-family:var(--mono);font-size:11px">…</span>`;
+      }
+    }
+    // Next
+    html += `<button class="pg-btn" data-pg="${currentPage+1}" ${currentPage===totalPages?'disabled':''}>Berikutnya ›</button>`;
+    pg.innerHTML = html;
+
+    // Bind pagination clicks
+    pg.querySelectorAll('.pg-btn[data-pg]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = parseInt(btn.dataset.pg);
+        if (p < 1 || p > totalPages) return;
+        currentPage = p;
+        renderViralPage(keyword, perPage);
+      });
+    });
+  }
+
+  // Change per-page triggers re-render if results exist
+  $('vf-per-page').addEventListener('change', () => {
+    if (allFetchedVideos.length > 0) {
+      currentPage = 1;
+      renderViralPage($('vf-keyword').value.trim(), parseInt($('vf-per-page').value));
+    }
+  });
+
+  $('btn-export-vf').addEventListener('click', () => {
+    if (!allFetchedVideos.length) return showToast('Belum ada data untuk diekspor.');
+    const csv = [
+      ['Title','Channel','Views','Likes','Comments','Duration','Country','Published'].join(','),
+      ...allFetchedVideos.map(item => {
+        const sn=item.snippet, st=item.statistics, cd=item.contentDetails;
+        const dm=cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        const durS=((+dm[1]||0)*3600)+((+dm[2]||0)*60)+(+dm[3]||0);
+        return [
+          `"${(sn.title||'').replace(/"/g,'""')}"`,
+          `"${(sn.channelTitle||'').replace(/"/g,'""')}"`,
+          st.viewCount||0, st.likeCount||0, st.commentCount||0,
+          fmtDur(durS), item._cc||'',
+          new Date(sn.publishedAt).toLocaleDateString('id-ID')
+        ].join(',');
+      })
+    ].join('\n');
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'clipstudio-viral.csv';
+    a.click();
+    showToast('File CSV berhasil diunduh!');
+  });
+
+})();
+</script>
+</body>
+</html>
