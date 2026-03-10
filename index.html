@@ -85,6 +85,19 @@
     button { font-family:var(--font); cursor:pointer; }
     input, select, textarea { font-family:var(--font); }
     .hidden { display:none !important; }
+    /* Secure text masking — avoids browser "password not in form" warning */
+    .f-secret { -webkit-text-security: disc; text-security: disc; }
+    .f-secret:focus { -webkit-text-security: none; text-security: none; }
+    .key-field-wrap { position:relative; }
+    .key-field-wrap .f-input { padding-right: 38px; }
+    .key-toggle-vis {
+      position:absolute; right:10px; top:50%; transform:translateY(-50%);
+      background:none; border:none; padding:4px; cursor:pointer;
+      color:var(--muted); transition:color var(--t) var(--ease);
+      display:flex; align-items:center;
+    }
+    .key-toggle-vis:hover { color:var(--text-2); }
+    .key-toggle-vis svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
     ::-webkit-scrollbar { width:4px; height:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:99px; }
@@ -409,12 +422,11 @@
     .prov-btn:hover { border-color:var(--border-2); }
     .prov-btn.active { border-color:var(--accent); background:var(--accent-bg); box-shadow:0 0 0 3px var(--accent-bg2); }
     .prov-btn.active.openai-active { border-color:#10a37f; background:rgba(16,163,127,.08); box-shadow:0 0 0 3px rgba(16,163,127,.14); }
-    .prov-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--surface); flex-shrink:0; border:1px solid var(--border); transition:background var(--t) var(--ease); }
-    .prov-btn.active .prov-icon { background:var(--accent); border-color:var(--accent); }
-    .prov-btn.active.openai-active .prov-icon { background:#10a37f; border-color:#10a37f; }
-    .prov-icon svg { width:14px; height:14px; stroke:var(--muted); transition:stroke var(--t) var(--ease); }
-    .prov-btn.active .prov-icon svg { stroke:#fff; fill:none; }
-    .prov-btn.active.openai-active .prov-icon svg { stroke:none; fill:#fff; }
+    .prov-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--surface); flex-shrink:0; border:1px solid var(--border); transition:all var(--t) var(--ease); overflow:hidden; }
+    .prov-btn.active .prov-icon { background:#fff; border-color:rgba(0,0,0,.1); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .prov-btn.active.openai-active .prov-icon { background:#000; border-color:#000; }
+    .prov-icon svg { width:18px; height:18px; transition:all var(--t) var(--ease); }
+    .prov-icon img { width:18px; height:18px; object-fit:contain; }
     .prov-text { display:flex; flex-direction:column; gap:1px; text-align:left; }
     .prov-name { font-family:var(--font); font-size:13px; font-weight:700; color:var(--text); line-height:1; }
     .prov-sub { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
@@ -556,16 +568,39 @@
         <div class="provider-lbl">AI Provider</div>
         <div class="provider-toggle" id="provider-toggle">
           <button class="prov-btn active" data-provider="claude">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span class="prov-icon">
+              <!-- Anthropic Claude real logo: overlapping circles/orbs -->
+              <svg viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.75 10.5H17.25L10 30.5H16.3L17.8 26H23.2L24.7 30.5H31L23.75 10.5ZM19.2 21.5L20.5 17.3L21.8 21.5H19.2Z" fill="#CC785C"/>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">Claude</span><span class="prov-sub">Anthropic</span></span>
           </button>
           <button class="prov-btn" data-provider="gemini">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g1)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg></span>
+            <span class="prov-icon">
+              <!-- Google Gemini real logo: star/sparkle shape -->
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2C14 2 14 11 11 14C8 17 2 14 2 14C2 14 11 14 14 17C17 20 14 26 14 26C14 26 14 17 17 14C20 11 26 14 26 14C26 14 17 14 14 11C11 8 14 2 14 2Z" fill="url(#gem-real-grad)"/>
+                <defs>
+                  <linearGradient id="gem-real-grad" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#4285F4"/>
+                    <stop offset="33%" stop-color="#9B72CB"/>
+                    <stop offset="66%" stop-color="#D96570"/>
+                    <stop offset="100%" stop-color="#D96570"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">Gemini</span><span class="prov-sub">Google</span></span>
             <span class="prov-badge" style="background:rgba(66,133,244,.12);color:#4285F4;border-color:rgba(66,133,244,.25)">FREE</span>
           </button>
           <button class="prov-btn" data-provider="openai">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg></span>
+            <span class="prov-icon">
+              <!-- OpenAI real logo: stylized O -->
+              <svg viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M20.5 4C11.4 4 4 11.4 4 20.5S11.4 37 20.5 37 37 29.6 37 20.5 29.6 4 20.5 4Zm0 4C27.4 8 33 13.6 33 20.5S27.4 33 20.5 33 8 27.4 8 20.5 13.6 8 20.5 8Zm0 4a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z" fill="white"/>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">ChatGPT</span><span class="prov-sub">OpenAI</span></span>
             <span class="prov-badge">PRO</span>
           </button>
@@ -580,11 +615,11 @@
       <div class="grid-2">
         <div class="field">
           <label class="field-lbl" for="yt-api-key">YouTube API Key <span class="req">*</span></label>
-          <input class="f-input" type="password" id="yt-api-key" placeholder="AIzaSy…" autocomplete="off" />
+          <div class="key-field-wrap"><input class="f-input f-secret" type="text" id="yt-api-key" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false" /><button type="button" class="key-toggle-vis" data-target="yt-api-key" title="Tampilkan/Sembunyikan"><svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg><svg class="eye-on" viewBox="0 0 24 24" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
         <div class="field">
           <label class="field-lbl" id="ai-key-label">Claude API Key <span class="req">*</span></label>
-          <input class="f-input" type="password" id="ai-api-key" placeholder="sk-ant-…" autocomplete="off" />
+          <div class="key-field-wrap"><input class="f-input f-secret" type="text" id="ai-api-key" placeholder="sk-ant-…" autocomplete="new-password" spellcheck="false" /><button type="button" class="key-toggle-vis" data-target="ai-api-key" title="Tampilkan/Sembunyikan"><svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg><svg class="eye-on" viewBox="0 0 24 24" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
       </div>
 
@@ -741,16 +776,36 @@
         <div class="provider-lbl">AI Provider</div>
         <div class="provider-toggle" id="vf-provider-toggle">
           <button class="prov-btn active" data-provider="claude">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span class="prov-icon">
+              <svg viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.75 10.5H17.25L10 30.5H16.3L17.8 26H23.2L24.7 30.5H31L23.75 10.5ZM19.2 21.5L20.5 17.3L21.8 21.5H19.2Z" fill="#CC785C"/>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">Claude</span><span class="prov-sub">Anthropic</span></span>
           </button>
           <button class="prov-btn" data-provider="gemini">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g2)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg></span>
+            <span class="prov-icon">
+              <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2C14 2 14 11 11 14C8 17 2 14 2 14C2 14 11 14 14 17C17 20 14 26 14 26C14 26 14 17 17 14C20 11 26 14 26 14C26 14 17 14 14 11C11 8 14 2 14 2Z" fill="url(#gem-real-grad2)"/>
+                <defs>
+                  <linearGradient id="gem-real-grad2" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#4285F4"/>
+                    <stop offset="33%" stop-color="#9B72CB"/>
+                    <stop offset="66%" stop-color="#D96570"/>
+                    <stop offset="100%" stop-color="#D96570"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">Gemini</span><span class="prov-sub">Google</span></span>
             <span class="prov-badge" style="background:rgba(66,133,244,.12);color:#4285F4;border-color:rgba(66,133,244,.25)">FREE</span>
           </button>
           <button class="prov-btn" data-provider="openai">
-            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg></span>
+            <span class="prov-icon">
+              <svg viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M20.5 4C11.4 4 4 11.4 4 20.5S11.4 37 20.5 37 37 29.6 37 20.5 29.6 4 20.5 4Zm0 4C27.4 8 33 13.6 33 20.5S27.4 33 20.5 33 8 27.4 8 20.5 13.6 8 20.5 8Zm0 4a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 4a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z" fill="white"/>
+              </svg>
+            </span>
             <span class="prov-text"><span class="prov-name">ChatGPT</span><span class="prov-sub">OpenAI</span></span>
             <span class="prov-badge">PRO</span>
           </button>
@@ -765,11 +820,11 @@
       <div class="grid-2">
         <div class="field">
           <label class="field-lbl" for="vf-yt-key">YouTube API Key <span class="req">*</span></label>
-          <input class="f-input" type="password" id="vf-yt-key" placeholder="AIzaSy…" autocomplete="off" />
+          <div class="key-field-wrap"><input class="f-input f-secret" type="text" id="vf-yt-key" placeholder="AIzaSy…" autocomplete="new-password" spellcheck="false" /><button type="button" class="key-toggle-vis" data-target="vf-yt-key" title="Tampilkan/Sembunyikan"><svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg><svg class="eye-on" viewBox="0 0 24 24" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
         <div class="field">
           <label class="field-lbl" id="vf-ai-key-label">Claude API Key <span class="opt">(opsional)</span></label>
-          <input class="f-input" type="password" id="vf-ai-key" placeholder="sk-ant-…" autocomplete="off" />
+          <div class="key-field-wrap"><input class="f-input f-secret" type="text" id="vf-ai-key" placeholder="sk-ant-…" autocomplete="new-password" spellcheck="false" /><button type="button" class="key-toggle-vis" data-target="vf-ai-key" title="Tampilkan/Sembunyikan"><svg class="eye-off" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg><svg class="eye-on" viewBox="0 0 24 24" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
         </div>
       </div>
 
@@ -1394,6 +1449,18 @@
     });
   });
 
+  /* ── Eye toggle for API key fields ── */
+  document.querySelectorAll('.key-toggle-vis').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = $(btn.dataset.target);
+      if (!input) return;
+      const isHidden = input.classList.contains('f-secret');
+      input.classList.toggle('f-secret', !isHidden);
+      btn.querySelector('.eye-off').style.display = isHidden ? 'block' : 'none';
+      btn.querySelector('.eye-on').style.display  = isHidden ? 'none' : 'block';
+    });
+  });
+
   /* ══════════════════════════════════════
      CLIP HIGHLIGHTER
   ══════════════════════════════════════ */
@@ -1506,132 +1573,195 @@ Respond ONLY with a valid JSON array — no markdown, no explanation, no extra t
 Valid "type" values: viral | hook | insight | emotional | funny`;
   }
 
-  /* ── FIX: Claude via proxy (CORS workaround) ── */
+  /* ── Claude via multi-fallback CORS proxy ── */
   async function generateClipsClaude(apiKey, meta, clipCount, clipLen, platform, lang) {
-    // Claude API is blocked by CORS when called directly from browser.
-    // We attempt via a CORS proxy. If unavailable, a helpful error is thrown.
-    const PROXY = 'https://corsproxy.io/?';
     const targetUrl = 'https://api.anthropic.com/v1/messages';
+    const body = JSON.stringify({
+      model: 'claude-opus-4-5',
+      max_tokens: 3000,
+      messages: [{ role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) }],
+    });
     let res;
     try {
-      res = await fetch(PROXY + encodeURIComponent(targetUrl), {
+      res = await fetchWithProxy(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
         },
-        body: JSON.stringify({
-          model: 'claude-opus-4-5',
-          max_tokens: 3000,
-          messages: [{ role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) }],
-        }),
+        body,
       });
     } catch (e) {
-      throw new Error('Tidak dapat terhubung ke Claude API. Coba gunakan Gemini (gratis, tanpa proxy). Detail: ' + e.message);
+      throw new Error(
+        'Tidak dapat terhubung ke Claude API melalui proxy.\n\n' +
+        'Claude API memblokir request langsung dari browser.\n' +
+        'Rekomendasi: Gunakan Gemini (gratis, tidak ada masalah CORS).\n\n' +
+        'Detail: ' + e.message
+      );
     }
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       if (res.status === 401) throw new Error('Claude API Key tidak valid. Periksa kembali key Anda di console.anthropic.com.');
-      if (res.status === 429) throw new Error('Claude API: rate limit atau kredit habis. Coba gunakan Gemini (gratis).');
+      if (res.status === 429) throw new Error('Claude API rate limit atau kredit habis.\nCoba gunakan Gemini (gratis).');
       throw new Error('Claude API error: ' + (data.error?.message || `HTTP ${res.status}`));
     }
-    return extractJSON(data.content[0].text);
+    return extractJSON(data.content?.[0]?.text || '');
   }
 
-  /* ── FIX: OpenAI via proxy ── */
+  /* ── OpenAI via multi-fallback CORS proxy ── */
   async function generateClipsOpenAI(apiKey, model, meta, clipCount, clipLen, platform, lang) {
-    const PROXY = 'https://corsproxy.io/?';
     const targetUrl = 'https://api.openai.com/v1/chat/completions';
+    const body = JSON.stringify({
+      model, max_tokens: 3000, temperature: 0.7,
+      messages: [
+        { role: 'system', content: 'You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no explanation.' },
+        { role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) },
+      ],
+    });
     let res;
     try {
-      res = await fetch(PROXY + encodeURIComponent(targetUrl), {
+      res = await fetchWithProxy(targetUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + apiKey,
-        },
-        body: JSON.stringify({
-          model: model,
-          max_tokens: 3000,
-          temperature: 0.7,
-          messages: [
-            { role: 'system', content: 'You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no explanation.' },
-            { role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) },
-          ],
-        }),
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+        body,
       });
     } catch (e) {
-      throw new Error('Tidak dapat terhubung ke OpenAI API. Coba gunakan Gemini (gratis, tanpa proxy). Detail: ' + e.message);
+      throw new Error('Tidak dapat terhubung ke OpenAI API melalui proxy.\nRekomendasi: Gunakan Gemini (gratis, tidak ada masalah CORS).\nDetail: ' + e.message);
     }
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      if (res.status === 401) throw new Error('OpenAI API Key tidak valid. Periksa kembali key Anda di platform.openai.com/api-keys.');
-      if (res.status === 429) throw new Error('Kuota OpenAI habis atau rate limit. Coba lagi nanti atau gunakan Gemini (gratis).');
-      if (res.status === 404) throw new Error(`Model "${model}" tidak tersedia. Coba ganti ke gpt-4o atau gpt-3.5-turbo.`);
+      if (res.status === 401) throw new Error('OpenAI API Key tidak valid. Periksa di platform.openai.com/api-keys.');
+      if (res.status === 429) throw new Error('Kuota OpenAI habis atau rate limit. Coba lagi nanti.');
+      if (res.status === 404) throw new Error(`Model "${model}" tidak tersedia. Coba: gpt-4o atau gpt-3.5-turbo.`);
       throw new Error('OpenAI API: ' + (data.error?.message || `HTTP ${res.status}`));
     }
-    return extractJSON(data.choices[0].message.content);
+    return extractJSON(data.choices?.[0]?.message?.content || '');
   }
 
-  /* ── FIX: Gemini — hapus responseMimeType & perbaiki systemInstruction ── */
+  /* ── CORS Proxy helper — multi-fallback ── */
+  const CORS_PROXIES = [
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://thingproxy.freeboard.io/fetch/${url}`,
+  ];
+
+  async function fetchWithProxy(url, options, proxyIndex = 0) {
+    if (proxyIndex >= CORS_PROXIES.length) throw new Error('Semua CORS proxy gagal. Gunakan Gemini (tidak perlu proxy) atau deploy backend sendiri.');
+    const proxyUrl = CORS_PROXIES[proxyIndex](url);
+    try {
+      const res = await fetch(proxyUrl, options);
+      return res;
+    } catch (e) {
+      console.warn(`Proxy ${proxyIndex} gagal, coba proxy berikutnya...`, e);
+      return fetchWithProxy(url, options, proxyIndex + 1);
+    }
+  }
+
+  /* ── Gemini dengan auto-retry saat 429 rate limit ── */
   async function generateClipsGemini(apiKey, model, meta, clipCount, clipLen, platform, lang) {
-    // FIX 1: Tidak menggunakan responseMimeType (tidak semua model support)
-    // FIX 2: Tidak menggunakan systemInstruction (beda format antar versi API)
-    // FIX 3: Instruksi system dimasukkan langsung ke dalam prompt
     const prompt = `You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no preamble, no explanation.\n\n${buildPrompt(meta, clipCount, clipLen, platform, lang)}`;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`;
 
-    let res;
-    try {
-      res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 3000,
-            // FIX: removed responseMimeType — not supported by all models/versions
-          },
-          // FIX: removed systemInstruction — caused 400 errors on some model versions
-        }),
-      });
-    } catch (e) {
-      throw new Error('Tidak dapat terhubung ke Gemini API: ' + e.message);
-    }
+    const MAX_RETRIES = 3;
+    let lastError = null;
 
-    const data = await res.json();
-    if (!res.ok) {
-      const errMsg = data.error?.message || `HTTP ${res.status}`;
-      if (res.status === 400) {
-        // More specific 400 error messages
-        if (errMsg.includes('model')) throw new Error(`Model "${model}" tidak dikenali. Coba ganti ke gemini-2.0-flash atau gemini-1.5-flash.`);
-        throw new Error(`Gemini: request tidak valid — ${errMsg}`);
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      let res;
+      try {
+        res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.7, maxOutputTokens: 3000 },
+          }),
+        });
+      } catch (e) {
+        throw new Error('Tidak dapat terhubung ke Gemini API. Periksa koneksi internet Anda. Detail: ' + e.message);
       }
-      if (res.status === 403) throw new Error('Google AI Studio Key tidak valid atau tidak memiliki izin. Periksa kembali key Anda di aistudio.google.com → "Get API Key".');
+
+      // Handle 429 Rate Limit dengan retry + countdown
       if (res.status === 429) {
-        // FIX: More informative 429 message — distinguish quota vs rate limit
-        const isQuota = errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('resource');
-        if (isQuota) throw new Error('Kuota harian Gemini habis (limit 1.500 req/hari di tier gratis). Coba lagi besok, atau upgrade ke paid tier di Google AI Studio.');
-        throw new Error('Gemini rate limit terlampaui. Tunggu beberapa detik lalu coba lagi.');
+        const data = await res.json().catch(() => ({}));
+        const errMsg = data.error?.message || '';
+
+        // Cek apakah ini benar-benar quota habis atau hanya rate limit
+        const isHardQuota = errMsg.toLowerCase().includes('quota exceeded') ||
+                            errMsg.toLowerCase().includes('daily quota') ||
+                            errMsg.toLowerCase().includes('resource has been exhausted');
+
+        if (isHardQuota) {
+          // Quota harian benar-benar habis
+          throw new Error(
+            `Kuota harian Gemini habis.\n\n` +
+            `Penyebab umum:\n` +
+            `• Tier gratis: limit ~1.500 req/hari untuk gemini-2.0-flash\n` +
+            `• Tier gratis: limit 15 req/menit\n\n` +
+            `Solusi:\n` +
+            `• Tunggu besok (reset jam 00:00 UTC / 07:00 WIB)\n` +
+            `• Ganti ke model lain: gemini-1.5-flash\n` +
+            `• Upgrade ke Google AI Studio paid tier\n` +
+            `• Pesan error asli: ${errMsg}`
+          );
+        }
+
+        // Rate limit sementara — retry dengan countdown
+        if (attempt < MAX_RETRIES) {
+          const waitSec = attempt === 1 ? 15 : 30;
+          const loadingEl = document.querySelector('#hl-loading span') || document.querySelector('#vf-loading span');
+
+          // Countdown timer
+          for (let s = waitSec; s >= 0; s--) {
+            if (loadingEl) loadingEl.textContent = `Gemini rate limit — retry ${attempt}/${MAX_RETRIES-1} dalam ${s}s…`;
+            await new Promise(r => setTimeout(r, 1000));
+          }
+          if (loadingEl) loadingEl.textContent = `Mencoba ulang dengan Gemini (${attempt+1}/${MAX_RETRIES})…`;
+          continue; // retry
+        } else {
+          throw new Error(
+            `Gemini rate limit terlampaui setelah ${MAX_RETRIES} percobaan.\n\n` +
+            `Gemini free tier: max 15 req/menit.\n\n` +
+            `Solusi: Tunggu 1-2 menit lalu coba lagi, atau ganti model ke gemini-1.5-flash.\n` +
+            `Pesan asli: ${errMsg}`
+          );
+        }
       }
-      if (res.status === 404) throw new Error(`Model "${model}" tidak ditemukan. Coba: gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro`);
-      throw new Error('Gemini API error: ' + errMsg);
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errMsg = data.error?.message || `HTTP ${res.status}`;
+        if (res.status === 400) {
+          if (errMsg.toLowerCase().includes('model') || errMsg.includes('not found')) {
+            throw new Error(`Model "${model}" tidak dikenali atau tidak tersedia.\nCoba: gemini-2.0-flash, gemini-1.5-flash, atau gemini-1.5-pro`);
+          }
+          if (errMsg.includes('API_KEY_INVALID') || errMsg.includes('invalid')) {
+            throw new Error('Google AI Studio API Key tidak valid. Periksa kembali key Anda di aistudio.google.com → Get API Key.');
+          }
+          throw new Error(`Gemini request tidak valid: ${errMsg}`);
+        }
+        if (res.status === 403) throw new Error('Google AI Studio Key tidak memiliki izin. Pastikan Anda mengaktifkan Generative Language API di Google Cloud Console.');
+        if (res.status === 404) throw new Error(`Model "${model}" tidak ditemukan.\nModel yang tersedia: gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro`);
+        throw new Error(`Gemini API error (${res.status}): ${errMsg}`);
+      }
+
+      const candidate = data.candidates?.[0];
+      if (!candidate) {
+        if (attempt < MAX_RETRIES) { await new Promise(r => setTimeout(r, 3000)); continue; }
+        throw new Error('Gemini tidak menghasilkan respons. Coba ulangi analisis.');
+      }
+      if (candidate.finishReason === 'SAFETY') throw new Error('Gemini memblokir karena konten tidak aman. Coba video/keyword yang berbeda.');
+      if (candidate.finishReason === 'RECITATION') throw new Error('Gemini menolak karena recitation policy. Coba ulangi.');
+
+      const raw = candidate.content?.parts?.[0]?.text;
+      if (!raw?.trim()) {
+        if (attempt < MAX_RETRIES) { await new Promise(r => setTimeout(r, 2000)); continue; }
+        throw new Error('Gemini menghasilkan respons kosong. Coba ulangi.');
+      }
+
+      return extractJSON(raw);
     }
-
-    // FIX: Robust response parsing
-    const candidate = data.candidates?.[0];
-    if (!candidate) throw new Error('Gemini tidak menghasilkan respons (no candidates). Coba ulangi.');
-
-    // Check finish reason
-    if (candidate.finishReason === 'SAFETY') throw new Error('Gemini memblokir respons karena alasan keamanan. Coba keyword yang berbeda.');
-    if (candidate.finishReason === 'RECITATION') throw new Error('Gemini menolak respons karena recitation. Coba ulangi.');
-
-    const raw = candidate.content?.parts?.[0]?.text;
-    if (!raw || !raw.trim()) throw new Error('Gemini menghasilkan respons kosong. Coba ulangi analisis.');
-
-    return extractJSON(raw);
+    throw lastError || new Error('Gemini gagal setelah beberapa percobaan. Coba lagi.');
   }
 
   function renderHighlighterResults(meta, clips) {
