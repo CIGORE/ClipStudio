@@ -503,6 +503,122 @@
       .prov-name { font-size:10px; }
       .country-grid { grid-template-columns:repeat(auto-fill,minmax(46px,1fr)); }
     }
+
+    /* ── BOTTOM NAV BAR — mobile only (≤640px) ── */
+    .bottom-nav {
+      display: none;
+    }
+    @media (max-width: 640px) {
+      /* Hide top nav tabs on mobile */
+      .header-nav { display: none; }
+
+      /* Show bottom nav */
+      .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0; left: 0; right: 0;
+        z-index: 200;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        box-shadow: 0 -4px 20px rgba(0,0,0,.10);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        transition: background var(--t) var(--ease), border-color var(--t) var(--ease);
+      }
+      .bn-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 10px 4px 8px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        color: var(--muted);
+        font-family: var(--font);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        position: relative;
+        transition: color var(--t) var(--ease);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .bn-item.active {
+        color: var(--accent);
+      }
+      .bn-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--t) var(--ease), transform .12s var(--ease);
+      }
+      .bn-item.active .bn-icon {
+        background: var(--accent-bg2);
+        transform: translateY(-1px);
+      }
+      .bn-item:active .bn-icon {
+        transform: scale(.88) translateY(-1px);
+      }
+      .bn-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .bn-item.active .bn-icon svg {
+        stroke-width: 2.2;
+      }
+      .bn-label {
+        font-size: 10px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      /* Active pill indicator */
+      .bn-item.active::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 32px; height: 3px;
+        background: var(--accent);
+        border-radius: 0 0 4px 4px;
+      }
+      /* Push content up so bottom nav doesn't cover it */
+      body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+
+      /* Reset button — hide from top nav area on mobile, show as FAB or inline */
+      .nav-reset { display: none; }
+
+      /* Mobile reset floats near bottom-right above nav */
+      .mobile-reset-fab {
+        display: flex;
+        position: fixed;
+        bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+        right: 14px;
+        z-index: 190;
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 10px rgba(0,0,0,.15);
+        align-items: center; justify-content: center;
+        cursor: pointer;
+        transition: all var(--t) var(--ease);
+        color: var(--text-2);
+      }
+      .mobile-reset-fab:active { transform: scale(.92); }
+      .mobile-reset-fab svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    }
+    @media (min-width: 641px) {
+      .mobile-reset-fab { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -557,6 +673,33 @@
     </nav>
   </div>
 </header>
+
+<!-- ── BOTTOM NAV BAR — visible on mobile only ── -->
+<nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Menu utama">
+  <button class="bn-item active" data-tab="highlighter" aria-label="Clip Highlighter">
+    <span class="bn-icon">
+      <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+    </span>
+    <span class="bn-label">Clip</span>
+  </button>
+  <button class="bn-item" data-tab="finder" aria-label="Viral Finder">
+    <span class="bn-icon">
+      <svg viewBox="0 0 24 24"><path d="M13 2c0 0-1.5 3-1 5.5C12.5 10 15 11 15 14c0 2.5-2 4.5-5 4.5S5 16 5 14c0-2 1-3.5 2-4.5 0 0 0 2 1.5 3 0-3 1-5 4.5-11z"/><path d="M10.5 14.5c-.5 1 0 2 1.5 2s2-1 1.5-2c-.3-.8-1-1-1.5-2-.5 1-.5 1.5-1.5 2z"/></svg>
+    </span>
+    <span class="bn-label">Viral</span>
+  </button>
+  <button class="bn-item" data-tab="guide" aria-label="Panduan">
+    <span class="bn-icon">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </span>
+    <span class="bn-label">Panduan</span>
+  </button>
+</nav>
+
+<!-- Mobile Reset FAB -->
+<button class="mobile-reset-fab" id="btn-reset-fab" title="Reset semua">
+  <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.69"/></svg>
+</button>
 
 <div class="main-wrap">
 
@@ -1068,19 +1211,33 @@
     localStorage.setItem('cs-theme', next);
   });
 
-  /* ─── Tab Switching ─── */
+  /* ─── Tab Switching — syncs top nav + bottom nav ─── */
+  function switchTab(tabName) {
+    $$('.nav-tab').forEach(b => b.classList.remove('active'));
+    $$('.bn-item').forEach(b => b.classList.remove('active'));
+    $$('.tab-panel').forEach(p => p.classList.remove('active'));
+    // Activate matching top nav tab
+    const topBtn = document.querySelector(`.nav-tab[data-tab="${tabName}"]`);
+    if (topBtn) topBtn.classList.add('active');
+    // Activate matching bottom nav item
+    const botBtn = document.querySelector(`.bn-item[data-tab="${tabName}"]`);
+    if (botBtn) botBtn.classList.add('active');
+    // Show panel
+    const panel = $('tab-' + tabName);
+    if (panel) panel.classList.add('active');
+    // Scroll to top smoothly on mobile
+    if (window.innerWidth <= 640) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   $$('.nav-tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      $$('.nav-tab').forEach(b => b.classList.remove('active'));
-      $$('.tab-panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      const panel = $('tab-' + btn.dataset.tab);
-      if (panel) panel.classList.add('active');
-    });
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+  $$('.bn-item').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
   /* ─── Reset ─── */
-  $('btn-reset').addEventListener('click', () => {
+  function doReset() {
     const active = document.querySelector('.tab-panel.active');
     if (!active) return;
     active.querySelectorAll('input[type="text"],input[type="password"]').forEach(i => i.value = '');
@@ -1088,12 +1245,15 @@
     hideAlert('hl-alert'); hideAlert('vf-alert');
     currentVideoId = null; currentClips = []; currentMeta = null;
     allFetchedVideos = []; currentPage = 1;
-    // Reset country selection to default US
     selectedCCs = new Set(['US']);
     updateCountLabel();
     renderCountryGrid();
     showToast('Reset berhasil!');
-  });
+  }
+  $('btn-reset').addEventListener('click', doReset);
+  // Mobile FAB reset
+  const fabReset = document.getElementById('btn-reset-fab');
+  if (fabReset) fabReset.addEventListener('click', doReset);
 
   /* ─── Filter chips ─── */
   $$('.chip').forEach(c => c.addEventListener('click', () => {
@@ -1842,7 +2002,7 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
     const watchBtn = e.target.closest('[data-watch]:not(.vc-thumb)');
     if (watchBtn?.dataset.watch) { window.open('https://youtube.com/watch?v='+watchBtn.dataset.watch,'_blank'); return; }
     const clipBtn = e.target.closest('[data-clip]');
-    if (clipBtn) { $('video-url').value=clipBtn.dataset.clip; document.querySelector('[data-tab="highlighter"]').click(); return; }
+    if (clipBtn) { $('video-url').value=clipBtn.dataset.clip; switchTab('highlighter'); return; }
     const copyVidBtn = e.target.closest('[data-copy-vid]');
     if (copyVidBtn) navigator.clipboard.writeText(copyVidBtn.dataset.copyVid).then(()=>showToast('Video ID disalin!'));
   });
