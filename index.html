@@ -663,12 +663,78 @@
     /* ══════════════════════════════════════
        RESPONSIVE
     ══════════════════════════════════════ */
-    @media (max-width:640px) {
-      .header-logo-row { padding:12px 16px 8px; }
-      .header-right-actions { right:16px; }
-      .nav-tab { padding:0 14px; font-size:12px; }
+    @media (max-width:768px) {
+      /* Header */
+      .header-logo-row { padding:10px 14px 8px; }
+      .header-right-actions { right:14px; }
+      .logo-badge { display:none; }
+
+      /* Nav tabs */
+      .nav-tab { padding:0 12px; font-size:11.5px; }
+      .nav-tabs { padding:0 14px; gap:2px; }
+
+      /* Main layout */
+      .main-wrap { padding:14px 12px 60px; }
+
+      /* Cards */
+      .card { padding:14px 12px; }
+
+      /* Grids → single column */
+      .grid-2 { grid-template-columns:1fr; }
+
+      /* Provider toggle — wrap on small screens */
+      .provider-row { gap:8px; }
+      .provider-toggle { gap:4px; }
+      .prov-btn { padding:6px 10px; gap:6px; }
+      .prov-sub { display:none; }
+      .prov-badge { display:none; }
+
+      /* Model quick buttons */
+      .model-quick-btns { gap:4px; }
+      .mqb { font-size:9px; padding:3px 7px; }
+
+      /* Options row */
+      .opts-flex { flex-direction:column; gap:8px; }
+      .opt-group { width:100%; }
+      .f-select { width:100%; }
+
+      /* Summary grid */
+      .sum-grid { grid-template-columns:repeat(2,1fr); }
+
+      /* Video card */
+      .vid-card { flex-direction:column; }
+      .vid-thumb { width:100%; max-width:100%; aspect-ratio:16/9; height:auto; }
+      .vid-info { padding:10px 0 0; }
+
+      /* Guide */
+      .guide-intro h2 { font-size:16px; }
+      .guide-intro p { font-size:12px; }
+      .step-card { flex-direction:column; gap:8px; }
+      .step-num { width:36px; height:36px; font-size:13px; flex-shrink:0; }
+      .step-body h3 { font-size:13px; }
+      .step-body p, .step-body li { font-size:12px; }
+
+      /* CPM table — scrollable wrapper + smaller text */
+      .cpm-card { padding:12px 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+      .cpm-table { min-width:420px; font-size:11px; }
+      .cpm-table th, .cpm-table td { padding:6px 8px; }
+
+      /* Country grid */
+      .country-grid { grid-template-columns:repeat(auto-fill, minmax(52px, 1fr)); }
+
+      /* Pagination */
+      .pg-btn { min-width:30px; height:30px; font-size:11px; }
+
+      /* Viral Finder filters */
+      .vf-filters { flex-direction:column; gap:8px; }
+    }
+
+    @media (max-width:480px) {
       .nav-tab span:not(.tab-icon) { display:none; }
-      .main-wrap { padding:18px 16px 60px; }
+      .prov-name { font-size:11px; }
+      .logo-clip, .logo-studio { font-size:15px; }
+      .sum-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
+      .provider-toggle { flex-wrap:wrap; }
     }
   </style>
 </head>
@@ -1157,6 +1223,7 @@
     <div class="cpm-card">
       <div class="sec-title" style="margin-bottom:4px">💰 Estimasi CPM berdasarkan Region</div>
       <p style="font-size:12px;color:var(--muted);margin-top:4px">Estimasi CPM untuk konten klip pendek (Shorts/Reels). Angka bersifat indikatif dan dapat berubah sesuai niche dan musim.</p>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <table class="cpm-table">
         <thead><tr><th>Region</th><th>Rentang CPM</th><th>Niche Terbaik</th><th>Potensi</th></tr></thead>
         <tbody>
@@ -1170,6 +1237,7 @@
           <tr><td>🇮🇩 Indonesia</td><td>$0.8–$2.5</td><td>Hiburan, Komedi, Edukasi</td><td>⭐⭐</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
 
     <div class="sec-title" style="margin-bottom:10px;font-size:15px;font-weight:700">🚀 Cara Menggunakan ClipStudio</div>
@@ -1178,13 +1246,52 @@
         <div class="step-num sn-green">01</div>
         <div class="step-body">
           <h3>Siapkan API Key</h3>
-          <p>Dua API key yang perlu Anda siapkan sebelum menggunakan ClipStudio:</p>
+          <p>ClipStudio membutuhkan satu <strong>YouTube API Key</strong> (wajib) dan satu <strong>AI API Key</strong> (pilih salah satu dari tiga opsi di bawah). Semua key disimpan hanya di browser Anda dan tidak pernah dikirim ke server lain.</p>
+
+          <div class="step-note note-ok" style="margin:10px 0 14px">
+            🎯 <strong>Rekomendasi untuk pemula:</strong> Gunakan <strong>Google Gemini</strong> — gratis tanpa kartu kredit, cukup akun Google biasa.
+          </div>
+
+          <h3 style="margin-top:4px">① YouTube Data API v3 (Wajib)</h3>
           <ul>
-            <li><strong>YouTube Data API v3</strong> — Digunakan untuk mengambil metadata video, statistik, dan transcript. Daftar secara gratis melalui <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">Google Cloud Console</a>, lalu aktifkan YouTube Data API v3 di project Anda.</li>
-            <li><strong>Claude API (Anthropic)</strong> — Daftar melalui <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">Anthropic Console</a>.</li>
-            <li><strong>OpenAI API (ChatGPT)</strong> — Alternatif untuk pengguna ChatGPT Pro. Dapatkan API key di <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#10a37f">platform.openai.com</a>. Pilih model sesuai kebutuhan: GPT-4o untuk hasil terbaik, GPT-3.5 Turbo untuk lebih hemat kuota.</li>
+            <li>Buka <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">console.cloud.google.com</a></li>
+            <li>Buat project baru atau pilih project yang sudah ada</li>
+            <li>Klik <strong>APIs &amp; Services → Enable APIs</strong>, cari <em>YouTube Data API v3</em>, klik <strong>Enable</strong></li>
+            <li>Klik <strong>Credentials → Create Credentials → API Key</strong></li>
+            <li>Copy key-nya (format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code>)</li>
           </ul>
-          <div class="step-note note-warn">⚠️ Jangan pernah membagikan API key Anda kepada siapa pun. API key bersifat rahasia dan pribadi.</div>
+          <div class="step-note note-warn" style="margin-top:6px">⚠️ Kuota gratis YouTube API: 10.000 unit/hari. Setiap pencarian menggunakan ~100 unit.</div>
+
+          <h3 style="margin-top:14px">② Google Gemini API — <span style="color:var(--green);font-weight:700">GRATIS</span></h3>
+          <ul>
+            <li>Buka <a href="https://aistudio.google.com" target="_blank" style="color:#4285F4">aistudio.google.com</a></li>
+            <li>Login dengan akun Google biasa (tidak perlu berlangganan)</li>
+            <li>Klik tombol <strong style="color:#4285F4">Get API Key</strong> di pojok kiri atas</li>
+            <li>Klik <strong>Create API Key</strong> → pilih project Google Cloud Anda</li>
+            <li>Copy key-nya (format sama: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code>)</li>
+            <li>Di ClipStudio, pilih provider <strong>Gemini</strong>, lalu paste key di kolom <em>Google AI Studio Key</em></li>
+          </ul>
+          <div class="pill-row">
+            <span class="pill pill-green">✓ Gratis 1.500 req/hari</span>
+            <span class="pill pill-green">✓ Tanpa kartu kredit</span>
+            <span class="pill pill-green">✓ Model: gemini-2.0-flash</span>
+          </div>
+
+          <h3 style="margin-top:14px">③ Claude API (Anthropic) — Berbayar</h3>
+          <ul>
+            <li>Daftar di <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a></li>
+            <li>Tambah kredit (minimum $5), lalu buat API Key</li>
+            <li>Key format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">sk-ant-…</code></li>
+          </ul>
+
+          <h3 style="margin-top:14px">④ OpenAI ChatGPT API — Berbayar</h3>
+          <ul>
+            <li>Buka <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#10a37f">platform.openai.com/api-keys</a></li>
+            <li>Login → klik <strong>Create new secret key</strong></li>
+            <li>Key format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">sk-proj-…</code></li>
+            <li>Di ClipStudio, ketik nama model di kolom yang tersedia (contoh: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">gpt-4o</code>, <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">o1-mini</code>)</li>
+          </ul>
+          <div class="step-note note-warn" style="margin-top:8px">⚠️ Jangan pernah membagikan API key Anda kepada siapa pun. Key bersifat rahasia — jangan paste di tempat umum atau chat.</div>
         </div>
       </div>
       <div class="step-card">
@@ -1621,10 +1728,8 @@
 
   // Update provider UI for a given tab
   function applyProviderUI(tab, provider) {
-    const pfx = tab === 'hl' ? '' : 'vf-';
-    const labelId      = pfx + 'ai-key-label';
-    const inputId      = pfx + 'ai-api-key' || (tab === 'vf' ? 'vf-ai-key' : 'ai-api-key');
-    const realInputId  = tab === 'hl' ? 'ai-api-key' : 'vf-ai-key';
+    const labelId     = tab === 'hl' ? 'ai-key-label'  : 'vf-ai-key-label';
+    const realInputId = tab === 'hl' ? 'ai-api-key'    : 'vf-ai-key';
     const infoId       = tab === 'hl' ? 'provider-info'      : 'vf-provider-info';
     const infoTxtId    = tab === 'hl' ? 'provider-info-text' : 'vf-provider-info-text';
     const oaiRowId     = tab === 'hl' ? 'openai-model-row'   : 'vf-openai-model-row';
