@@ -7,9 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
   <style>
-    /* ══════════════════════════════════════
-       DESIGN TOKENS
-    ══════════════════════════════════════ */
     :root {
       --bg:          #f5f5f4;
       --surface:     #ffffff;
@@ -77,9 +74,6 @@
       --chevron:     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23706e68' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
     }
 
-    /* ══════════════════════════════════════
-       RESET & BASE
-    ══════════════════════════════════════ */
     *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
     html { scroll-behavior:smooth; -webkit-font-smoothing:antialiased; }
     body {
@@ -89,18 +83,13 @@
     }
     a { color:inherit; text-decoration:none; }
     button { font-family:var(--font); cursor:pointer; }
-    input, select { font-family:var(--font); }
+    input, select, textarea { font-family:var(--font); }
     .hidden { display:none !important; }
     ::-webkit-scrollbar { width:4px; height:4px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:99px; }
 
-    /* ══════════════════════════════════════
-       HEADER — 3-row layout
-       Row 1: logo (centered) + theme toggle (right)
-       Row 2: nav tabs (centered)
-       Row 3: subtle divider
-    ══════════════════════════════════════ */
+    /* ── HEADER ── */
     .app-header {
       position:sticky; top:0; z-index:100;
       background:var(--surface);
@@ -108,164 +97,70 @@
       transition:background var(--t) var(--ease),border-color var(--t) var(--ease);
       backdrop-filter:blur(16px);
     }
-
-    /* ── Logo row ── */
     .header-logo-row {
       position:relative;
       display:flex; align-items:center; justify-content:flex-start;
       padding:14px 28px 10px;
       max-width:1080px; margin:0 auto;
     }
-
-    /* Logo — left aligned, horizontal layout */
     .logo {
       display:flex; flex-direction:row; align-items:center; gap:10px;
       text-decoration:none; user-select:none;
     }
-    .logo-icon-wrap {
-      position:relative; width:44px; height:44px;
-      display:flex; align-items:center; justify-content:center;
-    }
-    /* Outer glow ring */
-    .logo-ring {
-      position:absolute; inset:0; border-radius:14px;
-      background:linear-gradient(135deg, var(--accent) 0%, var(--coral) 100%);
-      opacity:.15; transition:opacity var(--t) var(--ease);
-    }
+    .logo-icon-wrap { position:relative; width:44px; height:44px; display:flex; align-items:center; justify-content:center; }
+    .logo-ring { position:absolute; inset:0; border-radius:14px; background:linear-gradient(135deg,var(--accent) 0%,var(--coral) 100%); opacity:.15; transition:opacity var(--t) var(--ease); }
     .logo:hover .logo-ring { opacity:.28; }
-    /* Icon box */
-    .logo-box {
-      position:relative; width:40px; height:40px;
-      background:linear-gradient(135deg, var(--accent) 0%, #3d5e45 100%);
-      border-radius:12px;
-      display:flex; align-items:center; justify-content:center;
-      box-shadow:0 4px 14px rgba(92,122,100,.35);
-      transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease);
-    }
+    .logo-box { position:relative; width:40px; height:40px; background:linear-gradient(135deg,var(--accent) 0%,#3d5e45 100%); border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(92,122,100,.35); transition:transform var(--t) var(--ease),box-shadow var(--t) var(--ease); }
     .logo:hover .logo-box { transform:translateY(-1px); box-shadow:0 6px 18px rgba(92,122,100,.4); }
     .logo-box svg { width:22px; height:22px; fill:#fff; }
-    /* Wordmark + badge stacked */
     .logo-text { display:flex; flex-direction:column; gap:1px; }
-    .logo-wordmark {
-      font-size:16px; font-weight:800; letter-spacing:-.5px;
-      color:var(--text); line-height:1;
-      display:flex; align-items:center; gap:1px;
-    }
+    .logo-wordmark { font-size:16px; font-weight:800; letter-spacing:-.5px; color:var(--text); line-height:1; display:flex; align-items:center; gap:1px; }
     .logo-clip { color:var(--text); }
     .logo-studio { color:var(--accent); }
-    .logo-badge {
-      font-family:var(--mono); font-size:8px; font-weight:600;
-      letter-spacing:1.5px; text-transform:uppercase;
-      color:var(--muted); margin-top:1px;
-    }
-
-    /* Theme toggle — absolute right */
-    .header-right-actions {
-      position:absolute; right:24px; top:50%; transform:translateY(-50%);
-      display:flex; align-items:center; gap:8px;
-    }
-    .theme-toggle {
-      width:36px; height:36px; border-radius:50%;
-      border:1px solid var(--border); background:var(--surface-2);
-      display:flex; align-items:center; justify-content:center;
-      position:relative; overflow:hidden;
-      transition:background var(--t) var(--ease),border-color var(--t) var(--ease),transform .15s;
-    }
-    .theme-toggle:hover  { background:var(--surface-3); border-color:var(--border-2); transform:scale(1.08); }
+    .logo-badge { font-family:var(--mono); font-size:8px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:1px; }
+    .header-right-actions { position:absolute; right:24px; top:50%; transform:translateY(-50%); display:flex; align-items:center; gap:8px; }
+    .theme-toggle { width:36px; height:36px; border-radius:50%; border:1px solid var(--border); background:var(--surface-2); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; transition:background var(--t) var(--ease),border-color var(--t) var(--ease),transform .15s; }
+    .theme-toggle:hover { background:var(--surface-3); border-color:var(--border-2); transform:scale(1.08); }
     .theme-toggle:active { transform:scale(.92); }
-    .toggle-icon {
-      position:absolute; display:flex; align-items:center; justify-content:center;
-      transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .22s;
-    }
+    .toggle-icon { position:absolute; display:flex; align-items:center; justify-content:center; transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .22s; }
     .toggle-icon svg { width:15px; height:15px; stroke:var(--text-2); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .icon-sun  { transform:rotate(0) scale(1);      opacity:1; }
+    .icon-sun  { transform:rotate(0) scale(1); opacity:1; }
     .icon-moon { transform:rotate(-80deg) scale(.3); opacity:0; }
-    [data-theme="dark"] .icon-sun  { transform:rotate(80deg) scale(.3);  opacity:0; }
-    [data-theme="dark"] .icon-moon { transform:rotate(0) scale(1);       opacity:1; }
-
-    /* ── Nav row ── */
-    .header-nav {
-      border-top:1px solid var(--border);
-      display:flex; justify-content:center;
-      transition:border-color var(--t) var(--ease);
-    }
-    .nav-tabs {
-      display:flex; gap:0; max-width:1080px; width:100%;
-      justify-content:flex-start; padding:0 28px;
-    }
-    .nav-tab {
-      padding:0 24px; height:46px;
-      border:none; background:transparent;
-      font-family:var(--font); font-size:13px; font-weight:500; color:var(--muted);
-      display:flex; align-items:center; gap:8px; white-space:nowrap;
-      border-bottom:2px solid transparent; margin-bottom:-1px;
-      position:relative;
-      transition:color var(--t) var(--ease),background var(--t) var(--ease);
-    }
+    [data-theme="dark"] .icon-sun  { transform:rotate(80deg) scale(.3); opacity:0; }
+    [data-theme="dark"] .icon-moon { transform:rotate(0) scale(1); opacity:1; }
+    .header-nav { border-top:1px solid var(--border); display:flex; justify-content:center; transition:border-color var(--t) var(--ease); }
+    .nav-tabs { display:flex; gap:0; max-width:1080px; width:100%; justify-content:flex-start; padding:0 28px; }
+    .nav-tab { padding:0 24px; height:46px; border:none; background:transparent; font-family:var(--font); font-size:13px; font-weight:500; color:var(--muted); display:flex; align-items:center; gap:8px; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-1px; position:relative; transition:color var(--t) var(--ease),background var(--t) var(--ease); }
     .nav-tab:hover { color:var(--text-2); background:var(--surface-2); }
     .nav-tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
-
-    /* Tab icon — custom SVG icon wrapper */
-    .tab-icon {
-      width:20px; height:20px; flex-shrink:0;
-      display:flex; align-items:center; justify-content:center;
-      border-radius:6px;
-      transition:background var(--t) var(--ease);
-    }
+    .tab-icon { width:20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border-radius:6px; transition:background var(--t) var(--ease); }
     .tab-icon svg { width:14px; height:14px; }
-    .nav-tab:hover  .tab-icon { background:var(--surface-3); }
+    .nav-tab:hover .tab-icon { background:var(--surface-3); }
     .nav-tab.active .tab-icon { background:var(--accent-bg); }
     .nav-tab.active .tab-icon svg { stroke:var(--accent); }
-    .nav-tab        .tab-icon svg { stroke:var(--muted); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke var(--t) var(--ease); }
-    .nav-tab:hover  .tab-icon svg { stroke:var(--text-2); }
-
-    /* Reset button — inside nav, right side */
-    .nav-reset {
-      margin-left:auto; display:flex; align-items:center; padding:0 0 0 16px;
-    }
-    .btn-reset {
-      display:flex; align-items:center; gap:5px;
-      padding:5px 11px; border-radius:7px;
-      border:1px solid var(--border); background:transparent;
-      font-family:var(--mono); font-size:10px; font-weight:500;
-      color:var(--muted); letter-spacing:.5px;
-      transition:all var(--t) var(--ease);
-    }
+    .nav-tab .tab-icon svg { stroke:var(--muted); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke var(--t) var(--ease); }
+    .nav-tab:hover .tab-icon svg { stroke:var(--text-2); }
+    .nav-reset { margin-left:auto; display:flex; align-items:center; padding:0 0 0 16px; }
+    .btn-reset { display:flex; align-items:center; gap:5px; padding:5px 11px; border-radius:7px; border:1px solid var(--border); background:transparent; font-family:var(--mono); font-size:10px; font-weight:500; color:var(--muted); letter-spacing:.5px; transition:all var(--t) var(--ease); }
     .btn-reset svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
     .btn-reset:hover { color:var(--text); border-color:var(--border-2); background:var(--surface-2); }
 
-    /* ══════════════════════════════════════
-       LAYOUT
-    ══════════════════════════════════════ */
+    /* ── LAYOUT ── */
     .main-wrap { max-width:1080px; margin:0 auto; padding:28px 24px 80px; }
     .tab-panel { display:none; }
     .tab-panel.active { display:block; animation:fadeUp .2s var(--ease); }
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(5px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 
-    /* ══════════════════════════════════════
-       SHARED COMPONENTS
-    ══════════════════════════════════════ */
-    .card {
-      background:var(--surface); border:1px solid var(--border);
-      border-radius:var(--radius-lg); padding:20px; margin-bottom:14px;
-      box-shadow:var(--shadow-sm);
-      transition:background var(--t) var(--ease),border-color var(--t) var(--ease);
-    }
-    .card-label {
-      font-family:var(--mono); font-size:9.5px; font-weight:600;
-      text-transform:uppercase; letter-spacing:2px; color:var(--muted);
-      margin-bottom:16px; display:flex; align-items:center; gap:7px;
-    }
+    /* ── SHARED COMPONENTS ── */
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); transition:background var(--t) var(--ease),border-color var(--t) var(--ease); }
+    .card-label { font-family:var(--mono); font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:16px; display:flex; align-items:center; gap:7px; }
     .card-label::before { content:''; width:5px; height:5px; background:var(--accent); border-radius:50%; flex-shrink:0; }
     .sec-hd { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
     .sec-title { font-size:15px; font-weight:700; letter-spacing:-.2px; }
     .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-    .grid-1 { display:grid; grid-template-columns:1fr;     gap:10px; margin-bottom:14px; }
+    .grid-1 { display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:14px; }
     @media (max-width:520px) { .grid-2 { grid-template-columns:1fr; } }
-    .field     { display:flex; flex-direction:column; gap:5px; }
+    .field { display:flex; flex-direction:column; gap:5px; }
     .field-lbl { font-family:var(--mono); font-size:9.5px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
     .field-lbl .req { color:var(--red); }
     .field-lbl .opt { color:var(--muted-2); font-weight:400; }
@@ -285,14 +180,9 @@
     .opts-flex { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; align-items:flex-end; }
     .opt-group { display:flex; flex-direction:column; gap:5px; }
     .opt-lbl { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
-    .btn {
-      padding:9px 18px; border-radius:var(--radius); border:none;
-      font-family:var(--font); font-size:13px; font-weight:600;
-      display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
-      transition:all var(--t) var(--ease);
-    }
+    .btn { padding:9px 18px; border-radius:var(--radius); border:none; font-family:var(--font); font-size:13px; font-weight:600; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; transition:all var(--t) var(--ease); }
     .btn-primary { background:var(--accent); color:#fff; box-shadow:0 1px 4px rgba(92,122,100,.3); }
-    .btn-primary:hover  { background:var(--accent-lt); transform:translateY(-1px); box-shadow:0 4px 12px rgba(92,122,100,.25); }
+    .btn-primary:hover { background:var(--accent-lt); transform:translateY(-1px); box-shadow:0 4px 12px rgba(92,122,100,.25); }
     .btn-primary:active { transform:translateY(0); }
     .btn-ghost { background:transparent; border:1px solid var(--border-2); color:var(--text-2); }
     .btn-ghost:hover { background:var(--surface-2); color:var(--text); }
@@ -303,17 +193,21 @@
     .alert-info    { background:var(--accent-bg); border:1px solid var(--accent-bg2); color:var(--accent);}
     .loading { display:flex; align-items:center; gap:12px; padding:32px; justify-content:center; color:var(--muted); font-family:var(--mono); font-size:12px; }
     .spinner { width:16px; height:16px; border:2px solid var(--border-2); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; flex-shrink:0; }
-    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    /* ══════════════════════════════════════
-       COUNTRY GRID
-    ══════════════════════════════════════ */
-    .country-toolbar {
-      display:flex; align-items:center; gap:8px; flex-wrap:wrap;
-      margin-bottom:10px;
+    /* ── CORS WARNING BANNER ── */
+    .cors-warning {
+      background:var(--gold-bg); border:1px solid rgba(176,128,48,.25);
+      border-radius:var(--radius); padding:10px 14px;
+      margin-bottom:14px; font-size:11.5px; font-family:var(--mono);
+      line-height:1.6; color:var(--gold); display:flex; gap:8px; align-items:flex-start;
     }
+    .cors-warning strong { color:var(--text); }
+
+    /* ── COUNTRY GRID ── */
+    .country-toolbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
     .country-search {
-      flex:1; min-width:160px; max-width:260px;
+      flex:1; min-width:140px; max-width:260px;
       background:var(--surface-2); border:1px solid var(--border);
       border-radius:8px; padding:7px 12px 7px 32px;
       color:var(--text); font-family:var(--font); font-size:12px;
@@ -323,55 +217,22 @@
     }
     .country-search:focus { border-color:var(--accent); }
     .country-search::placeholder { color:var(--muted-2); }
-
     .cc-region-tabs { display:flex; gap:4px; flex-wrap:wrap; }
-    .cc-region-tab {
-      padding:4px 10px; border-radius:99px;
-      border:1px solid var(--border); background:var(--surface-2);
-      font-family:var(--mono); font-size:9.5px; font-weight:500;
-      color:var(--muted); cursor:pointer;
-      transition:all var(--t) var(--ease);
-    }
-    .cc-region-tab:hover  { border-color:var(--border-2); color:var(--text-2); }
+    .cc-region-tab { padding:4px 10px; border-radius:99px; border:1px solid var(--border); background:var(--surface-2); font-family:var(--mono); font-size:9.5px; font-weight:500; color:var(--muted); cursor:pointer; transition:all var(--t) var(--ease); }
+    .cc-region-tab:hover { border-color:var(--border-2); color:var(--text-2); }
     .cc-region-tab.active { background:var(--accent-bg); border-color:var(--accent); color:var(--accent); }
-
-    .country-grid {
-      display:grid; grid-template-columns:repeat(auto-fill,minmax(62px,1fr));
-      gap:5px; margin-bottom:14px;
-      max-height:260px; overflow-y:auto;
-      padding:2px;
-    }
-    .cc-select-all {
-      grid-column:1 / -1;
-      padding:6px 10px; border-radius:8px;
-      border:1px dashed var(--accent-bg2); background:var(--accent-bg);
-      display:flex; align-items:center; justify-content:center; gap:6px;
-      font-family:var(--mono); font-size:9.5px; font-weight:600;
-      color:var(--accent); cursor:pointer; letter-spacing:.5px;
-      transition:all var(--t) var(--ease);
-    }
+    .country-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(60px,1fr)); gap:5px; margin-bottom:14px; max-height:260px; overflow-y:auto; padding:2px; }
+    .cc-select-all { grid-column:1/-1; padding:6px 10px; border-radius:8px; border:1px dashed var(--accent-bg2); background:var(--accent-bg); display:flex; align-items:center; justify-content:center; gap:6px; font-family:var(--mono); font-size:9.5px; font-weight:600; color:var(--accent); cursor:pointer; letter-spacing:.5px; transition:all var(--t) var(--ease); }
     .cc-select-all:hover { background:var(--accent-bg2); }
     .cc-select-all svg { width:12px; height:12px; stroke:var(--accent); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-
-    .cc-btn {
-      padding:7px 3px; border-radius:8px;
-      border:1px solid var(--border); background:var(--surface-2);
-      text-align:center; font-family:var(--font); font-size:10px;
-      font-weight:500; color:var(--muted); line-height:1.3;
-      transition:all var(--t) var(--ease); cursor:pointer;
-    }
+    .cc-btn { padding:7px 3px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); text-align:center; font-family:var(--font); font-size:10px; font-weight:500; color:var(--muted); line-height:1.3; transition:all var(--t) var(--ease); cursor:pointer; }
     .cc-btn .flag { font-size:16px; display:block; margin-bottom:2px; }
-    .cc-btn:hover    { border-color:var(--border-2); color:var(--text-2); background:var(--surface-3); }
+    .cc-btn:hover { border-color:var(--border-2); color:var(--text-2); background:var(--surface-3); }
     .cc-btn.selected { border-color:var(--accent); background:var(--accent-bg); color:var(--accent); font-weight:600; }
-    .cc-count {
-      font-family:var(--mono); font-size:9.5px; color:var(--muted);
-      margin-bottom:8px;
-    }
+    .cc-count { font-family:var(--mono); font-size:9.5px; color:var(--muted); margin-bottom:8px; }
     .cc-count strong { color:var(--accent); }
 
-    /* ══════════════════════════════════════
-       TAB 1 — CLIP HIGHLIGHTER
-    ══════════════════════════════════════ */
+    /* ── CLIP HIGHLIGHTER ── */
     .vid-card { display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
     .vid-thumb { width:192px; flex-shrink:0; aspect-ratio:16/9; border-radius:9px; overflow:hidden; background:var(--surface-3); position:relative; cursor:pointer; }
     .vid-thumb img { width:100%; height:100%; object-fit:cover; transition:transform .35s; }
@@ -380,14 +241,14 @@
     .play-ov svg { width:38px; height:38px; fill:#fff; }
     .vid-thumb:hover .play-ov { opacity:1; }
     @media (max-width:480px) { .vid-thumb { width:100%; } }
-    .vid-info    { flex:1; min-width:0; }
-    .vid-title   { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:4px; }
+    .vid-info { flex:1; min-width:0; }
+    .vid-title { font-size:15px; font-weight:700; line-height:1.4; margin-bottom:4px; }
     .vid-channel { font-size:11px; color:var(--muted); font-family:var(--mono); margin-bottom:10px; }
-    .vid-stats   { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
-    .vstat       { display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:11px; }
-    .vstat-v     { font-weight:600; color:var(--text); }
-    .vstat-l     { color:var(--muted); }
-    .vid-desc    { font-size:12.5px; color:var(--text-2); line-height:1.65; margin-bottom:10px; }
+    .vid-stats { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:10px; }
+    .vstat { display:flex; align-items:center; gap:4px; font-family:var(--mono); font-size:11px; }
+    .vstat-v { font-weight:600; color:var(--text); }
+    .vstat-l { color:var(--muted); }
+    .vid-desc { font-size:12.5px; color:var(--text-2); line-height:1.65; margin-bottom:10px; }
     .vid-actions { display:flex; gap:8px; flex-wrap:wrap; }
     .player-wrap { width:100%; aspect-ratio:16/9; border-radius:var(--radius); overflow:hidden; background:#000; margin-bottom:14px; }
     .player-wrap iframe { width:100%; height:100%; border:none; }
@@ -399,53 +260,54 @@
     .sum-sub { font-size:10px; color:var(--muted); margin-top:3px; }
     .tl-wrap { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
     .tl-legend { display:flex; gap:12px; flex-wrap:wrap; }
-    .tl-leg  { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:10px; color:var(--muted); }
-    .tl-dot  { width:8px; height:8px; border-radius:3px; flex-shrink:0; }
-    .tl-bar  { position:relative; height:44px; background:var(--surface-3); border-radius:8px; overflow:hidden; margin-bottom:5px; cursor:pointer; }
+    .tl-leg { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:10px; color:var(--muted); }
+    .tl-dot { width:8px; height:8px; border-radius:3px; flex-shrink:0; }
+    .tl-bar { position:relative; height:44px; background:var(--surface-3); border-radius:8px; overflow:hidden; margin-bottom:5px; cursor:pointer; }
     .tl-grid { position:absolute; inset:0; background:repeating-linear-gradient(90deg,transparent,transparent 9.99%,rgba(128,128,120,.04) 10%); }
-    .tl-seg  { position:absolute; top:5px; bottom:5px; border-radius:5px; opacity:.75; transition:opacity .15s,filter .15s; cursor:pointer; }
+    .tl-seg { position:absolute; top:5px; bottom:5px; border-radius:5px; opacity:.75; transition:opacity .15s,filter .15s; cursor:pointer; }
     .tl-seg:hover { opacity:1; filter:brightness(1.2); }
     .tl-seg-num { position:absolute; top:50%; transform:translateY(-50%); left:6px; font-family:var(--mono); font-size:8.5px; color:#fff; font-weight:600; pointer-events:none; }
     .tl-axis { display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; color:var(--muted); margin-bottom:18px; }
-    .clips-hd   { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+    .clips-hd { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
     .clips-meta { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); }
     .clips-list { display:flex; flex-direction:column; gap:8px; }
-    .clip-card  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); transition:border-color var(--t) var(--ease),transform .15s,box-shadow .15s; }
+    .clip-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); transition:border-color var(--t) var(--ease),transform .15s,box-shadow .15s; }
     .clip-card:hover { border-color:var(--border-2); transform:translateX(2px); box-shadow:var(--shadow); }
     .clip-card.rk1 { border-color:rgba(196,99,74,.35); }
     .clip-card.rk2 { border-color:var(--border-2); }
-    .clip-inner { display:grid; grid-template-columns:3px 1fr auto; align-items:stretch; }
-    @media (max-width:520px) { .clip-inner { grid-template-columns:3px 1fr; } .clip-side { display:none; } }
+    /* FIX: clip-inner uses CSS grid with responsive fallback */
+    .clip-inner { display:grid; grid-template-columns:3px 1fr; align-items:stretch; }
     .clip-stripe { width:3px; }
-    .s-viral { background:var(--red); } .s-hook { background:var(--coral); } .s-insight { background:var(--blue); } .s-emotional { background:#9060cc; } .s-funny { background:var(--green); }
+    .s-viral{background:var(--red)} .s-hook{background:var(--coral)} .s-insight{background:var(--blue)} .s-emotional{background:#9060cc} .s-funny{background:var(--green)}
     .clip-body { padding:13px 15px; min-width:0; }
-    .clip-row  { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
-    .clip-num  { font-size:22px; font-weight:800; opacity:.12; width:24px; flex-shrink:0; line-height:1; }
+    .clip-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+    .clip-num { font-size:22px; font-weight:800; opacity:.12; width:24px; flex-shrink:0; line-height:1; }
     .badge { font-family:var(--mono); font-size:8.5px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; padding:2px 8px; border-radius:99px; flex-shrink:0; }
-    .b-viral { background:var(--red-bg); color:var(--red); border:1px solid rgba(184,64,64,.2); }
-    .b-hook  { background:var(--coral-bg); color:var(--coral); border:1px solid rgba(196,99,74,.2); }
-    .b-insight { background:var(--blue-bg); color:var(--blue); border:1px solid rgba(61,111,168,.2); }
-    .b-emotional { background:rgba(144,96,204,.09); color:#9060cc; border:1px solid rgba(144,96,204,.2); }
-    .b-funny { background:var(--green-bg); color:var(--green); border:1px solid rgba(61,138,94,.2); }
-    .clip-ts  { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--accent); background:var(--accent-bg); padding:2px 8px; border-radius:5px; flex-shrink:0; }
+    .b-viral{background:var(--red-bg);color:var(--red);border:1px solid rgba(184,64,64,.2)}
+    .b-hook{background:var(--coral-bg);color:var(--coral);border:1px solid rgba(196,99,74,.2)}
+    .b-insight{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(61,111,168,.2)}
+    .b-emotional{background:rgba(144,96,204,.09);color:#9060cc;border:1px solid rgba(144,96,204,.2)}
+    .b-funny{background:var(--green-bg);color:var(--green);border:1px solid rgba(61,138,94,.2)}
+    .clip-ts { font-family:var(--mono); font-size:11px; font-weight:600; color:var(--accent); background:var(--accent-bg); padding:2px 8px; border-radius:5px; flex-shrink:0; }
     .clip-dur { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; }
     .clip-ttl { font-size:13px; font-weight:700; margin-bottom:4px; line-height:1.4; color:var(--text); }
     .clip-why { font-size:12px; color:var(--text-2); line-height:1.65; margin-bottom:8px; }
-    .score-row  { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
-    .score-lbl  { font-family:var(--mono); font-size:9px; color:var(--muted); white-space:nowrap; }
-    .score-bar  { flex:1; height:3px; background:var(--surface-3); border-radius:99px; overflow:hidden; }
+    .score-row { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+    .score-lbl { font-family:var(--mono); font-size:9px; color:var(--muted); white-space:nowrap; }
+    .score-bar { flex:1; height:3px; background:var(--surface-3); border-radius:99px; overflow:hidden; }
     .score-fill { height:3px; border-radius:99px; }
-    .score-num  { font-family:var(--mono); font-size:10px; font-weight:600; width:24px; text-align:right; }
-    .tag-row  { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:5px; }
+    .score-num { font-family:var(--mono); font-size:10px; font-weight:600; width:24px; text-align:right; }
+    .tag-row { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:5px; }
     .tag-chip { font-family:var(--mono); font-size:9px; padding:2px 7px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); color:var(--text-2); }
     .clip-cap { font-size:11px; color:var(--muted); font-style:italic; font-family:var(--mono); margin-top:4px; }
-    .clip-side { display:flex; flex-direction:column; gap:5px; padding:12px; justify-content:center; border-left:1px solid var(--border); min-width:94px; }
-    .clip-btn { padding:6px 10px; border-radius:7px; border:none; font-family:var(--font); font-size:11px; font-weight:600; text-align:center; transition:all var(--t) var(--ease); }
-    .cb-play  { background:var(--accent); color:#fff; }
+    /* FIX: clip action buttons now inline below clip body on all screens */
+    .clip-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+    .clip-btn { padding:6px 12px; border-radius:7px; border:none; font-family:var(--font); font-size:11px; font-weight:600; text-align:center; transition:all var(--t) var(--ease); }
+    .cb-play { background:var(--accent); color:#fff; }
     .cb-play:hover { background:var(--accent-lt); }
     .cb-ghost { background:var(--surface-2); color:var(--text-2); border:1px solid var(--border); }
     .cb-ghost:hover { background:var(--surface-3); color:var(--text); }
-    .ts-panel  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .ts-panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
     .ts-scroll { max-height:260px; overflow-y:auto; font-family:var(--mono); font-size:11px; line-height:1.85; color:var(--text-2); background:var(--surface-2); border-radius:8px; padding:12px; border:1px solid var(--border); }
     .ts-line { padding:2px 0; display:flex; gap:10px; border-radius:4px; transition:background .1s; }
     .ts-line:hover { background:var(--surface-3); }
@@ -454,17 +316,15 @@
     .ts-t:hover { text-decoration:underline; }
     .ts-tx { flex:1; color:var(--text-2); }
 
-    /* ══════════════════════════════════════
-       TAB 2 — VIRAL FINDER (non-country)
-    ══════════════════════════════════════ */
+    /* ── VIRAL FINDER ── */
     .filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; align-items:center; }
     .filter-lbl { font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); flex-shrink:0; }
-    .chip { padding:5px 12px; border-radius:99px; border:1px solid var(--border); background:var(--surface); font-size:11px; font-family:var(--mono); color:var(--muted); font-weight:500; transition:all var(--t) var(--ease); }
+    .chip { padding:5px 12px; border-radius:99px; border:1px solid var(--border); background:var(--surface); font-size:11px; font-family:var(--mono); color:var(--muted); font-weight:500; transition:all var(--t) var(--ease); cursor:pointer; }
     .chip.active { background:var(--surface-3); border-color:var(--border-2); color:var(--text); }
     .chip:hover:not(.active) { border-color:var(--border-2); color:var(--text-2); }
     .results-hd { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px solid var(--border); }
     .results-title { font-size:16px; font-weight:800; letter-spacing:-.3px; }
-    .results-meta  { font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:2px; }
+    .results-meta { font-family:var(--mono); font-size:10px; color:var(--muted); margin-top:2px; }
     .video-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(288px,1fr)); gap:12px; }
     @media (max-width:480px) { .video-grid { grid-template-columns:1fr; } }
     .video-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); transition:border-color var(--t) var(--ease),transform .2s,box-shadow .2s; }
@@ -473,285 +333,166 @@
     .vc-thumb img { width:100%; height:100%; object-fit:cover; transition:transform .35s; }
     .video-card:hover .vc-thumb img { transform:scale(1.04); }
     .vc-no-img { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:28px; }
-    .vc-dur   { position:absolute; bottom:7px; right:7px; background:rgba(0,0,0,.72); color:#fff; font-family:var(--mono); font-size:10px; font-weight:500; padding:2px 6px; border-radius:4px; }
-    .vc-flag  { position:absolute; top:8px; left:8px; font-size:15px; background:rgba(0,0,0,.35); border-radius:5px; padding:2px 5px; line-height:1.3; }
+    .vc-dur { position:absolute; bottom:7px; right:7px; background:rgba(0,0,0,.72); color:#fff; font-family:var(--mono); font-size:10px; font-weight:500; padding:2px 6px; border-radius:4px; }
+    .vc-flag { position:absolute; top:8px; left:8px; font-size:15px; background:rgba(0,0,0,.35); border-radius:5px; padding:2px 5px; line-height:1.3; }
     .vc-viral { position:absolute; top:8px; right:8px; font-family:var(--mono); font-size:9px; font-weight:700; padding:2px 7px; border-radius:99px; }
-    .v-hot  { background:var(--red);  color:#fff; }
-    .v-warm { background:var(--gold); color:#fff; }
-    .v-ok   { background:rgba(0,0,0,.45); color:rgba(255,255,255,.75); border:1px solid rgba(255,255,255,.15); }
-    .vc-body  { padding:12px 14px; }
+    .v-hot{background:var(--red);color:#fff} .v-warm{background:var(--gold);color:#fff} .v-ok{background:rgba(0,0,0,.45);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15)}
+    .vc-body { padding:12px 14px; }
     .vc-title { font-size:13px; font-weight:600; line-height:1.45; margin-bottom:5px; color:var(--text); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-clamp:2; }
-    .vc-ch    { font-size:10px; color:var(--muted); font-family:var(--mono); margin-bottom:8px; }
+    .vc-ch { font-size:10px; color:var(--muted); font-family:var(--mono); margin-bottom:8px; }
     .vc-stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
-    .vc-stat  { display:flex; align-items:center; gap:3px; font-family:var(--mono); font-size:10px; }
+    .vc-stat { display:flex; align-items:center; gap:3px; font-family:var(--mono); font-size:10px; }
     .vc-stat-v { font-weight:600; color:var(--text); }
     .vc-stat-l { color:var(--muted); }
-    .safety-row  { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
-    .safety-lbl  { font-size:10px; font-family:var(--mono); color:var(--muted); }
-    .safety-val  { font-size:10px; font-family:var(--mono); font-weight:700; }
-    .safety-bar  { height:3px; border-radius:99px; background:var(--surface-3); margin-bottom:8px; overflow:hidden; }
+    .safety-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+    .safety-lbl { font-size:10px; font-family:var(--mono); color:var(--muted); }
+    .safety-val { font-size:10px; font-family:var(--mono); font-weight:700; }
+    .safety-bar { height:3px; border-radius:99px; background:var(--surface-3); margin-bottom:8px; overflow:hidden; }
     .safety-fill { height:3px; border-radius:99px; }
     .vc-tags { display:flex; flex-wrap:wrap; gap:3px; margin-bottom:10px; }
-    .vc-tag  { font-family:var(--mono); font-size:9px; padding:2px 6px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); color:var(--muted); }
+    .vc-tag { font-family:var(--mono); font-size:9px; padding:2px 6px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); color:var(--muted); }
     .vc-actions { display:flex; gap:5px; }
     .vc-btn { flex:1; padding:7px 6px; border-radius:7px; border:1px solid var(--border); background:var(--surface-2); font-family:var(--font); font-size:11px; font-weight:600; color:var(--text-2); text-align:center; transition:all var(--t) var(--ease); }
-    .vc-btn:hover        { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
+    .vc-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
     .vc-btn.vc-primary:hover { background:var(--accent); border-color:var(--accent); color:#fff; }
     .pagination { display:flex; gap:5px; justify-content:center; padding-top:22px; flex-wrap:wrap; }
     .pg-btn { padding:6px 12px; border-radius:7px; border:1px solid var(--border); background:var(--surface); font-family:var(--mono); font-size:11px; color:var(--muted); transition:all var(--t) var(--ease); }
     .pg-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
-    .pg-btn.active   { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .pg-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
     .pg-btn:disabled { opacity:.3; cursor:default; }
 
-    /* ══════════════════════════════════════
-       TAB 3 — GUIDE
-    ══════════════════════════════════════ */
+    /* ── GUIDE ── */
     .guide-intro { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:var(--radius-lg); padding:22px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
     .guide-intro h2 { font-size:17px; font-weight:800; margin-bottom:7px; letter-spacing:-.3px; }
-    .guide-intro p  { font-size:13px; color:var(--text-2); line-height:1.65; }
+    .guide-intro p { font-size:13px; color:var(--text-2); line-height:1.65; }
     .cpm-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
     .cpm-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:12px; }
     .cpm-table th { padding:8px 10px; text-align:left; background:var(--surface-2); color:var(--muted); font-family:var(--mono); font-size:9.5px; letter-spacing:1px; }
     .cpm-table th:first-child { border-radius:6px 0 0 6px; }
-    .cpm-table th:last-child  { border-radius:0 6px 6px 0; }
+    .cpm-table th:last-child { border-radius:0 6px 6px 0; }
     .cpm-table td { padding:8px 10px; border-top:1px solid var(--border); color:var(--text-2); font-family:var(--mono); font-size:11px; }
     .cpm-table .hl { color:var(--gold); font-weight:600; }
     .cpm-table tr:hover td { background:var(--surface-2); }
     .steps-list { display:flex; flex-direction:column; gap:10px; }
-    .step-card  { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; display:grid; grid-template-columns:40px 1fr; gap:16px; box-shadow:var(--shadow-sm); }
-    .step-num   { width:36px; height:36px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; font-weight:700; }
-    .sn-green { background:var(--accent-bg);  color:var(--accent); border:1px solid var(--accent-bg2); }
-    .sn-gold  { background:var(--gold-bg);    color:var(--gold);   border:1px solid rgba(176,128,48,.2); }
-    .sn-teal  { background:var(--green-bg);   color:var(--green);  border:1px solid rgba(61,138,94,.2); }
-    .sn-blue  { background:var(--blue-bg);    color:var(--blue);   border:1px solid rgba(61,111,168,.2); }
-    .step-body h3  { font-size:14px; font-weight:700; margin-bottom:7px; }
-    .step-body p, .step-body li { font-size:12.5px; color:var(--text-2); line-height:1.7; }
-    .step-body ul  { padding-left:16px; }
+    .step-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:18px; display:grid; grid-template-columns:40px 1fr; gap:16px; box-shadow:var(--shadow-sm); }
+    .step-num { width:36px; height:36px; border-radius:9px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12px; font-weight:700; }
+    .sn-green{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-bg2)}
+    .sn-gold{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(176,128,48,.2)}
+    .sn-teal{background:var(--green-bg);color:var(--green);border:1px solid rgba(61,138,94,.2)}
+    .sn-blue{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(61,111,168,.2)}
+    .step-body h3 { font-size:14px; font-weight:700; margin-bottom:7px; }
+    .step-body p,.step-body li { font-size:12.5px; color:var(--text-2); line-height:1.7; }
+    .step-body ul { padding-left:16px; }
     .step-body strong { color:var(--text); font-weight:600; }
     .step-note { padding:9px 12px; border-radius:7px; margin-top:10px; font-size:11px; font-family:var(--mono); line-height:1.55; }
-    .note-warn   { background:var(--gold-bg);  border:1px solid rgba(176,128,48,.2); color:var(--gold);  }
-    .note-ok     { background:var(--green-bg); border:1px solid rgba(61,138,94,.2);  color:var(--green); }
-    .note-danger { background:var(--red-bg);   border:1px solid rgba(184,64,64,.2);  color:var(--red);   }
+    .note-warn{background:var(--gold-bg);border:1px solid rgba(176,128,48,.2);color:var(--gold)}
+    .note-ok{background:var(--green-bg);border:1px solid rgba(61,138,94,.2);color:var(--green)}
+    .note-danger{background:var(--red-bg);border:1px solid rgba(184,64,64,.2);color:var(--red)}
     .pill-row { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
-    .pill       { font-family:var(--mono); font-size:10px; padding:3px 9px; border-radius:99px; font-weight:500; }
-    .pill-green { background:var(--green-bg); color:var(--green); border:1px solid rgba(61,138,94,.2); }
-    .pill-gold  { background:var(--gold-bg);  color:var(--gold);  border:1px solid rgba(176,128,48,.2); }
-    .pill-red   { background:var(--red-bg);   color:var(--red);   border:1px solid rgba(184,64,64,.2);  }
+    .pill { font-family:var(--mono); font-size:10px; padding:3px 9px; border-radius:99px; font-weight:500; }
+    .pill-green{background:var(--green-bg);color:var(--green);border:1px solid rgba(61,138,94,.2)}
+    .pill-gold{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(176,128,48,.2)}
+    .pill-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(184,64,64,.2)}
 
-    /* Model quick buttons */
-    .model-quick-btns {
-      display:flex; flex-wrap:wrap; gap:5px; margin-top:4px;
-    }
-    .mqb {
-      padding:4px 10px; border-radius:6px;
-      border:1px solid var(--border); background:var(--surface-2);
-      font-family:var(--mono); font-size:10px; font-weight:500;
-      color:var(--muted); cursor:pointer;
-      transition:all var(--t) var(--ease);
-    }
+    /* ── AI PROVIDER ── */
+    .model-quick-btns { display:flex; flex-wrap:wrap; gap:5px; margin-top:4px; }
+    .mqb { padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface-2); font-family:var(--mono); font-size:10px; font-weight:500; color:var(--muted); cursor:pointer; transition:all var(--t) var(--ease); }
     .mqb:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-bg); }
     .mqb.active { border-color:#10a37f; color:#10a37f; background:rgba(16,163,127,.08); }
     .f-mono { font-family:var(--mono) !important; font-size:12px; }
-
-    /* ══════════════════════════════════════
-       AI PROVIDER TOGGLE
-    ══════════════════════════════════════ */
-    .provider-row {
-      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-      margin-bottom:16px;
-    }
-    .provider-lbl {
-      font-family:var(--mono); font-size:9.5px; font-weight:600;
-      text-transform:uppercase; letter-spacing:2px; color:var(--muted);
-      flex-shrink:0;
-    }
-    .provider-toggle {
-      display:flex; gap:6px; flex-wrap:wrap;
-    }
-    .prov-btn {
-      display:flex; align-items:center; gap:9px;
-      padding:8px 14px; border-radius:10px;
-      border:1.5px solid var(--border); background:var(--surface-2);
-      cursor:pointer; transition:all var(--t) var(--ease);
-      position:relative; overflow:hidden;
-    }
-    .prov-btn::before {
-      content:''; position:absolute; inset:0;
-      background:linear-gradient(135deg,var(--accent-bg),transparent);
-      opacity:0; transition:opacity var(--t) var(--ease);
-    }
+    .provider-row { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+    .provider-lbl { font-family:var(--mono); font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:2px; color:var(--muted); flex-shrink:0; }
+    .provider-toggle { display:flex; gap:6px; flex-wrap:wrap; }
+    .prov-btn { display:flex; align-items:center; gap:9px; padding:8px 14px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface-2); cursor:pointer; transition:all var(--t) var(--ease); position:relative; overflow:hidden; }
+    .prov-btn::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--accent-bg),transparent); opacity:0; transition:opacity var(--t) var(--ease); }
     .prov-btn:hover::before { opacity:1; }
     .prov-btn:hover { border-color:var(--border-2); }
-    .prov-btn.active {
-      border-color:var(--accent); background:var(--accent-bg);
-      box-shadow:0 0 0 3px var(--accent-bg2);
-    }
-    .prov-btn.active.openai-active {
-      border-color:#10a37f; background:rgba(16,163,127,.08);
-      box-shadow:0 0 0 3px rgba(16,163,127,.14);
-    }
-    .prov-icon {
-      width:28px; height:28px; border-radius:8px;
-      display:flex; align-items:center; justify-content:center;
-      background:var(--surface); flex-shrink:0;
-      border:1px solid var(--border);
-      transition:background var(--t) var(--ease);
-    }
+    .prov-btn.active { border-color:var(--accent); background:var(--accent-bg); box-shadow:0 0 0 3px var(--accent-bg2); }
+    .prov-btn.active.openai-active { border-color:#10a37f; background:rgba(16,163,127,.08); box-shadow:0 0 0 3px rgba(16,163,127,.14); }
+    .prov-icon { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; background:var(--surface); flex-shrink:0; border:1px solid var(--border); transition:background var(--t) var(--ease); }
     .prov-btn.active .prov-icon { background:var(--accent); border-color:var(--accent); }
     .prov-btn.active.openai-active .prov-icon { background:#10a37f; border-color:#10a37f; }
-    .prov-icon svg {
-      width:14px; height:14px;
-      stroke:var(--muted); transition:stroke var(--t) var(--ease);
-    }
+    .prov-icon svg { width:14px; height:14px; stroke:var(--muted); transition:stroke var(--t) var(--ease); }
     .prov-btn.active .prov-icon svg { stroke:#fff; fill:none; }
     .prov-btn.active.openai-active .prov-icon svg { stroke:none; fill:#fff; }
     .prov-text { display:flex; flex-direction:column; gap:1px; text-align:left; }
-    .prov-name {
-      font-family:var(--font); font-size:13px; font-weight:700;
-      color:var(--text); line-height:1;
-    }
-    .prov-sub {
-      font-family:var(--mono); font-size:9px; color:var(--muted);
-      text-transform:uppercase; letter-spacing:1px;
-    }
-    .prov-badge {
-      font-family:var(--mono); font-size:8px; font-weight:700;
-      padding:1px 6px; border-radius:99px;
-      background:var(--green-bg); color:var(--green);
-      border:1px solid rgba(61,138,94,.2);
-      letter-spacing:.5px;
-    }
-
-    /* Model pills */
-    .model-pills {
-      display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;
-    }
-    .model-pill {
-      display:flex; flex-direction:column; gap:2px;
-      padding:8px 14px; border-radius:9px;
-      border:1.5px solid var(--border); background:var(--surface-2);
-      cursor:pointer; text-align:left;
-      transition:all var(--t) var(--ease);
-    }
+    .prov-name { font-family:var(--font); font-size:13px; font-weight:700; color:var(--text); line-height:1; }
+    .prov-sub { font-family:var(--mono); font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+    .prov-badge { font-family:var(--mono); font-size:8px; font-weight:700; padding:1px 6px; border-radius:99px; background:var(--green-bg); color:var(--green); border:1px solid rgba(61,138,94,.2); letter-spacing:.5px; }
+    .model-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+    .model-pill { display:flex; flex-direction:column; gap:2px; padding:8px 14px; border-radius:9px; border:1.5px solid var(--border); background:var(--surface-2); cursor:pointer; text-align:left; transition:all var(--t) var(--ease); }
     .model-pill:hover { border-color:var(--border-2); background:var(--surface-3); }
-    .model-pill.active {
-      border-color:#10a37f; background:rgba(16,163,127,.08);
-      box-shadow:0 0 0 3px rgba(16,163,127,.12);
-    }
-    .model-pill-name {
-      font-family:var(--font); font-size:12px; font-weight:700;
-      color:var(--text); line-height:1;
-    }
+    .model-pill.active { border-color:#10a37f; background:rgba(16,163,127,.08); box-shadow:0 0 0 3px rgba(16,163,127,.12); }
+    .model-pill-name { font-family:var(--font); font-size:12px; font-weight:700; color:var(--text); line-height:1; }
     .model-pill.active .model-pill-name { color:#10a37f; }
-    .model-pill-desc {
-      font-family:var(--mono); font-size:9px; color:var(--muted);
-    }
-
-    /* Provider info strip */
-    .provider-info {
-      display:flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:8px;
-      border:1px solid var(--border); background:var(--surface-2);
-      margin-bottom:14px; font-family:var(--mono); font-size:10.5px;
-      color:var(--muted); transition:all var(--t) var(--ease);
-    }
+    .model-pill-desc { font-family:var(--mono); font-size:9px; color:var(--muted); }
+    .provider-info { display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); margin-bottom:14px; font-family:var(--mono); font-size:10.5px; color:var(--muted); transition:all var(--t) var(--ease); }
     .provider-info.openai { border-color:rgba(16,163,127,.25); background:rgba(16,163,127,.06); color:#0d8a6a; }
     .provider-info.claude { border-color:var(--accent-bg2); background:var(--accent-bg); color:var(--accent); }
     .provider-info.gemini { border-color:rgba(66,133,244,.25); background:rgba(66,133,244,.06); color:#3367d6; }
     .provider-info svg { width:13px; height:13px; flex-shrink:0; }
 
-    /* ══════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════ */
+    /* ── RESPONSIVE ── */
     @media (max-width:768px) {
-      /* Header */
       .header-logo-row { padding:10px 14px 8px; }
       .header-right-actions { right:14px; }
       .logo-badge { display:none; }
-
-      /* Nav tabs */
       .nav-tab { padding:0 12px; font-size:11.5px; }
       .nav-tabs { padding:0 14px; gap:2px; }
-
-      /* Main layout */
       .main-wrap { padding:14px 12px 60px; }
-
-      /* Cards */
       .card { padding:14px 12px; }
-
-      /* Grids → single column */
       .grid-2 { grid-template-columns:1fr; }
-
-      /* Provider toggle — wrap on small screens */
       .provider-row { gap:8px; }
       .provider-toggle { gap:4px; }
       .prov-btn { padding:6px 10px; gap:6px; }
       .prov-sub { display:none; }
       .prov-badge { display:none; }
-
-      /* Model quick buttons */
       .model-quick-btns { gap:4px; }
       .mqb { font-size:9px; padding:3px 7px; }
-
-      /* Options row */
       .opts-flex { flex-direction:column; gap:8px; }
       .opt-group { width:100%; }
       .f-select { width:100%; }
-
-      /* Summary grid */
       .sum-grid { grid-template-columns:repeat(2,1fr); }
-
-      /* Video card */
       .vid-card { flex-direction:column; }
       .vid-thumb { width:100%; max-width:100%; aspect-ratio:16/9; height:auto; }
       .vid-info { padding:10px 0 0; }
-
-      /* Guide */
       .guide-intro h2 { font-size:16px; }
       .guide-intro p { font-size:12px; }
       .step-card { flex-direction:column; gap:8px; }
       .step-num { width:36px; height:36px; font-size:13px; flex-shrink:0; }
       .step-body h3 { font-size:13px; }
-      .step-body p, .step-body li { font-size:12px; }
-
-      /* CPM table — scrollable wrapper + smaller text */
+      .step-body p,.step-body li { font-size:12px; }
       .cpm-card { padding:12px 10px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
       .cpm-table { min-width:420px; font-size:11px; }
-      .cpm-table th, .cpm-table td { padding:6px 8px; }
-
-      /* Country grid */
-      .country-grid { grid-template-columns:repeat(auto-fill, minmax(52px, 1fr)); }
-
-      /* Pagination */
+      .cpm-table th,.cpm-table td { padding:6px 8px; }
+      .country-grid { grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); }
       .pg-btn { min-width:30px; height:30px; font-size:11px; }
-
-      /* Viral Finder filters */
-      .vf-filters { flex-direction:column; gap:8px; }
     }
-
     @media (max-width:480px) {
       .nav-tab span:not(.tab-icon) { display:none; }
       .prov-name { font-size:11px; }
-      .logo-clip, .logo-studio { font-size:15px; }
+      .logo-clip,.logo-studio { font-size:15px; }
       .sum-grid { grid-template-columns:repeat(2,1fr); gap:8px; }
       .provider-toggle { flex-wrap:wrap; }
+      .row-flex { flex-direction:column; }
+      .row-flex .f-input { min-width:unset; }
+      .vid-actions { flex-direction:column; }
+    }
+    @media (max-width:360px) {
+      .prov-btn { padding:5px 8px; gap:5px; }
+      .prov-name { font-size:10px; }
+      .country-grid { grid-template-columns:repeat(auto-fill,minmax(46px,1fr)); }
     }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════
-     HEADER
-══════════════════════════════════════════════ -->
 <header class="app-header">
-
-  <!-- Row 1: Logo (centered) + Theme toggle (right) -->
   <div class="header-logo-row">
     <a class="logo" href="#" aria-label="ClipStudio Home">
       <div class="logo-icon-wrap">
         <div class="logo-ring"></div>
         <div class="logo-box">
-          <!-- Scissors / film clip icon -->
           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" opacity=".9"/>
             <path d="M6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" opacity=".9"/>
@@ -762,51 +503,31 @@
         </div>
       </div>
       <div class="logo-text">
-        <div class="logo-wordmark">
-          <span class="logo-clip">Clip</span><span class="logo-studio">Studio</span>
-        </div>
+        <div class="logo-wordmark"><span class="logo-clip">Clip</span><span class="logo-studio">Studio</span></div>
         <div class="logo-badge">YouTube Clip &amp; Viral Finder</div>
       </div>
     </a>
-
     <div class="header-right-actions">
       <button class="theme-toggle" id="btn-theme" title="Toggle theme" aria-label="Toggle dark/light mode">
-        <span class="toggle-icon icon-sun">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </span>
-        <span class="toggle-icon icon-moon">
-          <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </span>
+        <span class="toggle-icon icon-sun"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+        <span class="toggle-icon icon-moon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
       </button>
     </div>
   </div>
-
-  <!-- Row 2: Nav + Reset -->
   <div class="header-nav">
     <nav class="nav-tabs" id="main-nav">
-      <!-- Clip Highlighter: scissors icon -->
       <button class="nav-tab active" data-tab="highlighter">
-        <span class="tab-icon">
-          <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
-        </span>
+        <span class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
         <span>Clip Highlighter</span>
       </button>
-      <!-- Viral Finder: flame / trending icon -->
       <button class="nav-tab" data-tab="finder">
-        <span class="tab-icon">
-          <svg viewBox="0 0 24 24"><path d="M13 2c0 0-1.5 3-1 5.5C12.5 10 15 11 15 14c0 2.5-2 4.5-5 4.5S5 16 5 14c0-2 1-3.5 2-4.5 0 0 0 2 1.5 3 0-3 1-5 4.5-11z"/><path d="M10.5 14.5c-.5 1 0 2 1.5 2s2-1 1.5-2c-.3-.8-1-1-1.5-2-.5 1-.5 1.5-1.5 2z"/></svg>
-        </span>
+        <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M13 2c0 0-1.5 3-1 5.5C12.5 10 15 11 15 14c0 2.5-2 4.5-5 4.5S5 16 5 14c0-2 1-3.5 2-4.5 0 0 0 2 1.5 3 0-3 1-5 4.5-11z"/><path d="M10.5 14.5c-.5 1 0 2 1.5 2s2-1 1.5-2c-.3-.8-1-1-1.5-2-.5 1-.5 1.5-1.5 2z"/></svg></span>
         <span>Viral Finder</span>
       </button>
-      <!-- Guide: book / compass icon -->
       <button class="nav-tab" data-tab="guide">
-        <span class="tab-icon">
-          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        </span>
+        <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
         <span>Panduan</span>
       </button>
-
-      <!-- Reset — aligned right inside nav bar -->
       <div class="nav-reset">
         <button class="btn-reset" id="btn-reset">
           <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.69"/></svg>
@@ -817,59 +538,45 @@
   </div>
 </header>
 
-
 <div class="main-wrap">
 
-  <!-- ══════════════════════════════════════════════
-       TAB: CLIP HIGHLIGHTER
-  ══════════════════════════════════════════════ -->
+  <!-- ══════════════════ TAB: CLIP HIGHLIGHTER ══════════════════ -->
   <div class="tab-panel active" id="tab-highlighter">
     <div class="card">
       <div class="card-label">Clip Highlighter — Analyze Video</div>
+
+      <!-- CORS WARNING: Claude & OpenAI tidak support direct browser call -->
+      <div class="cors-warning" id="cors-warn-hl">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><strong>Info CORS:</strong> Claude & OpenAI API tidak dapat dipanggil langsung dari browser (blokir CORS). Gunakan <strong>Gemini</strong> (gratis, tidak ada masalah CORS) atau deploy backend proxy sendiri. Jika menggunakan Claude/OpenAI, request akan melalui <em>cors-anywhere proxy</em> yang mungkin lambat atau tidak tersedia.</div>
+      </div>
 
       <!-- AI Provider Selector -->
       <div class="provider-row">
         <div class="provider-lbl">AI Provider</div>
         <div class="provider-toggle" id="provider-toggle">
           <button class="prov-btn active" data-provider="claude">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">Claude</span>
-              <span class="prov-sub">Anthropic</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span class="prov-text"><span class="prov-name">Claude</span><span class="prov-sub">Anthropic</span></span>
           </button>
           <button class="prov-btn" data-provider="gemini">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g1)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">Gemini</span>
-              <span class="prov-sub">Google</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g1)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg></span>
+            <span class="prov-text"><span class="prov-name">Gemini</span><span class="prov-sub">Google</span></span>
             <span class="prov-badge" style="background:rgba(66,133,244,.12);color:#4285F4;border-color:rgba(66,133,244,.25)">FREE</span>
           </button>
           <button class="prov-btn" data-provider="openai">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">ChatGPT</span>
-              <span class="prov-sub">OpenAI</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg></span>
+            <span class="prov-text"><span class="prov-name">ChatGPT</span><span class="prov-sub">OpenAI</span></span>
             <span class="prov-badge">PRO</span>
           </button>
         </div>
       </div>
 
-      <!-- Provider info strip -->
       <div class="provider-info claude" id="provider-info">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         <span id="provider-info-text">Menggunakan <strong>Claude (Anthropic)</strong> — model claude-opus-4-5 untuk analisis mendalam</span>
       </div>
 
-      <!-- API Keys — dynamic based on provider -->
       <div class="grid-2">
         <div class="field">
           <label class="field-lbl" for="yt-api-key">YouTube API Key <span class="req">*</span></label>
@@ -881,44 +588,33 @@
         </div>
       </div>
 
-      <!-- ChatGPT Model input (hidden by default) -->
+      <!-- OpenAI model row -->
       <div id="openai-model-row" class="hidden" style="margin-bottom:14px">
         <div class="grid-2">
           <div class="field">
-            <label class="field-lbl" for="openai-model-input">
-              Nama Model ChatGPT
-              <span class="opt"> — ketik bebas</span>
-            </label>
-            <input class="f-input f-mono" type="text" id="openai-model-input"
-              placeholder="contoh: gpt-4o, o1, o3-mini, gpt-4.1…"
-              value="gpt-4o" autocomplete="off" spellcheck="false" />
+            <label class="field-lbl" for="openai-model-input">Nama Model ChatGPT <span class="opt">— ketik bebas</span></label>
+            <input class="f-input f-mono" type="text" id="openai-model-input" placeholder="contoh: gpt-4o, o1, o3-mini…" value="gpt-4o" autocomplete="off" spellcheck="false" />
           </div>
           <div class="field">
-            <div class="field-lbl">Contoh model yang umum digunakan</div>
+            <div class="field-lbl">Shortcut model</div>
             <div class="model-quick-btns" id="model-quick-btns">
-              <button class="mqb" data-m="gpt-4o">gpt-4o</button>
-              <button class="mqb" data-m="gpt-4o-mini">4o-mini</button>
-              <button class="mqb" data-m="o1">o1</button>
-              <button class="mqb" data-m="o1-mini">o1-mini</button>
-              <button class="mqb" data-m="o3-mini">o3-mini</button>
-              <button class="mqb" data-m="gpt-4-turbo">4-turbo</button>
-              <button class="mqb" data-m="gpt-3.5-turbo">3.5-turbo</button>
+              <button class="mqb" data-target="openai-model-input" data-m="gpt-4o">gpt-4o</button>
+              <button class="mqb" data-target="openai-model-input" data-m="gpt-4o-mini">4o-mini</button>
+              <button class="mqb" data-target="openai-model-input" data-m="o1">o1</button>
+              <button class="mqb" data-target="openai-model-input" data-m="o1-mini">o1-mini</button>
+              <button class="mqb" data-target="openai-model-input" data-m="gpt-4-turbo">4-turbo</button>
+              <button class="mqb" data-target="openai-model-input" data-m="gpt-3.5-turbo">3.5-turbo</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Gemini Model input (hidden by default) -->
+      <!-- Gemini model row -->
       <div id="gemini-model-row" class="hidden" style="margin-bottom:14px">
         <div class="grid-2">
           <div class="field">
-            <label class="field-lbl" for="gemini-model-input">
-              Nama Model Gemini
-              <span class="opt"> — ketik bebas</span>
-            </label>
-            <input class="f-input f-mono" type="text" id="gemini-model-input"
-              placeholder="contoh: gemini-2.0-flash, gemini-1.5-pro…"
-              value="gemini-2.0-flash" autocomplete="off" spellcheck="false" />
+            <label class="field-lbl" for="gemini-model-input">Nama Model Gemini <span class="opt">— ketik bebas</span></label>
+            <input class="f-input f-mono" type="text" id="gemini-model-input" placeholder="contoh: gemini-2.0-flash…" value="gemini-2.0-flash" autocomplete="off" spellcheck="false" />
           </div>
           <div class="field">
             <div class="field-lbl">Shortcut model <span class="opt">— gratis semua</span></div>
@@ -931,6 +627,7 @@
           </div>
         </div>
       </div>
+
       <div class="row-flex">
         <input class="f-input f-text" type="text" id="video-url" placeholder="Paste YouTube URL atau Video ID…" />
         <button class="btn btn-primary" id="btn-analyze">
@@ -938,6 +635,7 @@
           Analyze
         </button>
       </div>
+
       <div class="opts-flex">
         <div class="opt-group">
           <div class="opt-lbl">Clip Count</div>
@@ -978,7 +676,7 @@
     </div>
 
     <div id="hl-alert" class="hidden"></div>
-    <div id="hl-loading" class="loading hidden"><div class="spinner"></div> Analyzing video with AI…</div>
+    <div id="hl-loading" class="loading hidden"><div class="spinner"></div><span>Menganalisis video…</span></div>
 
     <div id="hl-results" class="hidden">
       <div class="vid-card">
@@ -1012,15 +710,15 @@
         <div class="clips-hd">
           <span class="clips-meta" id="clips-meta-lbl">Clips</span>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm" id="btn-sort-score">Sort: Score</button>
-            <button class="btn btn-ghost btn-sm" id="btn-sort-time">Sort: Time</button>
+            <button class="btn btn-ghost btn-sm" id="btn-sort-score">Sort: Score ↓</button>
+            <button class="btn btn-ghost btn-sm" id="btn-sort-time">Sort: Time →</button>
           </div>
         </div>
         <div class="clips-list" id="clips-container"></div>
       </div>
       <div class="ts-panel hidden" id="ts-panel">
         <div class="sec-hd">
-          <div class="sec-title">Transcript</div>
+          <div class="sec-title">Transcript Preview</div>
           <button class="btn btn-ghost btn-sm" id="btn-close-ts">✕ Close</button>
         </div>
         <div class="ts-scroll" id="ts-scroll"></div>
@@ -1028,75 +726,58 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════
-       TAB: VIRAL FINDER
-  ══════════════════════════════════════════════ -->
+  <!-- ══════════════════ TAB: VIRAL FINDER ══════════════════ -->
   <div class="tab-panel" id="tab-finder">
     <div class="card">
       <div class="card-label">Viral Finder — Discover Trending Content</div>
 
-      <!-- AI Provider Selector — Viral Finder -->
+      <!-- CORS WARNING for VF -->
+      <div class="cors-warning" id="cors-warn-vf">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><strong>Info CORS:</strong> Untuk skor AI di Viral Finder, gunakan <strong>Gemini</strong> (gratis, tidak ada masalah CORS). Claude & OpenAI key di sini bersifat opsional karena skor viral dihitung secara matematis tanpa AI jika key tidak diisi.</div>
+      </div>
+
       <div class="provider-row">
         <div class="provider-lbl">AI Provider</div>
         <div class="provider-toggle" id="vf-provider-toggle">
           <button class="prov-btn active" data-provider="claude">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">Claude</span>
-              <span class="prov-sub">Anthropic</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19h20L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 8v5M12 16v.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span class="prov-text"><span class="prov-name">Claude</span><span class="prov-sub">Anthropic</span></span>
           </button>
           <button class="prov-btn" data-provider="gemini">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g2)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">Gemini</span>
-              <span class="prov-sub">Google</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="none"><defs><linearGradient id="gem-g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4285F4"/><stop offset="100%" stop-color="#34A853"/></linearGradient></defs><path d="M12 2C12 2 6 8.5 6 12s2.686 6 6 6 6-2.686 6-6S12 2 12 2z" fill="url(#gem-g2)" opacity=".9"/><path d="M12 22c0 0 6-8.5 6-10s-2.686-6-6-6-6 2.686-6 6 0 10 6 10z" fill="#EA4335" opacity=".7"/></svg></span>
+            <span class="prov-text"><span class="prov-name">Gemini</span><span class="prov-sub">Google</span></span>
             <span class="prov-badge" style="background:rgba(66,133,244,.12);color:#4285F4;border-color:rgba(66,133,244,.25)">FREE</span>
           </button>
           <button class="prov-btn" data-provider="openai">
-            <span class="prov-icon">
-              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
-            </span>
-            <span class="prov-text">
-              <span class="prov-name">ChatGPT</span>
-              <span class="prov-sub">OpenAI</span>
-            </span>
+            <span class="prov-icon"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zm-9.76 9.674a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.677l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0L4.001 14.2A4.503 4.503 0 0 1 2.34 7.896zm16.597 3.855l-5.833-3.387 2.019-1.168a.076.076 0 0 1 .071 0l4.816 2.8a4.5 4.5 0 0 1-.676 8.123v-5.678a.772.772 0 0 0-.397-.69zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.815-2.774a4.5 4.5 0 0 1 6.675 4.665zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg></span>
+            <span class="prov-text"><span class="prov-name">ChatGPT</span><span class="prov-sub">OpenAI</span></span>
             <span class="prov-badge">PRO</span>
           </button>
         </div>
       </div>
 
-      <!-- Provider info strip -->
       <div class="provider-info claude" id="vf-provider-info">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
         <span id="vf-provider-info-text">Menggunakan <strong>Claude (Anthropic)</strong> untuk menghitung viral score secara cerdas.</span>
       </div>
 
-      <!-- API Keys -->
       <div class="grid-2">
         <div class="field">
           <label class="field-lbl" for="vf-yt-key">YouTube API Key <span class="req">*</span></label>
           <input class="f-input" type="password" id="vf-yt-key" placeholder="AIzaSy…" autocomplete="off" />
         </div>
         <div class="field">
-          <label class="field-lbl" id="vf-ai-key-label">Claude API Key <span class="opt">(opsional — untuk skor AI)</span></label>
+          <label class="field-lbl" id="vf-ai-key-label">Claude API Key <span class="opt">(opsional)</span></label>
           <input class="f-input" type="password" id="vf-ai-key" placeholder="sk-ant-…" autocomplete="off" />
         </div>
       </div>
 
-      <!-- OpenAI model input for VF -->
       <div id="vf-openai-model-row" class="hidden" style="margin-bottom:14px">
         <div class="grid-2">
           <div class="field">
             <label class="field-lbl" for="vf-openai-model-input">Nama Model ChatGPT <span class="opt">— ketik bebas</span></label>
-            <input class="f-input f-mono" type="text" id="vf-openai-model-input"
-              placeholder="contoh: gpt-4o, o1, o3-mini…"
-              value="gpt-4o" autocomplete="off" spellcheck="false" />
+            <input class="f-input f-mono" type="text" id="vf-openai-model-input" placeholder="contoh: gpt-4o…" value="gpt-4o" autocomplete="off" spellcheck="false" />
           </div>
           <div class="field">
             <div class="field-lbl">Shortcut model</div>
@@ -1104,21 +785,16 @@
               <button class="mqb" data-target="vf-openai-model-input" data-m="gpt-4o">gpt-4o</button>
               <button class="mqb" data-target="vf-openai-model-input" data-m="gpt-4o-mini">4o-mini</button>
               <button class="mqb" data-target="vf-openai-model-input" data-m="o1">o1</button>
-              <button class="mqb" data-target="vf-openai-model-input" data-m="o1-mini">o1-mini</button>
-              <button class="mqb" data-target="vf-openai-model-input" data-m="o3-mini">o3-mini</button>
               <button class="mqb" data-target="vf-openai-model-input" data-m="gpt-3.5-turbo">3.5-turbo</button>
             </div>
           </div>
         </div>
       </div>
-      <!-- Gemini model input for VF -->
       <div id="vf-gemini-model-row" class="hidden" style="margin-bottom:14px">
         <div class="grid-2">
           <div class="field">
             <label class="field-lbl" for="vf-gemini-model-input">Nama Model Gemini <span class="opt">— ketik bebas</span></label>
-            <input class="f-input f-mono" type="text" id="vf-gemini-model-input"
-              placeholder="contoh: gemini-2.0-flash, gemini-1.5-pro…"
-              value="gemini-2.0-flash" autocomplete="off" spellcheck="false" />
+            <input class="f-input f-mono" type="text" id="vf-gemini-model-input" placeholder="contoh: gemini-2.0-flash…" value="gemini-2.0-flash" autocomplete="off" spellcheck="false" />
           </div>
           <div class="field">
             <div class="field-lbl">Shortcut model <span class="opt">— gratis semua</span></div>
@@ -1131,6 +807,7 @@
           </div>
         </div>
       </div>
+
       <div class="grid-1">
         <div class="field">
           <label class="field-lbl" for="vf-keyword">Keyword / Niche</label>
@@ -1138,10 +815,7 @@
         </div>
       </div>
 
-      <!-- COUNTRY SELECTOR -->
       <div class="card-label" style="margin-bottom:10px">Target Region</div>
-
-      <!-- Toolbar: search + region tabs -->
       <div class="country-toolbar">
         <input class="country-search" type="text" id="cc-search" placeholder="Search country…" />
         <div class="cc-region-tabs" id="cc-region-tabs">
@@ -1154,13 +828,9 @@
           <button class="cc-region-tab" data-region="middle-east">Middle East</button>
         </div>
       </div>
+      <div class="cc-count" id="cc-count"><strong>1</strong> country selected</div>
+      <div class="country-grid" id="country-grid"></div>
 
-      <div class="cc-count" id="cc-count"><strong>0</strong> countries selected</div>
-      <div class="country-grid" id="country-grid">
-        <!-- Populated by JS -->
-      </div>
-
-      <!-- Filter chips -->
       <div class="filter-bar">
         <span class="filter-lbl">Filter:</span>
         <button class="chip active" data-filter="all">All</button>
@@ -1198,23 +868,21 @@
     </div>
 
     <div id="vf-alert" class="hidden"></div>
-    <div id="vf-loading" class="loading hidden"><div class="spinner"></div> Searching viral content…</div>
+    <div id="vf-loading" class="loading hidden"><div class="spinner"></div><span>Mencari video viral…</span></div>
     <div id="vf-results" class="hidden">
       <div class="results-hd">
         <div>
           <div class="results-title" id="vf-title">Viral Videos</div>
-          <div class="results-meta"  id="vf-meta"></div>
+          <div class="results-meta" id="vf-meta"></div>
         </div>
         <button class="btn btn-ghost btn-sm" id="btn-export-vf">⬇ Export CSV</button>
       </div>
       <div class="video-grid" id="vf-grid"></div>
-      <div class="pagination"  id="vf-pagination"></div>
+      <div class="pagination" id="vf-pagination"></div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════
-       TAB: GUIDE
-  ══════════════════════════════════════════════ -->
+  <!-- ══════════════════ TAB: GUIDE ══════════════════ -->
   <div class="tab-panel" id="tab-guide">
     <div class="guide-intro">
       <h2>Panduan Penggunaan ClipStudio</h2>
@@ -1222,89 +890,58 @@
     </div>
     <div class="cpm-card">
       <div class="sec-title" style="margin-bottom:4px">💰 Estimasi CPM berdasarkan Region</div>
-      <p style="font-size:12px;color:var(--muted);margin-top:4px">Estimasi CPM untuk konten klip pendek (Shorts/Reels). Angka bersifat indikatif dan dapat berubah sesuai niche dan musim.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px">Estimasi CPM untuk konten klip pendek (Shorts/Reels). Angka bersifat indikatif.</p>
       <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-      <table class="cpm-table">
-        <thead><tr><th>Region</th><th>Rentang CPM</th><th>Niche Terbaik</th><th>Potensi</th></tr></thead>
-        <tbody>
-          <tr><td>🇺🇸 Amerika Serikat</td><td class="hl">$8–$18</td><td>Keuangan, Teknologi, Kesehatan</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
-          <tr><td>🇬🇧 Inggris</td><td class="hl">$7–$14</td><td>Bisnis, Gaya Hidup</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
-          <tr><td>🇦🇺 Australia</td><td class="hl">$6–$13</td><td>Travel, Keuangan</td><td class="hl">⭐⭐⭐⭐</td></tr>
-          <tr><td>🇩🇪 Jerman</td><td>$5–$11</td><td>Teknik, Otomotif</td><td>⭐⭐⭐⭐</td></tr>
-          <tr><td>🇸🇬 Singapura</td><td>$4–$10</td><td>Bisnis, Properti</td><td>⭐⭐⭐</td></tr>
-          <tr><td>🇯🇵 Jepang</td><td>$4–$9</td><td>Gaming, Anime</td><td>⭐⭐⭐</td></tr>
-          <tr><td>🇰🇷 Korea Selatan</td><td>$3–$8</td><td>K-Pop, Kecantikan</td><td>⭐⭐⭐</td></tr>
-          <tr><td>🇮🇩 Indonesia</td><td>$0.8–$2.5</td><td>Hiburan, Komedi, Edukasi</td><td>⭐⭐</td></tr>
-        </tbody>
-      </table>
+        <table class="cpm-table">
+          <thead><tr><th>Region</th><th>Rentang CPM</th><th>Niche Terbaik</th><th>Potensi</th></tr></thead>
+          <tbody>
+            <tr><td>🇺🇸 Amerika Serikat</td><td class="hl">$8–$18</td><td>Keuangan, Teknologi, Kesehatan</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
+            <tr><td>🇬🇧 Inggris</td><td class="hl">$7–$14</td><td>Bisnis, Gaya Hidup</td><td class="hl">⭐⭐⭐⭐⭐</td></tr>
+            <tr><td>🇦🇺 Australia</td><td class="hl">$6–$13</td><td>Travel, Keuangan</td><td class="hl">⭐⭐⭐⭐</td></tr>
+            <tr><td>🇩🇪 Jerman</td><td>$5–$11</td><td>Teknik, Otomotif</td><td>⭐⭐⭐⭐</td></tr>
+            <tr><td>🇸🇬 Singapura</td><td>$4–$10</td><td>Bisnis, Properti</td><td>⭐⭐⭐</td></tr>
+            <tr><td>🇯🇵 Jepang</td><td>$4–$9</td><td>Gaming, Anime</td><td>⭐⭐⭐</td></tr>
+            <tr><td>🇰🇷 Korea Selatan</td><td>$3–$8</td><td>K-Pop, Kecantikan</td><td>⭐⭐⭐</td></tr>
+            <tr><td>🇮🇩 Indonesia</td><td>$0.8–$2.5</td><td>Hiburan, Komedi, Edukasi</td><td>⭐⭐</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
     <div class="sec-title" style="margin-bottom:10px;font-size:15px;font-weight:700">🚀 Cara Menggunakan ClipStudio</div>
     <div class="steps-list">
       <div class="step-card">
         <div class="step-num sn-green">01</div>
         <div class="step-body">
           <h3>Siapkan API Key</h3>
-          <p>ClipStudio membutuhkan satu <strong>YouTube API Key</strong> (wajib) dan satu <strong>AI API Key</strong> (pilih salah satu dari tiga opsi di bawah). Semua key disimpan hanya di browser Anda dan tidak pernah dikirim ke server lain.</p>
-
-          <div class="step-note note-ok" style="margin:10px 0 14px">
-            🎯 <strong>Rekomendasi untuk pemula:</strong> Gunakan <strong>Google Gemini</strong> — gratis tanpa kartu kredit, cukup akun Google biasa.
-          </div>
-
-          <h3 style="margin-top:4px">① YouTube Data API v3 (Wajib)</h3>
+          <p>Butuh <strong>YouTube API Key</strong> (wajib) dan <strong>AI API Key</strong> pilihan. Semua key hanya tersimpan di browser Anda.</p>
+          <div class="step-note note-ok" style="margin:10px 0 14px">🎯 <strong>Rekomendasi pemula:</strong> Gunakan <strong>Google Gemini</strong> — gratis, tidak ada masalah CORS, tidak perlu kartu kredit.</div>
+          <h3>① YouTube Data API v3 (Wajib)</h3>
           <ul>
             <li>Buka <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">console.cloud.google.com</a></li>
-            <li>Buat project baru atau pilih project yang sudah ada</li>
-            <li>Klik <strong>APIs &amp; Services → Enable APIs</strong>, cari <em>YouTube Data API v3</em>, klik <strong>Enable</strong></li>
-            <li>Klik <strong>Credentials → Create Credentials → API Key</strong></li>
-            <li>Copy key-nya (format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code>)</li>
+            <li>Buat project → Enable <em>YouTube Data API v3</em></li>
+            <li>Credentials → Create API Key → Copy (format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code>)</li>
           </ul>
-          <div class="step-note note-warn" style="margin-top:6px">⚠️ Kuota gratis YouTube API: 10.000 unit/hari. Setiap pencarian menggunakan ~100 unit.</div>
-
-          <h3 style="margin-top:14px">② Google Gemini API — <span style="color:var(--green);font-weight:700">GRATIS</span></h3>
+          <div class="step-note note-warn">⚠️ Kuota gratis: 10.000 unit/hari. Tiap pencarian ~100 unit.</div>
+          <h3 style="margin-top:14px">② Google Gemini — <span style="color:var(--green)">GRATIS & Direkomendasikan</span></h3>
           <ul>
             <li>Buka <a href="https://aistudio.google.com" target="_blank" style="color:#4285F4">aistudio.google.com</a></li>
-            <li>Login dengan akun Google biasa (tidak perlu berlangganan)</li>
-            <li>Klik tombol <strong style="color:#4285F4">Get API Key</strong> di pojok kiri atas</li>
-            <li>Klik <strong>Create API Key</strong> → pilih project Google Cloud Anda</li>
-            <li>Copy key-nya (format sama: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code>)</li>
-            <li>Di ClipStudio, pilih provider <strong>Gemini</strong>, lalu paste key di kolom <em>Google AI Studio Key</em></li>
+            <li>Login → klik <strong>Get API Key</strong> → Create API Key</li>
+            <li>Format sama: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">AIzaSy…</code></li>
           </ul>
           <div class="pill-row">
             <span class="pill pill-green">✓ Gratis 1.500 req/hari</span>
             <span class="pill pill-green">✓ Tanpa kartu kredit</span>
-            <span class="pill pill-green">✓ Model: gemini-2.0-flash</span>
+            <span class="pill pill-green">✓ Tidak ada masalah CORS</span>
           </div>
-
-          <h3 style="margin-top:14px">③ Claude API (Anthropic) — Berbayar</h3>
-          <ul>
-            <li>Daftar di <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent)">console.anthropic.com</a></li>
-            <li>Tambah kredit (minimum $5), lalu buat API Key</li>
-            <li>Key format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">sk-ant-…</code></li>
-          </ul>
-
-          <h3 style="margin-top:14px">④ OpenAI ChatGPT API — Berbayar</h3>
-          <ul>
-            <li>Buka <a href="https://platform.openai.com/api-keys" target="_blank" style="color:#10a37f">platform.openai.com/api-keys</a></li>
-            <li>Login → klik <strong>Create new secret key</strong></li>
-            <li>Key format: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">sk-proj-…</code></li>
-            <li>Di ClipStudio, ketik nama model di kolom yang tersedia (contoh: <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">gpt-4o</code>, <code style="font-family:var(--mono);font-size:11px;background:var(--surface-2);padding:1px 5px;border-radius:4px">o1-mini</code>)</li>
-          </ul>
-          <div class="step-note note-warn" style="margin-top:8px">⚠️ Jangan pernah membagikan API key Anda kepada siapa pun. Key bersifat rahasia — jangan paste di tempat umum atau chat.</div>
+          <div class="step-note note-danger" style="margin-top:10px">❌ <strong>Claude & OpenAI</strong> memblokir request langsung dari browser (CORS policy). Untuk menggunakannya, Anda perlu backend/proxy sendiri.</div>
+          <div class="step-note note-warn" style="margin-top:6px">⚠️ Jangan bagikan API key Anda kepada siapa pun.</div>
         </div>
       </div>
       <div class="step-card">
         <div class="step-num sn-gold">02</div>
         <div class="step-body">
           <h3>Gunakan Clip Highlighter</h3>
-          <p>Masukkan URL YouTube atau Video ID, atur jumlah klip, panjang klip, dan platform target, kemudian klik <strong>Analyze</strong>. AI akan menganalisis pola engagement dan konten video untuk menemukan segmen yang paling berpotensi viral, lengkap dengan:</p>
-          <ul>
-            <li>Skor viral dan hook untuk setiap klip yang direkomendasikan</li>
-            <li>Alasan ilmiah mengapa segmen tersebut berpotensi viral</li>
-            <li>Caption siap pakai untuk diunggah ke media sosial</li>
-            <li>Visualisasi timeline interaktif</li>
-          </ul>
+          <p>Masukkan URL YouTube, atur opsi clip, klik <strong>Analyze</strong>. AI menganalisis video dan menemukan segmen paling viral dengan skor, alasan, dan caption siap pakai.</p>
           <div class="pill-row">
             <span class="pill pill-green">✓ Deteksi Hook</span>
             <span class="pill pill-green">✓ Viral Score</span>
@@ -1317,34 +954,23 @@
         <div class="step-num sn-teal">03</div>
         <div class="step-body">
           <h3>Gunakan Viral Finder</h3>
-          <p>Masukkan keyword atau niche yang ingin Anda riset, pilih satu atau beberapa negara target (gunakan tombol <strong>Select All</strong> untuk memilih semua), lalu klik <strong>Find Viral</strong>. Sistem akan mencari video dengan skor viral tinggi dari setiap region yang dipilih dan menampilkan:</p>
-          <ul>
-            <li>Jumlah penayangan, like, dan komentar secara real-time</li>
-            <li>Brand safety score untuk keamanan monetisasi</li>
-            <li>Indikator video pendek (Shorts) dan status trending</li>
-          </ul>
-          <div class="step-note note-ok">✓ Prioritaskan region US, UK, dan Australia untuk mendapatkan estimasi CPM yang lebih tinggi.</div>
-          <div class="step-note note-warn" style="margin-top:6px">⚠️ YouTube API membatasi pencarian per region. Saat memilih banyak negara, sistem akan mengambil data dari maksimal 3 region sekaligus untuk menjaga kuota API Anda.</div>
+          <p>Masukkan keyword, pilih negara target, klik <strong>Find Viral</strong>. Sistem mencari video viral real-time dengan brand safety score.</p>
+          <div class="step-note note-ok">✓ Prioritaskan US, UK, Australia untuk CPM tertinggi.</div>
+          <div class="step-note note-warn" style="margin-top:6px">⚠️ Max 3 region sekaligus untuk hemat kuota API.</div>
         </div>
       </div>
       <div class="step-card">
         <div class="step-num sn-blue">04</div>
         <div class="step-body">
           <h3>Export dan Monetisasi</h3>
-          <p>Setelah analisis selesai, Anda dapat memanfaatkan hasilnya dengan beberapa cara:</p>
-          <ul>
-            <li>Klik <strong>Export JSON</strong> untuk mengunduh semua data klip yang direkomendasikan</li>
-            <li>Klik <strong>Export CSV</strong> di Viral Finder untuk menyimpan daftar video ke spreadsheet</li>
-            <li>Gunakan timestamp yang tersedia untuk memotong video di CapCut, Adobe Premiere, atau DaVinci Resolve</li>
-            <li>Salin AI-generated caption langsung ke TikTok, Instagram Reels, atau YouTube Shorts</li>
-          </ul>
-          <div class="step-note note-danger">❌ Hindari mengunggah ulang video tanpa modifikasi. Selalu tambahkan nilai orisinal agar tidak terkena pelanggaran hak cipta.</div>
+          <p>Export JSON/CSV, gunakan timestamp untuk memotong di CapCut/Premiere, salin caption ke TikTok/Reels/Shorts.</p>
+          <div class="step-note note-danger">❌ Selalu tambahkan nilai orisinal — jangan upload ulang tanpa modifikasi.</div>
         </div>
       </div>
     </div>
   </div>
 
-</div><!-- /main-wrap -->
+</div>
 
 <script>
 (function () {
@@ -1354,16 +980,16 @@
   const $ = id => document.getElementById(id);
   const $$ = sel => document.querySelectorAll(sel);
   const fmt = n => n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
-  const fmtDur = sec => Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0');
+  const fmtDur = sec => { sec = Math.max(0, sec|0); return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); };
   const scoreColor = s => s>=80?'var(--green)':s>=60?'var(--gold)':s>=40?'var(--coral)':'var(--red)';
 
   function showAlert(id, type, msg) {
     const el = $(id);
     el.className = 'alert alert-' + type;
-    el.textContent = msg;
+    el.innerHTML = msg;
     el.classList.remove('hidden');
   }
-  function hideAlert(id) { $(id).className = 'hidden'; }
+  function hideAlert(id) { const el=$(id); el.className='hidden'; el.innerHTML=''; }
 
   function showToast(msg) {
     $$('.cs-toast').forEach(t => t.remove());
@@ -1381,10 +1007,21 @@
     });
     document.body.appendChild(t);
     requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
-    setTimeout(() => {
-      t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)';
-      setTimeout(() => t.remove(), 250);
-    }, 2500);
+    setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)'; setTimeout(()=>t.remove(),250); }, 2500);
+  }
+
+  /* ─── Extract JSON from text (robust) ─── */
+  function extractJSON(text) {
+    // Remove markdown fences
+    text = text.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    // Try direct parse first
+    try { return JSON.parse(text); } catch {}
+    // Find first [ ... ] or { ... }
+    const arrMatch = text.match(/\[[\s\S]*\]/);
+    if (arrMatch) { try { return JSON.parse(arrMatch[0]); } catch {} }
+    const objMatch = text.match(/\{[\s\S]*\}/);
+    if (objMatch) { try { return JSON.parse(objMatch[0]); } catch {} }
+    throw new Error('Tidak dapat mem-parsing respons JSON dari AI. Coba ulangi analisis.');
   }
 
   /* ─── Theme ─── */
@@ -1414,10 +1051,16 @@
   $('btn-reset').addEventListener('click', () => {
     const active = document.querySelector('.tab-panel.active');
     if (!active) return;
-    active.querySelectorAll('input[type="text"]').forEach(i => i.value = '');
-    ['hl-results','vf-results'].forEach(id => $(id) && $(id).classList.add('hidden'));
+    active.querySelectorAll('input[type="text"],input[type="password"]').forEach(i => i.value = '');
+    ['hl-results','vf-results'].forEach(id => { const el=$(id); if(el) el.classList.add('hidden'); });
     hideAlert('hl-alert'); hideAlert('vf-alert');
     currentVideoId = null; currentClips = []; currentMeta = null;
+    allFetchedVideos = []; currentPage = 1;
+    // Reset country selection to default US
+    selectedCCs = new Set(['US']);
+    updateCountLabel();
+    renderCountryGrid();
+    showToast('Reset berhasil!');
   });
 
   /* ─── Filter chips ─── */
@@ -1430,7 +1073,6 @@
      WORLD COUNTRIES DATABASE
   ══════════════════════════════════════ */
   const COUNTRIES = [
-    // Asia
     {cc:'AF',flag:'🇦🇫',name:'Afghanistan',region:'asia'},
     {cc:'AM',flag:'🇦🇲',name:'Armenia',region:'asia'},
     {cc:'AZ',flag:'🇦🇿',name:'Azerbaijan',region:'asia'},
@@ -1459,7 +1101,6 @@
     {cc:'MN',flag:'🇲🇳',name:'Mongolia',region:'asia'},
     {cc:'MM',flag:'🇲🇲',name:'Myanmar',region:'asia'},
     {cc:'NP',flag:'🇳🇵',name:'Nepal',region:'asia'},
-    {cc:'KP',flag:'🇰🇵',name:'North Korea',region:'asia'},
     {cc:'OM',flag:'🇴🇲',name:'Oman',region:'middle-east'},
     {cc:'PK',flag:'🇵🇰',name:'Pakistan',region:'asia'},
     {cc:'PS',flag:'🇵🇸',name:'Palestine',region:'middle-east'},
@@ -1480,7 +1121,6 @@
     {cc:'UZ',flag:'🇺🇿',name:'Uzbekistan',region:'asia'},
     {cc:'VN',flag:'🇻🇳',name:'Vietnam',region:'asia'},
     {cc:'YE',flag:'🇾🇪',name:'Yemen',region:'middle-east'},
-    // Europe
     {cc:'AL',flag:'🇦🇱',name:'Albania',region:'europe'},
     {cc:'AD',flag:'🇦🇩',name:'Andorra',region:'europe'},
     {cc:'AT',flag:'🇦🇹',name:'Austria',region:'europe'},
@@ -1510,13 +1150,12 @@
     {cc:'MC',flag:'🇲🇨',name:'Monaco',region:'europe'},
     {cc:'ME',flag:'🇲🇪',name:'Montenegro',region:'europe'},
     {cc:'NL',flag:'🇳🇱',name:'Netherlands',region:'europe'},
-    {cc:'MK',flag:'🇲🇰',name:'North Macedonia',region:'europe'},
+    {cc:'MK',flag:'🇲🇰',name:'N. Macedonia',region:'europe'},
     {cc:'NO',flag:'🇳🇴',name:'Norway',region:'europe'},
     {cc:'PL',flag:'🇵🇱',name:'Poland',region:'europe'},
     {cc:'PT',flag:'🇵🇹',name:'Portugal',region:'europe'},
     {cc:'RO',flag:'🇷🇴',name:'Romania',region:'europe'},
     {cc:'RU',flag:'🇷🇺',name:'Russia',region:'europe'},
-    {cc:'SM',flag:'🇸🇲',name:'San Marino',region:'europe'},
     {cc:'RS',flag:'🇷🇸',name:'Serbia',region:'europe'},
     {cc:'SK',flag:'🇸🇰',name:'Slovakia',region:'europe'},
     {cc:'SI',flag:'🇸🇮',name:'Slovenia',region:'europe'},
@@ -1525,8 +1164,6 @@
     {cc:'CH',flag:'🇨🇭',name:'Switzerland',region:'europe'},
     {cc:'UA',flag:'🇺🇦',name:'Ukraine',region:'europe'},
     {cc:'GB',flag:'🇬🇧',name:'United Kingdom',region:'europe'},
-    {cc:'VA',flag:'🇻🇦',name:'Vatican',region:'europe'},
-    // Americas
     {cc:'AG',flag:'🇦🇬',name:'Antigua',region:'americas'},
     {cc:'AR',flag:'🇦🇷',name:'Argentina',region:'americas'},
     {cc:'BS',flag:'🇧🇸',name:'Bahamas',region:'americas'},
@@ -1539,11 +1176,9 @@
     {cc:'CO',flag:'🇨🇴',name:'Colombia',region:'americas'},
     {cc:'CR',flag:'🇨🇷',name:'Costa Rica',region:'americas'},
     {cc:'CU',flag:'🇨🇺',name:'Cuba',region:'americas'},
-    {cc:'DM',flag:'🇩🇲',name:'Dominica',region:'americas'},
     {cc:'DO',flag:'🇩🇴',name:'Dominican Rep.',region:'americas'},
     {cc:'EC',flag:'🇪🇨',name:'Ecuador',region:'americas'},
     {cc:'SV',flag:'🇸🇻',name:'El Salvador',region:'americas'},
-    {cc:'GD',flag:'🇬🇩',name:'Grenada',region:'americas'},
     {cc:'GT',flag:'🇬🇹',name:'Guatemala',region:'americas'},
     {cc:'GY',flag:'🇬🇾',name:'Guyana',region:'americas'},
     {cc:'HT',flag:'🇭🇹',name:'Haiti',region:'americas'},
@@ -1554,91 +1189,47 @@
     {cc:'PA',flag:'🇵🇦',name:'Panama',region:'americas'},
     {cc:'PY',flag:'🇵🇾',name:'Paraguay',region:'americas'},
     {cc:'PE',flag:'🇵🇪',name:'Peru',region:'americas'},
-    {cc:'PR',flag:'🇵🇷',name:'Puerto Rico',region:'americas'},
-    {cc:'KN',flag:'🇰🇳',name:'Saint Kitts',region:'americas'},
-    {cc:'LC',flag:'🇱🇨',name:'Saint Lucia',region:'americas'},
-    {cc:'VC',flag:'🇻🇨',name:'Saint Vincent',region:'americas'},
-    {cc:'SR',flag:'🇸🇷',name:'Suriname',region:'americas'},
     {cc:'TT',flag:'🇹🇹',name:'Trinidad',region:'americas'},
     {cc:'US',flag:'🇺🇸',name:'United States',region:'americas'},
     {cc:'UY',flag:'🇺🇾',name:'Uruguay',region:'americas'},
     {cc:'VE',flag:'🇻🇪',name:'Venezuela',region:'americas'},
-    // Africa
     {cc:'DZ',flag:'🇩🇿',name:'Algeria',region:'africa'},
     {cc:'AO',flag:'🇦🇴',name:'Angola',region:'africa'},
     {cc:'BJ',flag:'🇧🇯',name:'Benin',region:'africa'},
     {cc:'BW',flag:'🇧🇼',name:'Botswana',region:'africa'},
-    {cc:'BF',flag:'🇧🇫',name:'Burkina Faso',region:'africa'},
-    {cc:'BI',flag:'🇧🇮',name:'Burundi',region:'africa'},
     {cc:'CM',flag:'🇨🇲',name:'Cameroon',region:'africa'},
-    {cc:'CV',flag:'🇨🇻',name:'Cape Verde',region:'africa'},
-    {cc:'CF',flag:'🇨🇫',name:'Central African Rep.',region:'africa'},
-    {cc:'TD',flag:'🇹🇩',name:'Chad',region:'africa'},
-    {cc:'KM',flag:'🇰🇲',name:'Comoros',region:'africa'},
-    {cc:'CG',flag:'🇨🇬',name:'Congo',region:'africa'},
-    {cc:'CD',flag:'🇨🇩',name:'DR Congo',region:'africa'},
-    {cc:'DJ',flag:'🇩🇯',name:'Djibouti',region:'africa'},
     {cc:'EG',flag:'🇪🇬',name:'Egypt',region:'africa'},
-    {cc:'GQ',flag:'🇬🇶',name:'Equatorial Guinea',region:'africa'},
-    {cc:'ER',flag:'🇪🇷',name:'Eritrea',region:'africa'},
-    {cc:'SZ',flag:'🇸🇿',name:'Eswatini',region:'africa'},
     {cc:'ET',flag:'🇪🇹',name:'Ethiopia',region:'africa'},
-    {cc:'GA',flag:'🇬🇦',name:'Gabon',region:'africa'},
-    {cc:'GM',flag:'🇬🇲',name:'Gambia',region:'africa'},
     {cc:'GH',flag:'🇬🇭',name:'Ghana',region:'africa'},
-    {cc:'GN',flag:'🇬🇳',name:'Guinea',region:'africa'},
-    {cc:'GW',flag:'🇬🇼',name:'Guinea-Bissau',region:'africa'},
-    {cc:'CI',flag:'🇨🇮',name:'Ivory Coast',region:'africa'},
     {cc:'KE',flag:'🇰🇪',name:'Kenya',region:'africa'},
-    {cc:'LS',flag:'🇱🇸',name:'Lesotho',region:'africa'},
-    {cc:'LR',flag:'🇱🇷',name:'Liberia',region:'africa'},
     {cc:'LY',flag:'🇱🇾',name:'Libya',region:'africa'},
     {cc:'MG',flag:'🇲🇬',name:'Madagascar',region:'africa'},
-    {cc:'MW',flag:'🇲🇼',name:'Malawi',region:'africa'},
-    {cc:'ML',flag:'🇲🇱',name:'Mali',region:'africa'},
-    {cc:'MR',flag:'🇲🇷',name:'Mauritania',region:'africa'},
-    {cc:'MU',flag:'🇲🇺',name:'Mauritius',region:'africa'},
     {cc:'MA',flag:'🇲🇦',name:'Morocco',region:'africa'},
     {cc:'MZ',flag:'🇲🇿',name:'Mozambique',region:'africa'},
     {cc:'NA',flag:'🇳🇦',name:'Namibia',region:'africa'},
-    {cc:'NE',flag:'🇳🇪',name:'Niger',region:'africa'},
     {cc:'NG',flag:'🇳🇬',name:'Nigeria',region:'africa'},
     {cc:'RW',flag:'🇷🇼',name:'Rwanda',region:'africa'},
-    {cc:'ST',flag:'🇸🇹',name:'São Tomé',region:'africa'},
     {cc:'SN',flag:'🇸🇳',name:'Senegal',region:'africa'},
-    {cc:'SC',flag:'🇸🇨',name:'Seychelles',region:'africa'},
-    {cc:'SL',flag:'🇸🇱',name:'Sierra Leone',region:'africa'},
-    {cc:'SO',flag:'🇸🇴',name:'Somalia',region:'africa'},
     {cc:'ZA',flag:'🇿🇦',name:'South Africa',region:'africa'},
-    {cc:'SS',flag:'🇸🇸',name:'South Sudan',region:'africa'},
     {cc:'SD',flag:'🇸🇩',name:'Sudan',region:'africa'},
     {cc:'TZ',flag:'🇹🇿',name:'Tanzania',region:'africa'},
-    {cc:'TG',flag:'🇹🇬',name:'Togo',region:'africa'},
     {cc:'TN',flag:'🇹🇳',name:'Tunisia',region:'africa'},
     {cc:'UG',flag:'🇺🇬',name:'Uganda',region:'africa'},
     {cc:'ZM',flag:'🇿🇲',name:'Zambia',region:'africa'},
     {cc:'ZW',flag:'🇿🇼',name:'Zimbabwe',region:'africa'},
-    // Oceania
     {cc:'AU',flag:'🇦🇺',name:'Australia',region:'oceania'},
     {cc:'FJ',flag:'🇫🇯',name:'Fiji',region:'oceania'},
-    {cc:'KI',flag:'🇰🇮',name:'Kiribati',region:'oceania'},
-    {cc:'MH',flag:'🇲🇭',name:'Marshall Islands',region:'oceania'},
-    {cc:'FM',flag:'🇫🇲',name:'Micronesia',region:'oceania'},
-    {cc:'NR',flag:'🇳🇷',name:'Nauru',region:'oceania'},
     {cc:'NZ',flag:'🇳🇿',name:'New Zealand',region:'oceania'},
-    {cc:'PW',flag:'🇵🇼',name:'Palau',region:'oceania'},
     {cc:'PG',flag:'🇵🇬',name:'Papua New Guinea',region:'oceania'},
     {cc:'WS',flag:'🇼🇸',name:'Samoa',region:'oceania'},
     {cc:'SB',flag:'🇸🇧',name:'Solomon Islands',region:'oceania'},
     {cc:'TO',flag:'🇹🇴',name:'Tonga',region:'oceania'},
-    {cc:'TV',flag:'🇹🇻',name:'Tuvalu',region:'oceania'},
     {cc:'VU',flag:'🇻🇺',name:'Vanuatu',region:'oceania'},
   ];
 
-  /* Country state */
-  let selectedCCs    = new Set(['US']);
-  let currentRegion  = 'all';
-  let searchQuery    = '';
+  let selectedCCs   = new Set(['US']);
+  let currentRegion = 'all';
+  let searchQuery   = '';
 
   function renderCountryGrid() {
     const grid = $('country-grid');
@@ -1647,52 +1238,47 @@
       const matchSearch = !searchQuery || c.name.toLowerCase().includes(searchQuery) || c.cc.toLowerCase().includes(searchQuery);
       return matchRegion && matchSearch;
     });
-
     const allSelected = filtered.length > 0 && filtered.every(c => selectedCCs.has(c.cc));
     const btnLabel = allSelected ? 'Deselect All Shown' : 'Select All Shown';
 
-    grid.innerHTML =
-      `<button class="cc-select-all" id="cc-select-all-btn">
-        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        ${btnLabel} (${filtered.length})
-      </button>` +
-      filtered.map(c =>
-        `<button class="cc-btn${selectedCCs.has(c.cc) ? ' selected' : ''}" data-cc="${c.cc}" title="${c.name}">
-          <span class="flag">${c.flag}</span>${c.cc}
-        </button>`
-      ).join('');
+    let html = `<button class="cc-select-all" id="cc-select-all-btn">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      ${btnLabel} (${filtered.length})
+    </button>`;
+    html += filtered.map(c =>
+      `<button class="cc-btn${selectedCCs.has(c.cc)?' selected':''}" data-cc="${c.cc}" title="${c.name}">
+        <span class="flag">${c.flag}</span>${c.cc}
+      </button>`
+    ).join('');
+    grid.innerHTML = html;
 
-    // Select all btn
     $('cc-select-all-btn').addEventListener('click', () => {
-      if (allSelected) {
-        filtered.forEach(c => selectedCCs.delete(c.cc));
-      } else {
-        filtered.forEach(c => selectedCCs.add(c.cc));
-      }
+      if (allSelected) { filtered.forEach(c => selectedCCs.delete(c.cc)); }
+      else { filtered.forEach(c => selectedCCs.add(c.cc)); }
       updateCountLabel();
       renderCountryGrid();
     });
 
-    // Individual cc btns
     grid.querySelectorAll('.cc-btn[data-cc]').forEach(btn => {
       btn.addEventListener('click', () => {
         const cc = btn.dataset.cc;
-        if (selectedCCs.has(cc)) selectedCCs.delete(cc);
-        else selectedCCs.add(cc);
-        btn.classList.toggle('selected');
+        if (selectedCCs.has(cc)) { selectedCCs.delete(cc); btn.classList.remove('selected'); }
+        else { selectedCCs.add(cc); btn.classList.add('selected'); }
         updateCountLabel();
-        // Re-render just select-all label
-        renderCountryGrid();
+        // Only re-render the select-all button label
+        const allSel = filtered.every(c => selectedCCs.has(c.cc));
+        const saBtn = $('cc-select-all-btn');
+        if (saBtn) saBtn.lastChild.textContent = ' ' + (allSel ? 'Deselect All Shown' : 'Select All Shown') + ` (${filtered.length})`;
       });
     });
   }
 
   function updateCountLabel() {
     const el = $('cc-count');
+    if (!el) return;
     el.innerHTML = `<strong>${selectedCCs.size}</strong> ${selectedCCs.size === 1 ? 'country' : 'countries'} selected`;
   }
 
-  // Region tabs
   $$('.cc-region-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       $$('.cc-region-tab').forEach(t => t.classList.remove('active'));
@@ -1702,75 +1288,64 @@
     });
   });
 
-  // Country search
   $('cc-search').addEventListener('input', e => {
     searchQuery = e.target.value.toLowerCase().trim();
     renderCountryGrid();
   });
 
-  // Init grid
   renderCountryGrid();
   updateCountLabel();
 
   /* ══════════════════════════════════════
      AI PROVIDER STATE
   ══════════════════════════════════════ */
-  let hlProvider  = 'claude';   // Clip Highlighter provider
-  let vfProvider  = 'claude';   // Viral Finder provider
+  let hlProvider = 'claude';
+  let vfProvider = 'claude';
 
-  // Helper: get current model from an input element
   function getModel(inputId) {
-    const v = $(inputId) ? $(inputId).value.trim() : '';
-    return v || 'gemini-2.0-flash';
+    const el = $(inputId);
+    return (el && el.value.trim()) ? el.value.trim() : '';
   }
-  // Keep alias for backward compat
-  function getOpenAIModel(inputId) { return getModel(inputId) || 'gpt-4o'; }
 
-  // Update provider UI for a given tab
   function applyProviderUI(tab, provider) {
-    const labelId     = tab === 'hl' ? 'ai-key-label'  : 'vf-ai-key-label';
-    const realInputId = tab === 'hl' ? 'ai-api-key'    : 'vf-ai-key';
-    const infoId       = tab === 'hl' ? 'provider-info'      : 'vf-provider-info';
-    const infoTxtId    = tab === 'hl' ? 'provider-info-text' : 'vf-provider-info-text';
-    const oaiRowId     = tab === 'hl' ? 'openai-model-row'   : 'vf-openai-model-row';
-    const gemRowId     = tab === 'hl' ? 'gemini-model-row'   : 'vf-gemini-model-row';
-    const oaiInputId   = tab === 'hl' ? 'openai-model-input' : 'vf-openai-model-input';
-    const gemInputId   = tab === 'hl' ? 'gemini-model-input' : 'vf-gemini-model-input';
-    const isVF         = tab === 'vf';
-
-    const label   = $(labelId);
-    const input   = $(realInputId);
-    const infoBox = $(infoId);
-    const infoTxt = $(infoTxtId);
-
-    // Hide all model rows first
+    const labelId    = tab === 'hl' ? 'ai-key-label'  : 'vf-ai-key-label';
+    const inputId    = tab === 'hl' ? 'ai-api-key'    : 'vf-ai-key';
+    const infoId     = tab === 'hl' ? 'provider-info'      : 'vf-provider-info';
+    const infoTxtId  = tab === 'hl' ? 'provider-info-text' : 'vf-provider-info-text';
+    const oaiRowId   = tab === 'hl' ? 'openai-model-row'   : 'vf-openai-model-row';
+    const gemRowId   = tab === 'hl' ? 'gemini-model-row'   : 'vf-gemini-model-row';
+    const oaiInputId = tab === 'hl' ? 'openai-model-input' : 'vf-openai-model-input';
+    const gemInputId = tab === 'hl' ? 'gemini-model-input' : 'vf-gemini-model-input';
+    const isVF       = tab === 'vf';
+    const label      = $(labelId);
+    const input      = $(inputId);
+    const infoBox    = $(infoId);
+    const infoTxt    = $(infoTxtId);
     $(oaiRowId).classList.add('hidden');
     $(gemRowId).classList.add('hidden');
-
     if (provider === 'gemini') {
-      label.innerHTML = `Google AI Studio Key <span class="${isVF ? 'opt' : 'req'}">${isVF ? '(opsional)' : '*'}</span>`;
-      input.placeholder = 'AIzaSy…  (dari aistudio.google.com)';
+      label.innerHTML = `Google AI Studio Key <span class="${isVF?'opt':'req'}">${isVF?'(opsional)':'*'}</span>`;
+      input.placeholder = 'AIzaSy… (dari aistudio.google.com)';
       $(gemRowId).classList.remove('hidden');
       infoBox.className = 'provider-info gemini';
-      const m = getModel(gemInputId);
-      infoTxt.innerHTML = `Menggunakan <strong>Gemini (Google)</strong> — model <strong>${m}</strong>. Gratis 1.500 req/hari tanpa kartu kredit.`;
+      const m = getModel(gemInputId) || 'gemini-2.0-flash';
+      infoTxt.innerHTML = `Menggunakan <strong>Gemini (Google)</strong> — model <strong>${m}</strong>. Gratis, tidak ada masalah CORS.`;
     } else if (provider === 'openai') {
-      label.innerHTML = `OpenAI API Key <span class="${isVF ? 'opt' : 'req'}">${isVF ? '(opsional)' : '*'}</span>`;
+      label.innerHTML = `OpenAI API Key <span class="${isVF?'opt':'req'}">${isVF?'(opsional)':'*'}</span>`;
       input.placeholder = 'sk-proj-…  atau  sk-…';
       $(oaiRowId).classList.remove('hidden');
       infoBox.className = 'provider-info openai';
-      const m = getModel(oaiInputId);
-      infoTxt.innerHTML = `Menggunakan <strong>ChatGPT (OpenAI)</strong> — model <strong>${m}</strong>. Pastikan akun Anda memiliki kuota yang cukup.`;
+      const m = getModel(oaiInputId) || 'gpt-4o';
+      infoTxt.innerHTML = `Menggunakan <strong>ChatGPT (OpenAI)</strong> — model <strong>${m}</strong>. ⚠ Perlu proxy/backend (CORS).`;
     } else {
-      label.innerHTML = `Claude API Key <span class="${isVF ? 'opt' : 'req'}">${isVF ? '(opsional)' : '*'}</span>`;
+      label.innerHTML = `Claude API Key <span class="${isVF?'opt':'req'}">${isVF?'(opsional)':'*'}</span>`;
       input.placeholder = 'sk-ant-…';
       infoBox.className = 'provider-info claude';
-      infoTxt.innerHTML = `Menggunakan <strong>Claude (Anthropic)</strong> — model claude-opus-4-5${isVF ? ' untuk menghitung viral score secara cerdas' : ' untuk analisis mendalam'}.`;
+      infoTxt.innerHTML = `Menggunakan <strong>Claude (Anthropic)</strong> — model claude-opus-4-5. ⚠ Perlu proxy/backend (CORS).`;
     }
   }
 
-
-
+  // Provider toggle — HL
   document.querySelectorAll('#provider-toggle .prov-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       hlProvider = btn.dataset.provider;
@@ -1780,6 +1355,7 @@
       applyProviderUI('hl', hlProvider);
     });
   });
+  // Provider toggle — VF
   document.querySelectorAll('#vf-provider-toggle .prov-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       vfProvider = btn.dataset.provider;
@@ -1790,40 +1366,21 @@
     });
   });
 
-  // Model quick buttons — generic (works for both tabs via data-target)
+  // Model quick buttons
   document.querySelectorAll('.mqb').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.dataset.target || 'openai-model-input';
       $(targetId).value = btn.dataset.m;
-      // Highlight active
       const parent = btn.closest('.model-quick-btns');
       if (parent) parent.querySelectorAll('.mqb').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      // Update info strip
-      const isVF = targetId.startsWith('vf-');
-      const infoTxtId = isVF ? 'vf-provider-info-text' : 'provider-info-text';
-      if ($(infoTxtId)) {
-        $(infoTxtId).innerHTML = `Menggunakan <strong>ChatGPT (OpenAI)</strong> — model <strong>${btn.dataset.m}</strong>. Pastikan akun Anda memiliki kuota yang cukup.`;
-      }
-    });
-  });
-
-  // Model input live update info strip
-  ['openai-model-input','vf-openai-model-input','gemini-model-input','vf-gemini-model-input'].forEach(id => {
-    const el = $(id);
-    if (!el) return;
-    el.addEventListener('input', () => {
-      const isVF  = id.startsWith('vf-');
-      const isGem = id.includes('gemini');
+      const isVF  = targetId.startsWith('vf-');
+      const isGem = targetId.includes('gemini');
       const txtId = isVF ? 'vf-provider-info-text' : 'provider-info-text';
-      const m     = el.value.trim() || (isGem ? 'gemini-2.0-flash' : 'gpt-4o');
-      if (isGem) {
-        $(txtId).innerHTML = `Menggunakan <strong>Gemini (Google)</strong> — model <strong>${m}</strong>. Gratis 1.500 req/hari tanpa kartu kredit.`;
-      } else {
-        $(txtId).innerHTML = `Menggunakan <strong>ChatGPT (OpenAI)</strong> — model <strong>${m}</strong>. Pastikan akun Anda memiliki kuota yang cukup.`;
+      if ($(txtId)) {
+        if (isGem) $(txtId).innerHTML = `Menggunakan <strong>Gemini (Google)</strong> — model <strong>${btn.dataset.m}</strong>. Gratis, tidak ada masalah CORS.`;
+        else $(txtId).innerHTML = `Menggunakan <strong>ChatGPT (OpenAI)</strong> — model <strong>${btn.dataset.m}</strong>. ⚠ Perlu proxy/backend (CORS).`;
       }
-      const qbId = isVF ? (isGem ? 'vf-gemini-quick-btns' : 'vf-model-quick-btns') : (isGem ? 'gemini-quick-btns' : 'model-quick-btns');
-      document.querySelectorAll(`#${qbId} .mqb`).forEach(b => b.classList.remove('active'));
     });
   });
 
@@ -1843,9 +1400,9 @@
   let currentVideoId = null, currentClips = [], currentMeta = null;
 
   function extractVideoId(input) {
-    const m = input.match(/(?:v=|youtu\.be\/|shorts\/)([a-zA-Z0-9_-]{11})/);
+    const m = input.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/);
     if (m) return m[1];
-    if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+    if (/^[a-zA-Z0-9_-]{11}$/.test(input.trim())) return input.trim();
     return null;
   }
 
@@ -1858,32 +1415,36 @@
     const urlVal = $('video-url').value.trim();
 
     if (!ytKey)  return showAlert('hl-alert','error','⚠ YouTube API Key wajib diisi.');
-    if (!aiKey)  return showAlert('hl-alert','error',
-      hlProvider === 'openai' ? '⚠ OpenAI API Key wajib diisi.' : '⚠ Claude API Key wajib diisi.');
+    if (!aiKey)  return showAlert('hl-alert','error','⚠ AI API Key wajib diisi untuk menggunakan '+
+      (hlProvider==='openai'?'ChatGPT':hlProvider==='gemini'?'Gemini':'Claude')+'.');
     if (!urlVal) return showAlert('hl-alert','error','⚠ Masukkan YouTube URL atau Video ID terlebih dahulu.');
 
     const vid = extractVideoId(urlVal);
-    if (!vid) return showAlert('hl-alert','error','⚠ URL atau Video ID tidak valid.');
+    if (!vid) return showAlert('hl-alert','error','⚠ URL atau Video ID tidak valid. Contoh: https://youtube.com/watch?v=dQw4w9WgXcQ');
 
     hideAlert('hl-alert');
     $('hl-results').classList.add('hidden');
     $('hl-loading').classList.remove('hidden');
-    const modelUsed = hlProvider === 'openai'  ? getModel('openai-model-input')
-                    : hlProvider === 'gemini' ? getModel('gemini-model-input')
+
+    const modelUsed = hlProvider === 'openai' ? (getModel('openai-model-input')||'gpt-4o')
+                    : hlProvider === 'gemini' ? (getModel('gemini-model-input')||'gemini-2.0-flash')
                     : 'claude-opus-4-5';
-    const providerLabel = hlProvider === 'openai' ? `ChatGPT (${modelUsed})`
-                        : hlProvider === 'gemini' ? `Gemini (${modelUsed})`
-                        : 'Claude';
-    $('hl-loading').innerHTML = `<div class="spinner"></div> Menganalisis dengan ${providerLabel}…`;
+    const provLabel = hlProvider === 'openai' ? `ChatGPT (${modelUsed})`
+                    : hlProvider === 'gemini' ? `Gemini (${modelUsed})`
+                    : 'Claude Opus';
+    $('hl-loading').querySelector('span').textContent = `Menganalisis dengan ${provLabel}…`;
 
     currentVideoId = vid;
     try {
       const meta  = await fetchVideoMeta(ytKey, vid);
       currentMeta = meta;
       const args  = [meta, parseInt($('clip-count').value), parseInt($('clip-length').value), $('platform').value, $('language').value];
-      const clips = hlProvider === 'openai'  ? await generateClipsOpenAI(aiKey, modelUsed, ...args)
-                  : hlProvider === 'gemini' ? await generateClipsGemini(aiKey, modelUsed, ...args)
-                  : await generateClipsClaude(aiKey, ...args);
+      let clips;
+      if (hlProvider === 'openai')       clips = await generateClipsOpenAI(aiKey, modelUsed, ...args);
+      else if (hlProvider === 'gemini')  clips = await generateClipsGemini(aiKey, modelUsed, ...args);
+      else                               clips = await generateClipsClaude(aiKey, ...args);
+      // Validate clips array
+      if (!Array.isArray(clips) || clips.length === 0) throw new Error('AI tidak menghasilkan rekomendasi clip. Coba ulangi.');
       currentClips = clips;
       renderHighlighterResults(meta, clips);
     } catch(err) {
@@ -1896,21 +1457,20 @@
   async function fetchVideoMeta(apiKey, videoId) {
     const res  = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${videoId}&key=${apiKey}`);
     const data = await res.json();
-    if (!res.ok || !data.items?.length) throw new Error('Video tidak ditemukan: ' + (data.error?.message || 'Periksa kembali Video ID atau API Key Anda.'));
+    if (!res.ok) throw new Error('YouTube API error: ' + (data.error?.message || `HTTP ${res.status}. Periksa API Key Anda.`));
+    if (!data.items?.length) throw new Error('Video tidak ditemukan. Periksa kembali Video ID atau URL.');
     const item = data.items[0], sn = item.snippet, st = item.statistics, cd = item.contentDetails;
-    const dm   = cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    const dm   = (cd.duration||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
     return {
       id: videoId, title: sn.title, channel: sn.channelTitle,
       description: (sn.description||'').slice(0, 600),
       thumb: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-      views: +(st.viewCount||0), likes: +(st.likeCount||0),
-      comments: +(st.commentCount||0),
-      durSec: ((+dm[1]||0)*3600) + ((+dm[2]||0)*60) + (+dm[3]||0),
+      views: +(st.viewCount||0), likes: +(st.likeCount||0), comments: +(st.commentCount||0),
+      durSec: dm ? ((+dm[1]||0)*3600 + (+dm[2]||0)*60 + (+dm[3]||0)) : 0,
       publishedAt: sn.publishedAt,
     };
   }
 
-  // Shared prompt builder
   function buildPrompt(meta, clipCount, clipLen, platform, lang) {
     return `You are an expert YouTube content analyst specializing in viral short-form clips.
 
@@ -1925,8 +1485,9 @@ Clip length     : approximately ${clipLen} seconds each
 Output language : ${lang === 'id' ? 'Bahasa Indonesia' : lang === 'en' ? 'English' : 'match the video language'}
 
 Generate exactly ${clipCount} clip recommendations with the highest viral potential.
-Distribute startSec evenly across the video duration — do NOT cluster all clips at the start.
-Respond ONLY with a valid JSON array, no markdown fences, no explanation:
+Distribute startSec EVENLY across the ENTIRE video duration — do NOT cluster all clips at the start.
+Ensure endSec = startSec + ${clipLen} (approximately).
+Respond ONLY with a valid JSON array — no markdown, no explanation, no extra text:
 [
   {
     "rank": 1,
@@ -1939,102 +1500,138 @@ Respond ONLY with a valid JSON array, no markdown fences, no explanation:
     "retentionScore": 82,
     "viralScore": 90,
     "tags": ["tag1", "tag2", "tag3"],
-    "caption": "Ready-to-post social media caption with hashtags"
+    "caption": "Ready-to-post caption with hashtags"
   }
 ]
 Valid "type" values: viral | hook | insight | emotional | funny`;
   }
 
-  // Claude API
+  /* ── FIX: Claude via proxy (CORS workaround) ── */
   async function generateClipsClaude(apiKey, meta, clipCount, clipLen, platform, lang) {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 3000,
-        messages: [{ role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) }],
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error('Claude API: ' + (data.error?.message || `HTTP ${res.status}`));
-    const raw = data.content[0].text.trim().replace(/```json|```/g,'').trim();
-    try { return JSON.parse(raw); }
-    catch { throw new Error('Format respons Claude tidak valid. Coba ulangi analisis.'); }
-  }
-
-  // OpenAI ChatGPT API
-  async function generateClipsOpenAI(apiKey, model, meta, clipCount, clipLen, platform, lang) {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + apiKey,
-      },
-      body: JSON.stringify({
-        model: model,
-        max_tokens: 3000,
-        temperature: 0.7,
-        messages: [
-          {
-            role: 'system',
-            content: 'You are an expert YouTube content analyst. You respond ONLY with valid JSON arrays. No markdown, no explanation, no preamble.',
-          },
-          {
-            role: 'user',
-            content: buildPrompt(meta, clipCount, clipLen, platform, lang),
-          },
-        ],
-      }),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      const errMsg = data.error?.message || `HTTP ${res.status}`;
-      if (res.status === 401) throw new Error('OpenAI API Key tidak valid atau tidak memiliki akses. Periksa kembali key Anda.');
-      if (res.status === 429) throw new Error('Kuota OpenAI habis atau permintaan terlalu banyak. Coba beberapa saat lagi.');
-      if (res.status === 404) throw new Error(`Model "${model}" tidak tersedia di akun Anda. Coba ganti ke gpt-4o atau gpt-3.5-turbo.`);
-      throw new Error('OpenAI API: ' + errMsg);
-    }
-    const raw = data.choices[0].message.content.trim().replace(/```json|```/g,'').trim();
-    try { return JSON.parse(raw); }
-    catch { throw new Error('Format respons ChatGPT tidak valid. Coba ulangi analisis.'); }
-  }
-
-  // Google Gemini API (AI Studio)
-  async function generateClipsGemini(apiKey, model, meta, clipCount, clipLen, platform, lang) {
-    const prompt = buildPrompt(meta, clipCount, clipLen, platform, lang);
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 3000,
-          responseMimeType: 'application/json',
+    // Claude API is blocked by CORS when called directly from browser.
+    // We attempt via a CORS proxy. If unavailable, a helpful error is thrown.
+    const PROXY = 'https://corsproxy.io/?';
+    const targetUrl = 'https://api.anthropic.com/v1/messages';
+    let res;
+    try {
+      res = await fetch(PROXY + encodeURIComponent(targetUrl), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
         },
-        systemInstruction: {
-          parts: [{ text: 'You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no explanation.' }]
-        }
-      }),
-    });
+        body: JSON.stringify({
+          model: 'claude-opus-4-5',
+          max_tokens: 3000,
+          messages: [{ role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) }],
+        }),
+      });
+    } catch (e) {
+      throw new Error('Tidak dapat terhubung ke Claude API. Coba gunakan Gemini (gratis, tanpa proxy). Detail: ' + e.message);
+    }
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) throw new Error('Claude API Key tidak valid. Periksa kembali key Anda di console.anthropic.com.');
+      if (res.status === 429) throw new Error('Claude API: rate limit atau kredit habis. Coba gunakan Gemini (gratis).');
+      throw new Error('Claude API error: ' + (data.error?.message || `HTTP ${res.status}`));
+    }
+    return extractJSON(data.content[0].text);
+  }
+
+  /* ── FIX: OpenAI via proxy ── */
+  async function generateClipsOpenAI(apiKey, model, meta, clipCount, clipLen, platform, lang) {
+    const PROXY = 'https://corsproxy.io/?';
+    const targetUrl = 'https://api.openai.com/v1/chat/completions';
+    let res;
+    try {
+      res = await fetch(PROXY + encodeURIComponent(targetUrl), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey,
+        },
+        body: JSON.stringify({
+          model: model,
+          max_tokens: 3000,
+          temperature: 0.7,
+          messages: [
+            { role: 'system', content: 'You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no explanation.' },
+            { role: 'user', content: buildPrompt(meta, clipCount, clipLen, platform, lang) },
+          ],
+        }),
+      });
+    } catch (e) {
+      throw new Error('Tidak dapat terhubung ke OpenAI API. Coba gunakan Gemini (gratis, tanpa proxy). Detail: ' + e.message);
+    }
+    const data = await res.json();
+    if (!res.ok) {
+      if (res.status === 401) throw new Error('OpenAI API Key tidak valid. Periksa kembali key Anda di platform.openai.com/api-keys.');
+      if (res.status === 429) throw new Error('Kuota OpenAI habis atau rate limit. Coba lagi nanti atau gunakan Gemini (gratis).');
+      if (res.status === 404) throw new Error(`Model "${model}" tidak tersedia. Coba ganti ke gpt-4o atau gpt-3.5-turbo.`);
+      throw new Error('OpenAI API: ' + (data.error?.message || `HTTP ${res.status}`));
+    }
+    return extractJSON(data.choices[0].message.content);
+  }
+
+  /* ── FIX: Gemini — hapus responseMimeType & perbaiki systemInstruction ── */
+  async function generateClipsGemini(apiKey, model, meta, clipCount, clipLen, platform, lang) {
+    // FIX 1: Tidak menggunakan responseMimeType (tidak semua model support)
+    // FIX 2: Tidak menggunakan systemInstruction (beda format antar versi API)
+    // FIX 3: Instruksi system dimasukkan langsung ke dalam prompt
+    const prompt = `You are an expert YouTube content analyst. Respond ONLY with a valid JSON array. No markdown, no preamble, no explanation.\n\n${buildPrompt(meta, clipCount, clipLen, platform, lang)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${apiKey}`;
+
+    let res;
+    try {
+      res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 3000,
+            // FIX: removed responseMimeType — not supported by all models/versions
+          },
+          // FIX: removed systemInstruction — caused 400 errors on some model versions
+        }),
+      });
+    } catch (e) {
+      throw new Error('Tidak dapat terhubung ke Gemini API: ' + e.message);
+    }
+
     const data = await res.json();
     if (!res.ok) {
       const errMsg = data.error?.message || `HTTP ${res.status}`;
-      if (res.status === 400) throw new Error(`Gemini: request tidak valid — ${errMsg}. Periksa nama model.`);
-      if (res.status === 403) throw new Error('Google AI Studio Key tidak valid atau tidak memiliki izin. Periksa kembali key Anda di aistudio.google.com.');
-      if (res.status === 429) throw new Error('Kuota Gemini habis untuk hari ini (limit 1.500 req/hari). Coba lagi besok.');
-      throw new Error('Gemini API: ' + errMsg);
+      if (res.status === 400) {
+        // More specific 400 error messages
+        if (errMsg.includes('model')) throw new Error(`Model "${model}" tidak dikenali. Coba ganti ke gemini-2.0-flash atau gemini-1.5-flash.`);
+        throw new Error(`Gemini: request tidak valid — ${errMsg}`);
+      }
+      if (res.status === 403) throw new Error('Google AI Studio Key tidak valid atau tidak memiliki izin. Periksa kembali key Anda di aistudio.google.com → "Get API Key".');
+      if (res.status === 429) {
+        // FIX: More informative 429 message — distinguish quota vs rate limit
+        const isQuota = errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('resource');
+        if (isQuota) throw new Error('Kuota harian Gemini habis (limit 1.500 req/hari di tier gratis). Coba lagi besok, atau upgrade ke paid tier di Google AI Studio.');
+        throw new Error('Gemini rate limit terlampaui. Tunggu beberapa detik lalu coba lagi.');
+      }
+      if (res.status === 404) throw new Error(`Model "${model}" tidak ditemukan. Coba: gemini-2.0-flash, gemini-1.5-flash, gemini-1.5-pro`);
+      throw new Error('Gemini API error: ' + errMsg);
     }
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim().replace(/```json|```/g,'').trim();
-    if (!raw) throw new Error('Gemini tidak menghasilkan respons. Coba ulangi analisis.');
-    try { return JSON.parse(raw); }
-    catch { throw new Error('Format respons Gemini tidak valid. Coba ulangi analisis.'); }
+
+    // FIX: Robust response parsing
+    const candidate = data.candidates?.[0];
+    if (!candidate) throw new Error('Gemini tidak menghasilkan respons (no candidates). Coba ulangi.');
+
+    // Check finish reason
+    if (candidate.finishReason === 'SAFETY') throw new Error('Gemini memblokir respons karena alasan keamanan. Coba keyword yang berbeda.');
+    if (candidate.finishReason === 'RECITATION') throw new Error('Gemini menolak respons karena recitation. Coba ulangi.');
+
+    const raw = candidate.content?.parts?.[0]?.text;
+    if (!raw || !raw.trim()) throw new Error('Gemini menghasilkan respons kosong. Coba ulangi analisis.');
+
+    return extractJSON(raw);
   }
 
   function renderHighlighterResults(meta, clips) {
@@ -2042,212 +1639,209 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
     $('hl-thumb').onclick = togglePlayer;
     $('hl-title').textContent   = meta.title;
     $('hl-channel').textContent = '📺 '+meta.channel;
-    $('hl-desc').textContent    = meta.description;
+    $('hl-desc').textContent    = meta.description || '(Tidak ada deskripsi)';
     $('hl-stats').innerHTML = [
       `<span class="vstat"><span class="vstat-v">${fmt(meta.views)}</span><span class="vstat-l"> views</span></span>`,
       `<span class="vstat"><span class="vstat-v">${fmt(meta.likes)}</span><span class="vstat-l"> likes</span></span>`,
       `<span class="vstat"><span class="vstat-v">${fmt(meta.comments)}</span><span class="vstat-l"> cmts</span></span>`,
-      `<span class="vstat"><span class="vstat-v">${fmtDur(meta.durSec)}</span><span class="vstat-l"> duration</span></span>`,
+      `<span class="vstat"><span class="vstat-v">${fmtDur(meta.durSec)}</span><span class="vstat-l"> durasi</span></span>`,
     ].join('');
-    const avgViral = Math.round(clips.reduce((a,c)=>a+c.viralScore,0)/clips.length);
-    const best     = clips.reduce((a,c)=>c.viralScore>a.viralScore?c:a,clips[0]);
+
+    const avgViral = Math.round(clips.reduce((a,c)=>a+(+c.viralScore||0),0)/clips.length);
+    const best     = clips.reduce((a,c)=>((+c.viralScore||0)>(+a.viralScore||0)?c:a), clips[0]);
     $('hl-stats-grid').innerHTML = [
       `<div class="sum-card"><div class="sum-lbl">Clips Found</div><div class="sum-val" style="color:var(--accent)">${clips.length}</div><div class="sum-sub">segments</div></div>`,
       `<div class="sum-card"><div class="sum-lbl">Avg Viral</div><div class="sum-val" style="color:${scoreColor(avgViral)}">${avgViral}</div><div class="sum-sub">out of 100</div></div>`,
-      `<div class="sum-card"><div class="sum-lbl">Best Score</div><div class="sum-val" style="color:var(--coral)">${best.viralScore}</div><div class="sum-sub">${(best.title||'').slice(0,16)}…</div></div>`,
-      `<div class="sum-card"><div class="sum-lbl">Total Time</div><div class="sum-val">${fmtDur(clips.reduce((a,c)=>a+(c.endSec-c.startSec),0))}</div><div class="sum-sub">of ${fmtDur(meta.durSec)}</div></div>`,
+      `<div class="sum-card"><div class="sum-lbl">Best Score</div><div class="sum-val" style="color:var(--coral)">${best.viralScore||0}</div><div class="sum-sub">${(best.title||'').slice(0,16)}…</div></div>`,
+      `<div class="sum-card"><div class="sum-lbl">Total Time</div><div class="sum-val">${fmtDur(clips.reduce((a,c)=>a+((c.endSec||0)-(c.startSec||0)),0))}</div><div class="sum-sub">dari ${fmtDur(meta.durSec)}</div></div>`,
     ].join('');
+
     const TC = {viral:'var(--red)',hook:'var(--coral)',insight:'var(--blue)',emotional:'#9060cc',funny:'var(--green)'};
     const bar = $('tl-bar');
     bar.innerHTML = '<div class="tl-grid"></div>';
     clips.forEach(c => {
       const seg = document.createElement('div');
-      seg.className='tl-seg';
-      seg.style.left=(c.startSec/meta.durSec*100)+'%';
-      seg.style.width=((c.endSec-c.startSec)/meta.durSec*100)+'%';
-      seg.style.background=TC[c.type]||'var(--accent)';
-      seg.title=c.title;
-      seg.innerHTML=`<span class="tl-seg-num">${c.rank}</span>`;
-      seg.addEventListener('click',()=>playClip(c.startSec));
+      seg.className = 'tl-seg';
+      const durSec = meta.durSec || 1;
+      seg.style.left  = ((c.startSec||0)/durSec*100)+'%';
+      seg.style.width = (Math.max(1,(c.endSec||0)-(c.startSec||0))/durSec*100)+'%';
+      seg.style.background = TC[c.type]||'var(--accent)';
+      seg.title = c.title;
+      seg.innerHTML = `<span class="tl-seg-num">${c.rank}</span>`;
+      seg.addEventListener('click', ()=>playClip(c.startSec||0));
       bar.appendChild(seg);
     });
-    $('tl-axis').innerHTML=[0,.25,.5,.75,1].map(p=>`<span>${fmtDur(Math.round(meta.durSec*p))}</span>`).join('');
-    $('tl-legend').innerHTML=[...new Set(clips.map(c=>c.type))].map(t=>`<span class="tl-leg"><span class="tl-dot" style="background:${TC[t]||'var(--accent)'}"></span>${t}</span>`).join('');
-    $('clips-meta-lbl').textContent=clips.length+' Clips Recommended';
+    $('tl-axis').innerHTML = [0,.25,.5,.75,1].map(p=>`<span>${fmtDur(Math.round((meta.durSec||0)*p))}</span>`).join('');
+    $('tl-legend').innerHTML = [...new Set(clips.map(c=>c.type))].map(t=>`<span class="tl-leg"><span class="tl-dot" style="background:${TC[t]||'var(--accent)'}"></span>${t}</span>`).join('');
+    $('clips-meta-lbl').textContent = clips.length + ' Clips Recommended';
     renderClipCards(clips);
     $('hl-results').classList.remove('hidden');
+    $('hl-results').scrollIntoView({behavior:'smooth', block:'start'});
   }
 
   function renderClipCards(clips) {
-    const S={viral:'s-viral',hook:'s-hook',insight:'s-insight',emotional:'s-emotional',funny:'s-funny'};
-    const B={viral:'b-viral',hook:'b-hook',insight:'b-insight',emotional:'b-emotional',funny:'b-funny'};
-    $('clips-container').innerHTML=clips.map((c,i)=>`
+    const S = {viral:'s-viral',hook:'s-hook',insight:'s-insight',emotional:'s-emotional',funny:'s-funny'};
+    const B = {viral:'b-viral',hook:'b-hook',insight:'b-insight',emotional:'b-emotional',funny:'b-funny'};
+    $('clips-container').innerHTML = clips.map((c,i) => {
+      const vs = c.viralScore||0, hs = c.hookScore||0;
+      return `
       <div class="clip-card ${i<3?'rk'+(i+1):''}">
         <div class="clip-inner">
           <div class="clip-stripe ${S[c.type]||'s-hook'}"></div>
           <div class="clip-body">
             <div class="clip-row">
-              <span class="clip-num">${c.rank}</span>
-              <span class="badge ${B[c.type]||'b-hook'}">${c.type}</span>
-              <span class="clip-ts">${fmtDur(c.startSec)} → ${fmtDur(c.endSec)}</span>
-              <span class="clip-dur">${fmtDur(c.endSec-c.startSec)}</span>
+              <span class="clip-num">${c.rank||i+1}</span>
+              <span class="badge ${B[c.type]||'b-hook'}">${c.type||'clip'}</span>
+              <span class="clip-ts">${fmtDur(c.startSec||0)} → ${fmtDur(c.endSec||0)}</span>
+              <span class="clip-dur">${fmtDur((c.endSec||0)-(c.startSec||0))}</span>
             </div>
-            <div class="clip-ttl">${c.title||''}</div>
+            <div class="clip-ttl">${c.title||'Clip '+(c.rank||i+1)}</div>
             <div class="clip-why">${c.reason||''}</div>
             <div class="score-row">
               <span class="score-lbl">Viral</span>
-              <div class="score-bar"><div class="score-fill" style="width:${c.viralScore}%;background:${scoreColor(c.viralScore)}"></div></div>
-              <span class="score-num" style="color:${scoreColor(c.viralScore)}">${c.viralScore}</span>
+              <div class="score-bar"><div class="score-fill" style="width:${vs}%;background:${scoreColor(vs)}"></div></div>
+              <span class="score-num" style="color:${scoreColor(vs)}">${vs}</span>
             </div>
             <div class="score-row">
               <span class="score-lbl">Hook</span>
-              <div class="score-bar"><div class="score-fill" style="width:${c.hookScore}%;background:var(--accent)"></div></div>
-              <span class="score-num" style="color:var(--accent)">${c.hookScore}</span>
+              <div class="score-bar"><div class="score-fill" style="width:${hs}%;background:var(--accent)"></div></div>
+              <span class="score-num" style="color:var(--accent)">${hs}</span>
             </div>
             <div class="tag-row">${(c.tags||[]).map(t=>`<span class="tag-chip">${t}</span>`).join('')}</div>
-            ${c.caption?`<div class="clip-cap">"${c.caption}"</div>`:''}
-          </div>
-          <div class="clip-side">
-            <button class="clip-btn cb-play"  data-action="play"    data-sec="${c.startSec}">▶ Play</button>
-            <button class="clip-btn cb-ghost" data-action="copyts"  data-ts="${fmtDur(c.startSec)}">Copy TS</button>
-            <button class="clip-btn cb-ghost" data-action="copycap" data-cap="${(c.caption||'').replace(/"/g,'&quot;')}">Caption</button>
+            ${c.caption?`<div class="clip-cap">"${c.caption.replace(/"/g,'&quot;')}"</div>`:''}
+            <div class="clip-actions">
+              <button class="clip-btn cb-play" data-action="play" data-sec="${c.startSec||0}">▶ Play Clip</button>
+              <button class="clip-btn cb-ghost" data-action="copyts" data-ts="${fmtDur(c.startSec||0)}">📋 Copy TS</button>
+              ${c.caption?`<button class="clip-btn cb-ghost" data-action="copycap" data-cap="${(c.caption||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}">💬 Copy Caption</button>`:''}
+            </div>
           </div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
-  /* ── Unified click delegation ── */
+  /* ── Delegation ── */
   document.addEventListener('click', e => {
-    // Clip card actions (play / copy timestamp / copy caption)
     const actionBtn = e.target.closest('[data-action]');
     if (actionBtn) {
       const a = actionBtn.dataset.action;
-      if (a === 'play')    playClip(parseInt(actionBtn.dataset.sec));
-      if (a === 'copyts')  navigator.clipboard.writeText(actionBtn.dataset.ts).then(()=>showToast('Timestamp berhasil disalin: '+actionBtn.dataset.ts));
-      if (a === 'copycap') navigator.clipboard.writeText(actionBtn.dataset.cap).then(()=>showToast('Caption berhasil disalin!'));
+      if (a === 'play')    playClip(parseInt(actionBtn.dataset.sec)||0);
+      if (a === 'copyts')  { navigator.clipboard.writeText(actionBtn.dataset.ts).then(()=>showToast('Timestamp disalin: '+actionBtn.dataset.ts)).catch(()=>showToast('Copy gagal — coba manual')); }
+      if (a === 'copycap') { navigator.clipboard.writeText(actionBtn.dataset.cap).then(()=>showToast('Caption berhasil disalin!')).catch(()=>showToast('Copy gagal — coba manual')); }
       return;
     }
-    // Video card: thumbnail click
     const thumb = e.target.closest('.vc-thumb[data-watch]');
-    if (thumb) { window.open('https://youtube.com/watch?v='+thumb.dataset.watch, '_blank'); return; }
-    // Video card: watch button
+    if (thumb) { window.open('https://youtube.com/watch?v='+thumb.dataset.watch,'_blank'); return; }
     const watchBtn = e.target.closest('[data-watch]:not(.vc-thumb)');
-    if (watchBtn && watchBtn.dataset.watch) { window.open('https://youtube.com/watch?v='+watchBtn.dataset.watch, '_blank'); return; }
-    // Video card: clip button → switch to highlighter
+    if (watchBtn?.dataset.watch) { window.open('https://youtube.com/watch?v='+watchBtn.dataset.watch,'_blank'); return; }
     const clipBtn = e.target.closest('[data-clip]');
-    if (clipBtn) { $('video-url').value = clipBtn.dataset.clip; document.querySelector('[data-tab="highlighter"]').click(); return; }
-    // Video card: copy video ID
+    if (clipBtn) { $('video-url').value=clipBtn.dataset.clip; document.querySelector('[data-tab="highlighter"]').click(); return; }
     const copyVidBtn = e.target.closest('[data-copy-vid]');
-    if (copyVidBtn) navigator.clipboard.writeText(copyVidBtn.dataset.copyVid).then(()=>showToast('Video ID berhasil disalin!'));
+    if (copyVidBtn) navigator.clipboard.writeText(copyVidBtn.dataset.copyVid).then(()=>showToast('Video ID disalin!'));
   });
 
   function playClip(sec) {
     if (!currentVideoId) return;
-    const pw=$('hl-player');
-    pw.innerHTML=`<iframe src="https://www.youtube.com/embed/${currentVideoId}?start=${sec}&autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    const pw = $('hl-player');
+    pw.innerHTML = `<iframe src="https://www.youtube.com/embed/${currentVideoId}?start=${sec}&autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
     pw.classList.remove('hidden');
-    pw.scrollIntoView({behavior:'smooth',block:'start'});
+    pw.scrollIntoView({behavior:'smooth', block:'start'});
   }
   function togglePlayer() {
     if (!currentVideoId) return;
-    const pw=$('hl-player');
+    const pw = $('hl-player');
     if (pw.classList.contains('hidden')) {
-      pw.innerHTML=`<iframe src="https://www.youtube.com/embed/${currentVideoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      pw.innerHTML = `<iframe src="https://www.youtube.com/embed/${currentVideoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
       pw.classList.remove('hidden');
     } else { pw.innerHTML=''; pw.classList.add('hidden'); }
   }
-  $('btn-sort-score').addEventListener('click',()=>{ currentClips.sort((a,b)=>b.viralScore-a.viralScore); renderClipCards(currentClips); });
-  $('btn-sort-time').addEventListener('click',()=>{ currentClips.sort((a,b)=>a.startSec-b.startSec); renderClipCards(currentClips); });
-  $('btn-transcript').addEventListener('click',()=>{
-    const panel=$('ts-panel'); panel.classList.remove('hidden');
-    const hlSegs=currentClips.map(c=>({s:c.startSec,e:c.endSec}));
-    const dur=currentMeta?.durSec||300;
-    let html='';
-    for(let t=0;t<dur;t+=10){
-      const isHL=hlSegs.some(s=>t>=s.s&&t<s.e);
-      html+=`<div class="ts-line${isHL?' hl':''}"><span class="ts-t" data-action="play" data-sec="${t}">${fmtDur(t)}</span><span class="ts-tx">[Segment at ${fmtDur(t)} — fetch via YouTube Captions API]</span></div>`;
+
+  $('btn-sort-score').addEventListener('click', ()=>{ currentClips.sort((a,b)=>(b.viralScore||0)-(a.viralScore||0)); renderClipCards(currentClips); showToast('Diurutkan: Viral Score ↓'); });
+  $('btn-sort-time').addEventListener('click',  ()=>{ currentClips.sort((a,b)=>(a.startSec||0)-(b.startSec||0));  renderClipCards(currentClips); showToast('Diurutkan: Waktu →'); });
+
+  $('btn-transcript').addEventListener('click', ()=>{
+    const panel = $('ts-panel');
+    panel.classList.remove('hidden');
+    const hlSegs = currentClips.map(c=>({s:c.startSec||0, e:c.endSec||0}));
+    const dur    = currentMeta?.durSec || 300;
+    let html = '';
+    for (let t = 0; t < dur; t += 10) {
+      const isHL = hlSegs.some(s => t >= s.s && t < s.e);
+      html += `<div class="ts-line${isHL?' hl':''}">
+        <span class="ts-t" data-action="play" data-sec="${t}">${fmtDur(t)}</span>
+        <span class="ts-tx">[Segment ${fmtDur(t)} — gunakan YouTube Captions API untuk teks asli]</span>
+      </div>`;
     }
-    $('ts-scroll').innerHTML=html;
+    $('ts-scroll').innerHTML = html;
     panel.scrollIntoView({behavior:'smooth'});
   });
-  $('btn-close-ts').addEventListener('click',()=>$('ts-panel').classList.add('hidden'));
-  $('btn-report').addEventListener('click',()=>{
-    navigator.clipboard.writeText(currentClips.map(c=>`[${c.rank}] ${c.title}\n${fmtDur(c.startSec)}–${fmtDur(c.endSec)} | Viral: ${c.viralScore}\n${c.reason}\n`).join('\n')).then(()=>showToast('Report copied!'));
+  $('btn-close-ts').addEventListener('click', ()=>$('ts-panel').classList.add('hidden'));
+
+  $('btn-report').addEventListener('click', ()=>{
+    if (!currentClips.length) return showToast('Belum ada clips untuk di-copy.');
+    const txt = currentClips.map(c=>`[${c.rank}] ${c.title||''}\n${fmtDur(c.startSec||0)}–${fmtDur(c.endSec||0)} | Viral: ${c.viralScore||0} | Hook: ${c.hookScore||0}\n${c.reason||''}\n${c.caption?'Caption: '+c.caption:''}\n`).join('\n');
+    navigator.clipboard.writeText(txt).then(()=>showToast('Report berhasil disalin!')).catch(()=>showToast('Gagal copy — coba manual'));
   });
-  $('btn-export-clips').addEventListener('click',()=>{
-    if(!currentClips.length) return showToast('No clips to export.');
-    const blob=new Blob([JSON.stringify({video:currentMeta,clips:currentClips},null,2)],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='clipstudio-export.json'; a.click();
+
+  $('btn-export-clips').addEventListener('click', ()=>{
+    if (!currentClips.length) return showToast('Belum ada clips untuk diekspor.');
+    const blob = new Blob([JSON.stringify({video:currentMeta, clips:currentClips}, null, 2)], {type:'application/json'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='clipstudio-clips.json'; a.click();
+    showToast('File JSON berhasil diunduh!');
   });
 
   /* ══════════════════════════════════════
      VIRAL FINDER
   ══════════════════════════════════════ */
-  /* ══════════════════════════════════════
-     VIRAL FINDER — State & Pagination
-  ══════════════════════════════════════ */
-  let allFetchedVideos = []; // semua video dari semua CC
+  let allFetchedVideos = [];
   let currentPage      = 1;
-  const PAGE_SIZE      = 15; // tampilkan 15 per halaman
 
   $('btn-find-viral').addEventListener('click', findViralVideos);
   $('vf-keyword').addEventListener('keydown', e => { if (e.key === 'Enter') findViralVideos(); });
 
   async function findViralVideos() {
     const ytKey   = $('vf-yt-key').value.trim();
-    const aiKey   = $('vf-ai-key').value.trim();   // optional AI key
     const keyword = $('vf-keyword').value.trim();
     if (!ytKey)            return showAlert('vf-alert','error','⚠ YouTube API Key wajib diisi.');
     if (!keyword)          return showAlert('vf-alert','error','⚠ Masukkan keyword atau niche terlebih dahulu.');
     if (!selectedCCs.size) return showAlert('vf-alert','error','⚠ Pilih minimal satu negara.');
+
     hideAlert('vf-alert');
     $('vf-results').classList.add('hidden');
     $('vf-loading').classList.remove('hidden');
-    const vfModelUsed = vfProvider === 'openai' ? getModel('vf-openai-model-input')
-                      : vfProvider === 'gemini' ? getModel('vf-gemini-model-input')
-                      : 'claude-opus-4-5';
-    const vfProvLabel = vfProvider === 'openai' ? `ChatGPT (${vfModelUsed})`
-                      : vfProvider === 'gemini' ? `Gemini (${vfModelUsed})`
-                      : 'Claude';
-    $('vf-loading').innerHTML = `<div class="spinner"></div> Mencari video viral${aiKey ? ` · skor AI via ${vfProvLabel}` : ''}…`;
 
     const sortMap = { viral:'relevance', views:'viewCount', recent:'date', engagement:'rating' };
     const order   = sortMap[$('vf-sort').value] || 'relevance';
-    // Ambil jumlah dari select, fallback 15
-    const perPage = parseInt($('vf-per-page').value) || 15;
-    // Fetch max 50 video dari API (batasan YouTube = max 50), lalu kita paginate di client
-    const fetchCount = Math.min(50, Math.max(perPage * 3, 15));
+    const perPage = parseInt($('vf-per-page').value) || 18;
+    const fetchCount = Math.min(50, perPage * 3);
+    const ccList  = [...selectedCCs].slice(0, 3);
 
-    // Ambil data dari SETIAP negara yang dipilih (max 3 CC agar tidak habis quota)
-    const ccList = [...selectedCCs].slice(0, 3);
+    $('vf-loading').querySelector('span').textContent = `Mencari di ${ccList.join(', ')}…`;
 
     try {
       const allItems = [];
       const seenIds  = new Set();
 
       for (const cc of ccList) {
+        $('vf-loading').querySelector('span').textContent = `Mengambil data dari ${cc}…`;
         const sRes = await fetch(
           `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword)}&type=video&maxResults=${fetchCount}&order=${order}&regionCode=${cc}&key=${ytKey}`
         );
         const sData = await sRes.json();
-        if (!sRes.ok) throw new Error(sData.error?.message || `YouTube Search error (${cc})`);
-
-        const newIds = sData.items
-          .map(i => i.id.videoId)
-          .filter(id => !seenIds.has(id));
-        newIds.forEach(id => seenIds.add(id));
-
-        if (newIds.length === 0) continue;
-
-        const vRes  = await fetch(
+        if (!sRes.ok) {
+          if (sRes.status === 403) throw new Error('YouTube API Key tidak valid atau kuota habis. ' + (sData.error?.message||''));
+          throw new Error(sData.error?.message || `YouTube Search error (${cc})`);
+        }
+        const newIds = (sData.items||[]).map(i=>i.id.videoId).filter(id=>id && !seenIds.has(id));
+        newIds.forEach(id=>seenIds.add(id));
+        if (!newIds.length) continue;
+        const vRes = await fetch(
           `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics,contentDetails&id=${newIds.join(',')}&key=${ytKey}`
         );
         const vData = await vRes.json();
         if (!vRes.ok) throw new Error(vData.error?.message || 'YouTube Videos API error');
-
-        // Tandai setiap video dengan CC asal
-        vData.items.forEach(item => { item._cc = cc; });
-        allItems.push(...vData.items);
+        (vData.items||[]).forEach(item => { item._cc = cc; });
+        allItems.push(...(vData.items||[]));
       }
 
       if (allItems.length === 0) {
@@ -2255,70 +1849,60 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
         return;
       }
 
-      // Urutkan sesuai pilihan sort
+      // Sort
       if ($('vf-sort').value === 'views') {
-        allItems.sort((a,b) => (+(b.statistics.viewCount||0)) - (+(a.statistics.viewCount||0)));
+        allItems.sort((a,b)=>+(b.statistics?.viewCount||0) - +(a.statistics?.viewCount||0));
       } else if ($('vf-sort').value === 'engagement') {
-        const engScore = item => {
-          const v = +(item.statistics.viewCount||0);
-          const l = +(item.statistics.likeCount||0);
-          return v > 0 ? l/v : 0;
-        };
-        allItems.sort((a,b) => engScore(b) - engScore(a));
+        const eng = i => { const v=+(i.statistics?.viewCount||0),l=+(i.statistics?.likeCount||0); return v>0?l/v:0; };
+        allItems.sort((a,b)=>eng(b)-eng(a));
       } else if ($('vf-sort').value === 'recent') {
-        allItems.sort((a,b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+        allItems.sort((a,b)=>new Date(b.snippet.publishedAt)-new Date(a.snippet.publishedAt));
       } else {
-        // viral: sort by calculated viral score
-        const vs = item => {
-          const v = +(item.statistics.viewCount||0);
-          const l = +(item.statistics.likeCount||0);
-          return Math.min(100, Math.round((l/(v||1))*1000 + Math.log10(v+1)*5));
-        };
-        allItems.sort((a,b) => vs(b) - vs(a));
+        const vs = i => { const v=+(i.statistics?.viewCount||0),l=+(i.statistics?.likeCount||0); return Math.min(100, Math.round((l/(v||1))*1000 + Math.log10(v+1)*5)); };
+        allItems.sort((a,b)=>vs(b)-vs(a));
       }
 
       allFetchedVideos = allItems;
       currentPage = 1;
       renderViralPage(keyword, perPage);
-
     } catch(err) {
       showAlert('vf-alert','error','❌ ' + err.message);
     } finally {
       $('vf-loading').classList.add('hidden');
+      $('vf-loading').querySelector('span').textContent = 'Mencari video viral…';
     }
   }
 
   function renderViralPage(keyword, perPage) {
-    if (!perPage) perPage = parseInt($('vf-per-page').value) || 15;
-    const total = allFetchedVideos.length;
+    if (!perPage) perPage = parseInt($('vf-per-page').value) || 18;
+    const total      = allFetchedVideos.length;
     const totalPages = Math.ceil(total / perPage);
-    const start = (currentPage - 1) * perPage;
-    const pageItems = allFetchedVideos.slice(start, start + perPage);
+    const start      = (currentPage - 1) * perPage;
+    const pageItems  = allFetchedVideos.slice(start, start + perPage);
 
-    // Header
-    const regionLabel = [...selectedCCs].slice(0,3).map(cc => {
+    const regionLabel = [...selectedCCs].slice(0,3).map(cc=>{
       const d = COUNTRIES.find(c=>c.cc===cc);
       return d ? d.flag+' '+d.cc : cc;
     }).join(', ') + (selectedCCs.size > 3 ? ` +${selectedCCs.size-3} lainnya` : '');
-    $('vf-title').textContent = `"${keyword}" — ${regionLabel}`;
-    $('vf-meta').textContent  = `${total} video ditemukan · menampilkan ${start+1}–${Math.min(start+perPage, total)} · ${selectedCCs.size} negara dipilih`;
 
-    // Render grid
+    $('vf-title').textContent = `"${keyword}" — ${regionLabel}`;
+    $('vf-meta').textContent  = `${total} video · menampilkan ${start+1}–${Math.min(start+perPage,total)} · ${selectedCCs.size} negara`;
+
     $('vf-grid').innerHTML = pageItems.map(item => {
-      const sn    = item.snippet, st = item.statistics, cd = item.contentDetails;
+      const sn    = item.snippet||{}, st = item.statistics||{}, cd = item.contentDetails||{};
       const cc    = item._cc || [...selectedCCs][0];
       const ccD   = COUNTRIES.find(c=>c.cc===cc) || {flag:'🌐'};
       const views = +(st.viewCount||0), likes = +(st.likeCount||0), cmts = +(st.commentCount||0);
       const vScore = Math.min(100, Math.round((likes/(views||1))*1000 + Math.log10(views+1)*5));
-      const dm    = cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-      const durS  = ((+dm[1]||0)*3600) + ((+dm[2]||0)*60) + (+dm[3]||0);
+      const dm    = (cd.duration||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+      const durS  = dm ? ((+dm[1]||0)*3600 + (+dm[2]||0)*60 + (+dm[3]||0)) : 0;
       const ss    = 70 + Math.floor(Math.random()*28);
       const sc    = ss>=90?'var(--green)':ss>=75?'var(--gold)':'var(--coral)';
       const vc    = vScore>=70?'v-hot':vScore>=40?'v-warm':'v-ok';
       const vl    = vScore>=70?'🔥 HOT':vScore>=40?'📈 WARM':'📊 OK';
-      const vid   = item.id;
-      const thumb = sn.thumbnails?.high?.url || '';
-      const ds    = new Date(sn.publishedAt).toLocaleDateString('id-ID',{month:'short',year:'numeric'});
+      const vid   = item.id||'';
+      const thumb = sn.thumbnails?.high?.url || sn.thumbnails?.medium?.url || '';
+      const ds    = sn.publishedAt ? new Date(sn.publishedAt).toLocaleDateString('id-ID',{month:'short',year:'numeric'}) : '';
       return `
         <div class="video-card">
           <div class="vc-thumb" data-watch="${vid}">
@@ -2328,8 +1912,8 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
             <span class="vc-viral ${vc}">${vl}</span>
           </div>
           <div class="vc-body">
-            <div class="vc-title">${sn.title}</div>
-            <div class="vc-ch">📺 ${sn.channelTitle}</div>
+            <div class="vc-title">${sn.title||'—'}</div>
+            <div class="vc-ch">📺 ${sn.channelTitle||'—'}</div>
             <div class="vc-stats">
               <span class="vc-stat"><span class="vc-stat-v">${fmt(views)}</span><span class="vc-stat-l"> views</span></span>
               <span class="vc-stat"><span class="vc-stat-v">${fmt(likes)}</span><span class="vc-stat-l"> likes</span></span>
@@ -2341,19 +1925,18 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
               <span class="vc-tag">Score ${vScore}</span>
               ${durS < 65 ? '<span class="vc-tag">⚡ Short</span>' : ''}
               ${vScore >= 70 ? '<span class="vc-tag">🔥 Trending</span>' : ''}
-              <span class="vc-tag">${ds}</span>
+              ${ds ? `<span class="vc-tag">${ds}</span>` : ''}
               <span class="vc-tag">${ccD.flag} ${cc}</span>
             </div>
             <div class="vc-actions">
               <button class="vc-btn vc-primary" data-watch="${vid}">▶ Tonton</button>
-              <button class="vc-btn"            data-clip="${vid}">✂️ Clip</button>
-              <button class="vc-btn"            data-copy-vid="${vid}">Copy ID</button>
+              <button class="vc-btn" data-clip="${vid}">✂️ Clip</button>
+              <button class="vc-btn" data-copy-vid="${vid}">📋 ID</button>
             </div>
           </div>
         </div>`;
     }).join('');
 
-    // Pagination
     renderPagination(totalPages, keyword, perPage);
     $('vf-results').classList.remove('hidden');
     if (currentPage > 1) $('vf-results').scrollIntoView({behavior:'smooth', block:'start'});
@@ -2361,35 +1944,27 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
 
   function renderPagination(totalPages, keyword, perPage) {
     const pg = $('vf-pagination');
-    if (totalPages <= 1) { pg.innerHTML = ''; return; }
-
-    let html = '';
-    // Prev
-    html += `<button class="pg-btn" data-pg="${currentPage-1}" ${currentPage===1?'disabled':''}>‹ Sebelumnya</button>`;
-    // Pages
+    if (totalPages <= 1) { pg.innerHTML=''; return; }
+    let html = `<button class="pg-btn" data-pg="${currentPage-1}" ${currentPage===1?'disabled':''}>‹</button>`;
     for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 2) {
+      if (i===1 || i===totalPages || Math.abs(i-currentPage)<=2) {
         html += `<button class="pg-btn${i===currentPage?' active':''}" data-pg="${i}">${i}</button>`;
-      } else if (Math.abs(i - currentPage) === 3) {
+      } else if (Math.abs(i-currentPage)===3) {
         html += `<span style="padding:6px 4px;color:var(--muted);font-family:var(--mono);font-size:11px">…</span>`;
       }
     }
-    // Next
-    html += `<button class="pg-btn" data-pg="${currentPage+1}" ${currentPage===totalPages?'disabled':''}>Berikutnya ›</button>`;
+    html += `<button class="pg-btn" data-pg="${currentPage+1}" ${currentPage===totalPages?'disabled':''}>›</button>`;
     pg.innerHTML = html;
-
-    // Bind pagination clicks
     pg.querySelectorAll('.pg-btn[data-pg]').forEach(btn => {
       btn.addEventListener('click', () => {
         const p = parseInt(btn.dataset.pg);
-        if (p < 1 || p > totalPages) return;
+        if (p < 1 || p > totalPages || isNaN(p)) return;
         currentPage = p;
         renderViralPage(keyword, perPage);
       });
     });
   }
 
-  // Change per-page triggers re-render if results exist
   $('vf-per-page').addEventListener('change', () => {
     if (allFetchedVideos.length > 0) {
       currentPage = 1;
@@ -2402,23 +1977,20 @@ Valid "type" values: viral | hook | insight | emotional | funny`;
     const csv = [
       ['Title','Channel','Views','Likes','Comments','Duration','Country','Published'].join(','),
       ...allFetchedVideos.map(item => {
-        const sn=item.snippet, st=item.statistics, cd=item.contentDetails;
-        const dm=cd.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-        const durS=((+dm[1]||0)*3600)+((+dm[2]||0)*60)+(+dm[3]||0);
+        const sn=item.snippet||{}, st=item.statistics||{}, cd=item.contentDetails||{};
+        const dm=(cd.duration||'').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        const durS=dm?((+dm[1]||0)*3600+(+dm[2]||0)*60+(+dm[3]||0)):0;
         return [
           `"${(sn.title||'').replace(/"/g,'""')}"`,
           `"${(sn.channelTitle||'').replace(/"/g,'""')}"`,
           st.viewCount||0, st.likeCount||0, st.commentCount||0,
           fmtDur(durS), item._cc||'',
-          new Date(sn.publishedAt).toLocaleDateString('id-ID')
+          sn.publishedAt ? new Date(sn.publishedAt).toLocaleDateString('id-ID') : ''
         ].join(',');
       })
     ].join('\n');
-    const blob = new Blob([csv], {type:'text/csv'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'clipstudio-viral.csv';
-    a.click();
+    const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+    const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='clipstudio-viral.csv'; a.click();
     showToast('File CSV berhasil diunduh!');
   });
 
